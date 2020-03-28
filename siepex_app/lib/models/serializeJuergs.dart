@@ -31,6 +31,18 @@ class Estudante {
     return this;
   }
 
+  Map<String, dynamic> toJson() =>
+  {
+    'name': nome,
+    'cpf': cpf,
+    'email': email,
+    'instituicao':instituicao,
+    'indUergs':indUergs,
+    'campoUergs':indUergs,
+    'indNecessidade':indNecessidade,
+    'tipoParticipante':tipoParticipante,
+  };
+/*
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['nome'] = this.nome;
@@ -42,5 +54,5 @@ class Estudante {
     data['indNecessidade'] = this.indNecessidade;
     data['tipoParticipante'] = this.tipoParticipante;
     return data;
-  }
+  }*/
 }

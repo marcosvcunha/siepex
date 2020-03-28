@@ -10,20 +10,21 @@ const {
 } = require('../../models');
 
 router.put('/', (req, res) => {
-  console.log(req.params.cpf);
-  cadastro_juergs.create({
+  cadastro_juergs.create(
+    {
     //cpf: Math.random().toString(36).substring(7),
-    cpf: req.params.cpf,
-    nome:'Paulo Steffen Machado',
-    email: 'paulo-steffen@uergs.edu.br',
-    instituicao : 'uegrs',
-    ind_uergs : '1',
-    campos_uergs: 'centro',
-    tipo_participante : 'c',
-    ind_necessidades_especiais: '0',
+    cpf: req.body['cpf'],
+    nome:req.body['nome'],
+    email: req.body['email'],
+    instituicao : req.body['instituicao'],
+    ind_uergs : req.body['indUergs'],
+    campos_uergs: req.body['campusUergs'],
+    tipo_participante : req.body['tipoParticipante'][0],
+    ind_necessidades_especiais: req.body['indNecessidade'],
 }).then((result) => {
       res.json(result);
   }).catch((err) => {
+      console.log(err)
       res.json(String(err));
   });
 });

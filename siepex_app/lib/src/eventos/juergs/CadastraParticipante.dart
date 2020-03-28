@@ -1,27 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:siepex/src/inicio/itemButton.dart';
-
-class Estudante {
-  final String nome;
-  final String cpf;
-  final String email;
-  final String instituicao;
-  final bool indUergs;
-
-  Estudante(
-    this.nome,
-    this.cpf,
-    this.email,
-    this.instituicao,
-    this.indUergs,
-  );
-
-  String toString() {
-    return 'Produto{nome: $nome, quantidade: $cpf, valor: $email}';
-  }
-}
+import 'package:siepex/models/serializeJuergs.dart';
+import 'package:siepex/src/config.dart';
+import 'package:http/http.dart' as http;
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class CadastraParticipante extends StatefulWidget {
   final Widget child;
@@ -45,11 +30,11 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
 
   TextEditingController txtInstituicao = TextEditingController();
 
-  bool indUergs = true;
+  bool checkIndUergs = true;
 
-  bool ehNecessitado = false;
+  bool checkEhNecessitado = false;
 
-  String tipoParticipante = "Jogador";
+  String comboTipoParticipante = "Jogador";
 
   var controller = MaskedTextController(mask: '000.000.000-00');
 
@@ -90,11 +75,11 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
   }
 
   Widget camposIndUergs() {
-    if (this.indUergs) {
+    if (this.checkIndUergs) {
       return Padding(
         padding: const EdgeInsets.only(left: 5, right: 5),
         child: TextField(
-          decoration: InputDecoration(labelText: 'Instituição'),
+          decoration: InputDecoration(labelText: 'Campus'),
           controller: txtInstituicao,
           keyboardType: TextInputType.text,
           style:
@@ -105,7 +90,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       return Padding(
         padding: const EdgeInsets.only(left: 5, right: 5),
         child: TextField(
-          decoration: InputDecoration(labelText: 'Campos'),
+          decoration: InputDecoration(labelText: 'Instituição'),
           controller: txtInstituicao,
           keyboardType: TextInputType.text,
           style:
@@ -131,7 +116,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           ),
         ),
         DropdownButton<String>(
-          value: tipoParticipante,
+          value: comboTipoParticipante,
           icon: Icon(Icons.arrow_downward),
           iconSize: 24,
           elevation: 16,
@@ -139,7 +124,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           underline: Container(height: 2, color: Colors.lightBlue),
           onChanged: (String newValue) {
             setState(() {
-              tipoParticipante = newValue;
+              comboTipoParticipante = newValue;
             });
           },
           items: <String>['Jogador', 'Espectador', 'Juiz', 'Outro']
@@ -152,6 +137,52 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
         ),
       ],
     );
+  }
+
+  cadastrar(Estudante estudante, BuildContext context) async {
+    print("login");
+    estudante.cpf = (estudante.cpf.replaceAll(".", "")).replaceAll("-", "");
+    print(estudante.cpf);
+    try {
+      var resposta = jsonDecode(
+          (await http.put(baseUrl + 'cadastroJuergs/', body: {
+            'nome':estudante.nome,
+            'cpf':estudante.cpf,
+            'email':estudante.email,
+            'instituicao':estudante.instituicao,
+            'campusUergs':estudante.campoUergs,
+            'indUergs':estudante.indUergs,
+            'indNecessidade':estudante.indNecessidade,
+            'tipoParticipante':estudante.tipoParticipante
+          }))
+              .body);
+
+      //print(resposta);
+      /*
+      if (resposta['erro'] != null) {
+        Alert(
+          context: context,
+          type: AlertType.error,
+          title: "Erro",
+          desc: resposta['erro'],
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Ok",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.pop(context),
+              width: 120,
+            )
+          ],
+        ).show();
+      } else {
+      }
+      // print(storage.getItem("user"));*/
+    } catch (e) {
+      print(e);
+      Alert(context: context, title: "Erro", desc: "Falha no Cadastro").show();
+    }
   }
 
   Widget corpo(BuildContext context) {
@@ -209,9 +240,9 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
                 ),
                 new Radio(
                   value: true,
-                  groupValue: this.indUergs,
+                  groupValue: this.checkIndUergs,
                   onChanged: (newValue) {
-                    this.indUergs = newValue;
+                    this.checkIndUergs = newValue;
                     setState(() {});
                   },
                 ),
@@ -221,9 +252,9 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
                 ),
                 new Radio(
                   value: false,
-                  groupValue: this.indUergs,
+                  groupValue: this.checkIndUergs,
                   onChanged: (newValue) {
-                    this.indUergs = newValue;
+                    this.checkIndUergs = newValue;
                     setState(() {});
                   },
                 ),
@@ -253,9 +284,9 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
                 ),
                 new Radio(
                   value: true,
-                  groupValue: this.ehNecessitado,
+                  groupValue: this.checkEhNecessitado,
                   onChanged: (newValue) {
-                    this.ehNecessitado = newValue;
+                    this.checkEhNecessitado = newValue;
                     setState(() {});
                   },
                 ),
@@ -265,9 +296,9 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
                 ),
                 new Radio(
                   value: false,
-                  groupValue: this.ehNecessitado,
+                  groupValue: this.checkEhNecessitado,
                   onChanged: (newValue) {
-                    this.ehNecessitado = newValue;
+                    this.checkEhNecessitado = newValue;
                     setState(() {});
                   },
                 ),
@@ -287,9 +318,23 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
               child: RaisedButton(
                 child: Text('Cadastrar'),
                 onPressed: () {
-                  final String nome = txtNome.text;
-                  final String cpf = txtCpf.text;
-                  final String email = txtEmail.text;
+                  print('Estudate é Uergs?');
+                  print(checkIndUergs);
+                  Estudante estudante = new Estudante();
+                  estudante.nome = txtNome.text;
+                  estudante.cpf = controller.text;
+                  if(checkIndUergs){
+                    estudante.campoUergs = txtInstituicao.text;
+                    estudante.instituicao = "Uergs";
+                  }else{
+                    estudante.campoUergs = "";
+                    estudante.instituicao = txtInstituicao.text;
+                  }
+                  estudante.email = txtEmail.text;
+                  estudante.indNecessidade = checkEhNecessitado.toString();
+                  estudante.indUergs = checkIndUergs.toString();
+                  estudante.tipoParticipante = comboTipoParticipante;
+                  this.cadastrar(estudante, context);
                 },
               ),
             ),
