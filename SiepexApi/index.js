@@ -31,7 +31,6 @@ app.use(bodyParser.raw({
   type: '*/*'
 }));
 
-
 app.use('/participante', participante_rotas);
 app.use('/visitas', visitas_rotas);
 app.use('/minicursos', minicursos_rotas);
