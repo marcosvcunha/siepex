@@ -1,16 +1,36 @@
-const {Sequelize} = require('sequelize');
+/* const {Sequelize} = require('sequelize');
 const sequelize = new Sequelize('siepex', 'root', 'admin', {
     host: 'localhost',
     dialect: 'mysql'
+}); */
+const express = require('express'),
+    router = express.Router();
+const {
+  cadastro_juergs,
+} = require('../../models');
+
+router.put('/', (req, res) => {
+  console.log(req.params.cpf);
+  cadastro_juergs.create({
+    //cpf: Math.random().toString(36).substring(7),
+    cpf: req.params.cpf,
+    nome:'Paulo Steffen Machado',
+    email: 'paulo-steffen@uergs.edu.br',
+    instituicao : 'uegrs',
+    ind_uergs : '1',
+    campos_uergs: 'centro',
+    tipo_participante : 'c',
+    ind_necessidades_especiais: '0',
+}).then((result) => {
+      res.json(result);
+  }).catch((err) => {
+      res.json(String(err));
+  });
 });
 
-sequelize.authenticate().then(function(){
-    console.log('dalhe');
-}).catch(function(erro){
-    console.log('nao deu: ' + erro);
-});
+module.exports = router;
 
-const Postagem = sequelize.define('cadastro_juergs',{
+/* const Postagem = sequelize.define('cadastro_juergs',{
     cpf: {
         type: Sequelize.STRING,
         primaryKey: true
@@ -49,10 +69,10 @@ const Postagem = sequelize.define('cadastro_juergs',{
       }
 },{
     timestamps: false,
-});
+}); */
 
-Postagem.create({
-    cpf: '04058277092',
+/* router.create({
+    cpf: Math.random().toString(36).substring(7),
     nome:'Paulo Steffen Machado',
     email: 'paulo-steffen@uergs.edu.br',
     instituicao : 'uegrs',
@@ -61,5 +81,5 @@ Postagem.create({
     tipo_participante : 'c',
     ind_necessidades_especiais: '0',
 
-});
+}); */
 
