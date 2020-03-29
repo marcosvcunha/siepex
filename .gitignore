@@ -91,3 +91,5 @@ doc/api/
 ###
 
 ./siepexapp/
+siepex_app/lib/src/config.dart
+SiepexApi/config/
