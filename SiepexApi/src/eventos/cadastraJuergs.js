@@ -5,6 +5,8 @@ const {
 } = require('../../models');
 
 router.put('/', (req, res) => {
+  console.log("Criando Cadastro"),
+  console.log(req.body['cpf']),
   cadastro_juergs.create(
     {
       cpf: req.body['cpf'],

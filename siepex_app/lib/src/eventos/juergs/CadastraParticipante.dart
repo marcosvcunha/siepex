@@ -162,7 +162,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       {
         if(resposta['status'] == 'sucesso')
         {
-          Alert(context: context, title: 'dalhe').show();
+          Navigator.popUntil(context, ModalRoute.withName('inicioJuergs'));
         }
         else if(resposta['status'] == 'erro')
         {
