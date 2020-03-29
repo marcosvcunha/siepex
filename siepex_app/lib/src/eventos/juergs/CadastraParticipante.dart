@@ -79,7 +79,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       return Padding(
         padding: const EdgeInsets.only(left: 5, right: 5),
         child: TextField(
-          decoration: InputDecoration(labelText: 'Instituição'),
+          decoration: InputDecoration(labelText: 'Campus'),
           controller: txtInstituicao,
           keyboardType: TextInputType.text,
           style:
@@ -90,7 +90,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       return Padding(
         padding: const EdgeInsets.only(left: 5, right: 5),
         child: TextField(
-          decoration: InputDecoration(labelText: 'Campos'),
+          decoration: InputDecoration(labelText: 'Instituição'),
           controller: txtInstituicao,
           keyboardType: TextInputType.text,
           style:
@@ -143,32 +143,32 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
     print("login");
     estudante.cpf = (estudante.cpf.replaceAll(".", "")).replaceAll("-", "");
     print(estudante.cpf);
-
-    print(baseUrl + 'cadastroJuergs/$estudante' + estudante.toJson().toString());
     try {
       var resposta = jsonDecode(
-          (await http.put(baseUrl + 'cadastroJuergs/', body: {'cpf' : estudante.cpf}))
+          (await http.put(baseUrl + 'cadastroJuergs/', body: {
+            'nome':estudante.nome,
+            'cpf':estudante.cpf,
+            'email':estudante.email,
+            'instituicao':estudante.instituicao,
+            'campusUergs':estudante.campoUergs,
+            'indUergs':estudante.indUergs,
+            'indNecessidade':estudante.indNecessidade,
+            'tipoParticipante':estudante.tipoParticipante
+          }))
               .body);
-      if (resposta['erro'] != null) {
-        Alert(
-          context: context,
-          type: AlertType.error,
-          title: "Erro",
-          desc: resposta['erro'],
-          buttons: [
-            DialogButton(
-              child: Text(
-                "Ok",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              onPressed: () => Navigator.pop(context),
-              width: 120,
-            )
-          ],
-        ).show();
-      } else {
+
+      print(resposta);
+      if(resposta['status'] != null)
+      {
+        if(resposta['status'] == 'sucesso')
+        {
+          Alert(context: context, title: 'dalhe').show();
+        }
+        else if(resposta['status'] == 'erro')
+        {
+          Alert(context: context, title: 'not this time').show();
+        }
       }
-      // print(storage.getItem("user"));
     } catch (e) {
       print(e);
       Alert(context: context, title: "Erro", desc: "Falha no Cadastro").show();
@@ -308,10 +308,18 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
               child: RaisedButton(
                 child: Text('Cadastrar'),
                 onPressed: () {
+                  print('Estudate é Uergs?');
+                  print(checkIndUergs);
                   Estudante estudante = new Estudante();
                   estudante.nome = txtNome.text;
                   estudante.cpf = controller.text;
-                  estudante.campoUergs = txtInstituicao.text;
+                  if(checkIndUergs){
+                    estudante.campoUergs = txtInstituicao.text;
+                    estudante.instituicao = "Uergs";
+                  }else{
+                    estudante.campoUergs = "";
+                    estudante.instituicao = txtInstituicao.text;
+                  }
                   estudante.email = txtEmail.text;
                   estudante.indNecessidade = checkEhNecessitado.toString();
                   estudante.indUergs = checkIndUergs.toString();
