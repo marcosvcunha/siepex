@@ -31,10 +31,6 @@ app.use(bodyParser.raw({
   type: '*/*'
 }));
 
-app.use('/test', (req, res) => {
-  console.log('teste')
-  res.json("oi")
-})
 app.use('/participante', participante_rotas);
 app.use('/visitas', visitas_rotas);
 app.use('/minicursos', minicursos_rotas);

@@ -157,28 +157,18 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           }))
               .body);
 
-      //print(resposta);
-      /*
-      if (resposta['erro'] != null) {
-        Alert(
-          context: context,
-          type: AlertType.error,
-          title: "Erro",
-          desc: resposta['erro'],
-          buttons: [
-            DialogButton(
-              child: Text(
-                "Ok",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              onPressed: () => Navigator.pop(context),
-              width: 120,
-            )
-          ],
-        ).show();
-      } else {
+      print(resposta);
+      if(resposta['status'] != null)
+      {
+        if(resposta['status'] == 'sucesso')
+        {
+          Alert(context: context, title: 'dalhe').show();
+        }
+        else if(resposta['status'] == 'erro')
+        {
+          Alert(context: context, title: 'not this time').show();
+        }
       }
-      // print(storage.getItem("user"));*/
     } catch (e) {
       print(e);
       Alert(context: context, title: "Erro", desc: "Falha no Cadastro").show();

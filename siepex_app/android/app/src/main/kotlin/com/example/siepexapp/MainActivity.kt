@@ -1,4 +1,4 @@
-package com.example.siepex_app
+package com.example.siepexapp
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

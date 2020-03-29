@@ -33,26 +33,13 @@ class Estudante {
 
   Map<String, dynamic> toJson() =>
   {
-    'name': nome,
-    'cpf': cpf,
-    'email': email,
-    'instituicao':instituicao,
-    'indUergs':indUergs,
-    'campoUergs':indUergs,
-    'indNecessidade':indNecessidade,
-    'tipoParticipante':tipoParticipante,
+    'name': this.nome,
+    'cpf': this.cpf,
+    'email': this.email,
+    'instituicao': this.instituicao,
+    'indUergs': this.indUergs,
+    'campoUergs': this.indUergs,
+    'indNecessidade': this.indNecessidade,
+    'tipoParticipante': this.tipoParticipante,
   };
-/*
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['nome'] = this.nome;
-    data['cpf'] = this.cpf;
-    data['email'] = this.email;
-    data['instituicao'] = this.instituicao;
-    data['indUergs'] = this.indUergs;
-    data['campoUergs'] = this.campoUergs;
-    data['indNecessidade'] = this.indNecessidade;
-    data['tipoParticipante'] = this.tipoParticipante;
-    return data;
-  }*/
 }
