@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:siepex/src/login/login.dart';
 
 class CadastraParticipante extends StatefulWidget {
   final Widget child;
@@ -36,7 +37,8 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
 
   String comboTipoParticipante = "Jogador";
 
-  var controller = MaskedTextController(mask: '000.000.000-00');
+  var cpfMask = new MaskTextInputFormatter(
+      mask: '###.###.###-##', filter: {"#": RegExp(r'[0-9]')});
 
   showAlertDialog1(BuildContext context) {
     // configura o button
@@ -115,25 +117,28 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
             ),
           ),
         ),
-        DropdownButton<String>(
-          value: comboTipoParticipante,
-          icon: Icon(Icons.arrow_downward),
-          iconSize: 24,
-          elevation: 16,
-          style: TextStyle(color: Colors.lightBlue),
-          underline: Container(height: 2, color: Colors.lightBlue),
-          onChanged: (String newValue) {
-            setState(() {
-              comboTipoParticipante = newValue;
-            });
-          },
-          items: <String>['Jogador', 'Espectador', 'Juiz', 'Outro']
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
+        Listener(
+          onPointerDown: (_) => FocusScope.of(context).unfocus(),
+          child: DropdownButton<String>(
+            value: comboTipoParticipante,
+            icon: Icon(Icons.arrow_downward),
+            iconSize: 24,
+            elevation: 16,
+            style: TextStyle(color: Colors.lightBlue),
+            underline: Container(height: 2, color: Colors.lightBlue),
+            onChanged: (String newValue) {
+              setState(() {
+                comboTipoParticipante = newValue;
+              });
+            },
+            items: <String>['Jogador', 'Espectador', 'Juiz', 'Outro']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
         ),
       ],
     );
@@ -142,30 +147,27 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
   cadastrar(Estudante estudante, BuildContext context) async {
     print("login");
     estudante.cpf = (estudante.cpf.replaceAll(".", "")).replaceAll("-", "");
-    print(estudante.cpf);
     try {
-      var resposta = jsonDecode(
-          (await http.put(baseUrl + 'cadastroJuergs/', body: {
-            'nome':estudante.nome,
-            'cpf':estudante.cpf,
-            'email':estudante.email,
-            'instituicao':estudante.instituicao,
-            'campusUergs':estudante.campoUergs,
-            'indUergs':estudante.indUergs,
-            'indNecessidade':estudante.indNecessidade,
-            'tipoParticipante':estudante.tipoParticipante
-          }))
+      print("Enviando request.");
+      var resposta =
+          jsonDecode((await http.put(baseUrl + 'cadastroJuergs/', body: {
+        'nome': estudante.nome,
+        'cpf': estudante.cpf,
+        'email': estudante.email,
+        'instituicao': estudante.instituicao,
+        'campusUergs': estudante.campoUergs,
+        'indUergs': estudante.indUergs,
+        'indNecessidade': estudante.indNecessidade,
+        'tipoParticipante': estudante.tipoParticipante
+      }))
               .body);
-
+      print("Request enviado.");
       print(resposta);
-      if(resposta['status'] != null)
-      {
-        if(resposta['status'] == 'sucesso')
-        {
-          Navigator.popUntil(context, ModalRoute.withName('inicioJuergs'));
-        }
-        else if(resposta['status'] == 'erro')
-        {
+      if (resposta['status'] != null) {
+        if (resposta['status'] == 'sucesso') {
+          Navigator.popUntil(context, ModalRoute.withName('inicio'));
+          Navigator.pushNamed(context, 'inicioJuergs');
+        } else if (resposta['status'] == 'erro') {
           Alert(context: context, title: 'not this time').show();
         }
       }
@@ -200,7 +202,8 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
             padding: const EdgeInsets.only(left: 5, right: 5),
             child: TextField(
               decoration: InputDecoration(labelText: 'CPF'),
-              controller: controller,
+              controller: txtCpf,
+              inputFormatters: [cpfMask],
               keyboardType: TextInputType.number,
               style: TextStyle(
                   color: Colors.lightBlue, fontWeight: FontWeight.w300),
@@ -308,15 +311,13 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
               child: RaisedButton(
                 child: Text('Cadastrar'),
                 onPressed: () {
-                  print('Estudate é Uergs?');
-                  print(checkIndUergs);
                   Estudante estudante = new Estudante();
                   estudante.nome = txtNome.text;
-                  estudante.cpf = controller.text;
-                  if(checkIndUergs){
+                  estudante.cpf = cpfMask.getUnmaskedText();
+                  if (checkIndUergs) {
                     estudante.campoUergs = txtInstituicao.text;
                     estudante.instituicao = "Uergs";
-                  }else{
+                  } else {
                     estudante.campoUergs = "";
                     estudante.instituicao = txtInstituicao.text;
                   }

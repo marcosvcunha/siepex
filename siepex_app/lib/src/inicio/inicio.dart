@@ -40,7 +40,7 @@ class InicioPage extends StatelessWidget {
                   children: <Widget>[      
                     itemButtonPersonalizado(new GridItem('Siepex', 'inicioSiepex', Icons.event_note), context,
                         expanded: false),
-                    itemButtonPersonalizado(new GridItem('Juergs', 'inicioJuergs', Icons.event_note), context,
+                    itemButtonPersonalizado(new GridItem('Juergs', 'loginJuergs', Icons.event_note), context,
                         expanded: false),
                     itemButtonPersonalizado(new GridItem('Fórum de Áreas', 'forumAreas', Icons.event_note), context,
                         expanded: false)

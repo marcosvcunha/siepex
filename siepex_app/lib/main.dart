@@ -28,6 +28,7 @@ import 'package:siepex/src/eventos/juergs/RestauranteJuergs.dart';
 import 'package:siepex/src/eventos/juergs/DefaultPage.dart';
 import 'package:siepex/src/eventos/juergs/ParticipanteJuergs.dart';
 import 'package:siepex/src/eventos/juergs/CadastraParticipante.dart';
+import 'package:siepex/src/eventos/juergs/LoginPage.dart';
 import 'package:siepex/src/eventos/forumAreas/forumAreas.dart';
 import 'package:siepex/src/inicio/inicioSiepex.dart';
 import 'package:siepex/src/tabs/tabs.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
         "juergsSobre": (BuildContext context) => JuergsSobre(),
         "forumAreas":(BuildContext context) => ForumPage(),
         "inicioSiepex":(BuildContext context) => InicioSiepex(),
+        "loginJuergs":(BuildContext context) => LoginJuergs(),
         "inicioJuergs":(BuildContext context) => InicioJuergs(),
         "hoteisJuergs":(BuildContext context) => HoteisJuergs(),
         "restaurantesJuergs":(BuildContext context) => RestaurantesJuergs(),
