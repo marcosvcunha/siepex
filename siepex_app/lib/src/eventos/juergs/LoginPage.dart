@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:cpf_cnpj_validator/cpf_validator.dart'; 
+
 
 class LoginJuergs extends StatefulWidget {
   @override
@@ -23,12 +25,13 @@ class _LoginJuergsState extends State<LoginJuergs> {
     Fazer a verificação aqui e Caso esteja tudo certo, logar no usuario.
   */
   void cpfVerifier(){
-    if(maskFormatter.getUnmaskedText().length < 11)
+    if(!CPFValidator.isValid(maskFormatter.getUnmaskedText()))
       _errorText = "Cpf invalido!";
     else{
       _errorText = null;
       Navigator.popAndPushNamed(context, 'inicioJuergs');
     }
+    
       setState(() {
         
       });
