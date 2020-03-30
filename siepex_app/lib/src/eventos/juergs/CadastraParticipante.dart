@@ -7,7 +7,7 @@ import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:siepex/src/login/login.dart';
+import 'package:cpf_cnpj_validator/cpf_validator.dart'; 
 
 class CadastraParticipante extends StatefulWidget {
   final Widget child;
@@ -144,9 +144,32 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
     );
   }
 
+  validaCampos(Estudante estudante){
+    if(!CPFValidator.isValid(estudante.cpf)){
+      Alert(context: context, title: 'CPF inválido').show();
+      return false;
+    }
+    if(estudante.email.isEmpty){
+      Alert(context: context, title: 'Email é obrigatório').show();
+      return false;
+    }
+    if(estudante.nome.isEmpty){
+      Alert(context: context, title: 'Nome é obrigatório').show();
+      return false;
+    }
+    if(estudante.instituicao.isEmpty){
+      Alert(context: context, title: 'Instituição é obrigatório').show();
+      return false;
+    }
+  }
+
   cadastrar(Estudante estudante, BuildContext context) async {
     print("login");
     estudante.cpf = (estudante.cpf.replaceAll(".", "")).replaceAll("-", "");
+    if(!validaCampos(estudante))
+    {
+      return false;
+    }
     try {
       print("Enviando request.");
       var resposta =
