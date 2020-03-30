@@ -88,7 +88,7 @@ Widget corpo(BuildContext context) {
                         context,
                         expanded: false),
                     itemButton(
-                        new GridItem('Área do Participante', 'participanteJuergs',
+                        new GridItem('Modalidades', 'modalidadesJuergs',
                             Icons.assignment_ind),
                         context,
                         expanded: false),

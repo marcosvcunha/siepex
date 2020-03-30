@@ -18,6 +18,7 @@ router.put('/', (req, res) => {
       tipo_participante: req.body['tipoParticipante'][0],
       ind_necessidades_especiais: req.body['indNecessidade'],
     }).then((result) => {
+      console.log("Cadastro realizado com sucesso.")
       res.json({
         status: 'sucesso'
       })

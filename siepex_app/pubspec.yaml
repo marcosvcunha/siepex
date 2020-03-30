@@ -87,6 +87,9 @@ flutter:
     - family: Mdi
       fonts:
         - asset: assets/fonts/Mdi.ttf
-  #
+    - family: MyFlutterApp
+      fonts:
+       - asset: assets/fonts/MyFlutterApp.ttf
+        #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

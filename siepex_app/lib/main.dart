@@ -29,6 +29,7 @@ import 'package:siepex/src/eventos/juergs/DefaultPage.dart';
 import 'package:siepex/src/eventos/juergs/ParticipanteJuergs.dart';
 import 'package:siepex/src/eventos/juergs/CadastraParticipante.dart';
 import 'package:siepex/src/eventos/juergs/LoginPage.dart';
+import 'package:siepex/src/eventos/juergs/ModalidadesPage.dart';
 import 'package:siepex/src/eventos/forumAreas/forumAreas.dart';
 import 'package:siepex/src/inicio/inicioSiepex.dart';
 import 'package:siepex/src/tabs/tabs.dart';
@@ -72,10 +73,11 @@ class MyApp extends StatelessWidget {
         "loginJuergs":(BuildContext context) => LoginJuergs(),
         "inicioJuergs":(BuildContext context) => InicioJuergs(),
         "hoteisJuergs":(BuildContext context) => HoteisJuergs(),
+        "modalidadesJuergs":(BuildContext context) => ModalidesPage(),
         "restaurantesJuergs":(BuildContext context) => RestaurantesJuergs(),
         "defaultPage":(BuildContext context) => DefaultPage(),
         "participanteJuergs":(BuildContext context) => ParticipanteJuergs(),
-        "cadastraParticipante":(BuildContext context) => CadastraParticipante()
+        "cadastraParticipante":(BuildContext context) => CadastraParticipante(),
       },
       title: 'Siepex App',
       theme: ThemeData(
