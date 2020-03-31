@@ -7,7 +7,8 @@ import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:cpf_cnpj_validator/cpf_validator.dart'; 
+import 'package:cpf_cnpj_validator/cpf_validator.dart';
+import 'package:email_validator/email_validator.dart';
 
 class CadastraParticipante extends StatefulWidget {
   final Widget child;
@@ -22,6 +23,11 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
   Widget build(BuildContext context) {
     return corpo(context);
   }
+  bool _loading = false;
+  String cpfError = null;
+  String nomeError = null;
+  String emailError = null;
+  String instError = null;
 
   TextEditingController txtNome = TextEditingController();
 
@@ -81,7 +87,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       return Padding(
         padding: const EdgeInsets.only(left: 5, right: 5),
         child: TextField(
-          decoration: InputDecoration(labelText: 'Campus'),
+          decoration: InputDecoration(labelText: 'Campus', errorText: instError),
           controller: txtInstituicao,
           keyboardType: TextInputType.text,
           style:
@@ -92,7 +98,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       return Padding(
         padding: const EdgeInsets.only(left: 5, right: 5),
         child: TextField(
-          decoration: InputDecoration(labelText: 'Instituição'),
+          decoration: InputDecoration(labelText: 'Instituição', errorText: instError),
           controller: txtInstituicao,
           keyboardType: TextInputType.text,
           style:
@@ -145,26 +151,39 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
   }
 
   validaCampos(Estudante estudante){
+    bool valido = true;
     if(!CPFValidator.isValid(estudante.cpf)){
-      Alert(context: context, title: 'CPF inválido').show();
-      return false;
+      cpfError = 'CPF inválido';
+      valido = false;
+    }else
+      cpfError = null;
+    if(!EmailValidator.validate(estudante.email)){
+      emailError = 'Email é Inválido';
+      valido = false;
     }
-    if(estudante.email.isEmpty){
-      Alert(context: context, title: 'Email é obrigatório').show();
-      return false;
-    }
+      else
+        emailError = null;
     if(estudante.nome.isEmpty){
-      Alert(context: context, title: 'Nome é obrigatório').show();
-      return false;
-    }
+      nomeError = 'Nome é obrigatório';
+      valido = false;
+    }else
+      nomeError = null;
     if(estudante.instituicao.isEmpty){
-      Alert(context: context, title: 'Instituição é obrigatório').show();
-      return false;
-    }
-    return true;
+      instError = 'Instituição é obrigatório';
+      valido = false;
+    }else{
+        if(estudante.instituicao == "Uergs" && estudante.campoUergs.isEmpty){
+          instError = 'Campus é obrigatório';
+          valido = false;
+        }else
+          instError = null;
+      }
+    setState(() {
+    });
+    return valido;
   }
 
-  cadastrar(Estudante estudante, BuildContext context) async {
+  Future cadastrar(Estudante estudante, BuildContext context) async {
     print("login");
     estudante.cpf = (estudante.cpf.replaceAll(".", "")).replaceAll("-", "");
     if(!validaCampos(estudante))
@@ -175,6 +194,9 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
     print("passou");
     try {
       print("Enviando request.");
+      setState(() {
+        _loading = true;
+      });
       var resposta =
           jsonDecode((await http.put(baseUrl + 'cadastroJuergs/', body: {
         'nome': estudante.nome,
@@ -187,10 +209,14 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
         'tipoParticipante': estudante.tipoParticipante
       }))
               .body);
+      setState(() {
+        _loading = false;
+      });
       print("Request enviado.");
       print(resposta);
       if (resposta['status'] != null) {
         if (resposta['status'] == 'sucesso') {
+          userJuergs = estudante;
           Navigator.popUntil(context, ModalRoute.withName('inicio'));
           Navigator.pushNamed(context, 'inicioJuergs');
         } else if (resposta['status'] == 'erro') {
@@ -215,12 +241,21 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
         ),
       ),
-      body: ListView(
+      body: _loading ? loadingScreen() : body(),
+    );
+  }
+  Widget loadingScreen(){
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+  Widget body(){
+    return ListView(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(left: 5, right: 5),
             child: TextField(
-              decoration: InputDecoration(labelText: 'Nome'),
+              decoration: InputDecoration(labelText: 'Nome', errorText: nomeError),
               controller: txtNome,
               keyboardType: TextInputType.text,
               style: TextStyle(
@@ -230,7 +265,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           Padding(
             padding: const EdgeInsets.only(left: 5, right: 5),
             child: TextField(
-              decoration: InputDecoration(labelText: 'CPF'),
+              decoration: InputDecoration(labelText: 'CPF', errorText: cpfError),
               controller: txtCpf,
               inputFormatters: [cpfMask],
               keyboardType: TextInputType.number,
@@ -241,7 +276,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           Padding(
             padding: const EdgeInsets.only(left: 5, right: 5),
             child: TextField(
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(labelText: 'Email', errorText: emailError),
               controller: txtEmail,
               keyboardType: TextInputType.text,
               style: TextStyle(
@@ -360,7 +395,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
             ),
           ),
         ],
-      ),
-    );
+      );
   }
+
 }

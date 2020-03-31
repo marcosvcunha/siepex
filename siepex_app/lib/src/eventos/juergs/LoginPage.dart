@@ -2,7 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:cpf_cnpj_validator/cpf_validator.dart'; 
+import 'package:cpf_cnpj_validator/cpf_validator.dart';
+import 'package:siepex/models/serializeJuergs.dart'; 
 
 
 class LoginJuergs extends StatefulWidget {
@@ -29,6 +30,8 @@ class _LoginJuergsState extends State<LoginJuergs> {
       _errorText = "Cpf invalido!";
     else{
       _errorText = null;
+      userJuergs.nome = "Marcos Vinicius Cunha";
+      userJuergs.email = "marcos-cunha@uergs.edu.br";
       Navigator.popAndPushNamed(context, 'inicioJuergs');
     }
     

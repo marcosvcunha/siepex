@@ -1,8 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import '../../../icons/my_flutter_app_icons.dart';
-import '../../../icons/sport_icons.dart';
 import '../../../models/modalidade.dart';
 
 List modalidades = [

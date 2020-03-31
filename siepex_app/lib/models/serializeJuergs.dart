@@ -1,3 +1,4 @@
+Estudante userJuergs = new Estudante();
 
 class Estudante {
   String nome;
@@ -42,4 +43,11 @@ class Estudante {
     'indNecessidade': this.indNecessidade,
     'tipoParticipante': this.tipoParticipante,
   };
+
+  void setName(String newNome){
+    this.nome = newNome;
+  }
+  void setEmail(String newEmail){
+    this.email = newEmail;
+  }
 }

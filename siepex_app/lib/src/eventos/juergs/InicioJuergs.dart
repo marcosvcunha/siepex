@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siepex/src/areaParticipante/homeParticipante.dart';
 import 'package:siepex/src/inicio/itemButton.dart';
 import 'package:siepex/mdi.dart';
+import './Widgets/Drawer.dart';
 
 class InicioJuergs extends StatelessWidget {
   final Widget child;
@@ -18,7 +19,7 @@ Widget corpo(BuildContext context) {
           elevation: 10,
           title: Text('Inicio'),
         ),
-        drawer: HomeParticipante(),
+        drawer: juergsDrawer(),
         body: Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
