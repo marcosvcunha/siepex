@@ -161,6 +161,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       Alert(context: context, title: 'Instituição é obrigatório').show();
       return false;
     }
+    return true;
   }
 
   cadastrar(Estudante estudante, BuildContext context) async {
@@ -168,8 +169,10 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
     estudante.cpf = (estudante.cpf.replaceAll(".", "")).replaceAll("-", "");
     if(!validaCampos(estudante))
     {
+      print("caiu");
       return false;
     }
+    print("passou");
     try {
       print("Enviando request.");
       var resposta =
@@ -191,7 +194,10 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           Navigator.popUntil(context, ModalRoute.withName('inicio'));
           Navigator.pushNamed(context, 'inicioJuergs');
         } else if (resposta['status'] == 'erro') {
-          Alert(context: context, title: 'not this time').show();
+          Alert(context: context, title: 'Erro no cadastro').show();
+        }
+        else if(resposta['status'] == 'registro_existente') {
+          Alert(context: context, title: 'Participante já cadastrado').show();
         }
       }
     } catch (e) {
