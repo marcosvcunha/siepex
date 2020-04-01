@@ -94,3 +94,4 @@ doc/api/
 siepex_app/lib/src/config.dart
 SiepexApi/config/
 *.zip
+TODO.txt

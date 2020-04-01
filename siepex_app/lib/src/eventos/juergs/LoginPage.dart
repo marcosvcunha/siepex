@@ -19,10 +19,25 @@ class _LoginJuergsState extends State<LoginJuergs> {
   var maskFormatter = new MaskTextInputFormatter(
       mask: '###.###.###-##', filter: {"#": RegExp(r'[0-9]')});
   var _errorText = null;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    return corpo(context);
+    return Scaffold(
+        appBar: AppBar(
+          elevation: 10,
+          title: Text('Login'),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(
+                      'assets/img/arte_uergs/Background_App_Uergs.png'),
+                  fit: BoxFit.cover)),
+          child: Center(
+            child: _isLoading ? CircularProgressIndicator() : corpo(context),
+          ),
+        ));
   }
 
   /*
@@ -43,13 +58,15 @@ class _LoginJuergsState extends State<LoginJuergs> {
   logar(String cpf) async {
     if (this.cpfVerifier(cpf)) {
       try {
-        print("Enviando request.");
-        print(baseUrl + 'obtemParticipante/' + 'cpf:' + cpf);
+        setState(() {
+          _isLoading = true;
+        });
         var resposta = jsonDecode(
             (await http.put(baseUrl + 'obtemParticipante/', body: {'cpf': cpf}))
                 .body);
-        print("Request enviado.");
-        print(resposta);
+        setState(() {
+          _isLoading = false;
+        });
         if (resposta['status'] != null) {
           if (resposta['status'] == 'ok') {
             Estudante estudante = new Estudante();
@@ -75,88 +92,73 @@ class _LoginJuergsState extends State<LoginJuergs> {
   }
 
   Widget corpo(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          elevation: 10,
-          title: Text('Login'),
+    return Container(
+      height: 250,
+      width: 300,
+      decoration: BoxDecoration(
+        border: Border.all(),
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
         ),
-        body: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(
-                      'assets/img/arte_uergs/Background_App_Uergs.png'),
-                  fit: BoxFit.cover)),
-          child: Center(
-            child: Container(
-              height: 250,
-              width: 300,
-              decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-                color: Color.fromRGBO(0xD8, 0xD8, 0xD8, 1),
+        color: Color.fromRGBO(0xD8, 0xD8, 0xD8, 1),
+      ),
+      child: Column(
+        //mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(30, 30, 30, 45),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'CPF',
+                labelStyle:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+                errorText: _errorText,
               ),
-              child: Column(
-                //mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 30, 30, 45),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: 'CPF',
-                        labelStyle: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.w400),
-                        errorText: _errorText,
-                      ),
-                      inputFormatters: [maskFormatter],
-                      controller: cpfController,
-                      keyboardType: TextInputType.number,
-                      style: TextStyle(
-                          color: Colors.lightBlue, fontWeight: FontWeight.w300),
-                    ),
-                  ),
-                  Container(
-                    height: 45,
-                    width: 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Color.fromRGBO(0, 81, 198, 1),
-                            Color.fromRGBO(0, 75, 183, 1)
-                          ]),
-                    ),
-                    child: FlatButton(
-                        onPressed: () => logar(maskFormatter.getUnmaskedText()),
-                        child: Align(
-                          child: Text(
-                            "Entrar",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        )),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: FlatButton(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onPressed: () {
-                          Navigator.pushNamed(context, 'cadastraParticipante');
-                        },
-                        child: Text(
-                          "Não é cadastrado?",
-                          style:
-                              TextStyle(color: Color.fromRGBO(0, 60, 150, 1)),
-                        )),
-                  ),
-                ],
-              ),
+              inputFormatters: [maskFormatter],
+              controller: cpfController,
+              keyboardType: TextInputType.number,
+              style: TextStyle(
+                  color: Colors.lightBlue, fontWeight: FontWeight.w300),
             ),
           ),
-        ));
+          Container(
+            height: 45,
+            width: 150,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color.fromRGBO(0, 81, 198, 1),
+                    Color.fromRGBO(0, 75, 183, 1)
+                  ]),
+            ),
+            child: FlatButton(
+                onPressed: () => logar(maskFormatter.getUnmaskedText()),
+                child: Align(
+                  child: Text(
+                    "Entrar",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )),
+          ),
+          Expanded(
+            flex: 1,
+            child: FlatButton(
+                splashColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onPressed: () {
+                  Navigator.pushNamed(context, 'cadastraParticipante');
+                },
+                child: Text(
+                  "Não é cadastrado?",
+                  style: TextStyle(color: Color.fromRGBO(0, 60, 150, 1)),
+                )),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -19,7 +19,7 @@ Widget corpo(BuildContext context) {
           elevation: 10,
           title: Text('Inicio'),
         ),
-        drawer: juergsDrawer(),
+        drawer: JuergsDrawer(),
         body: Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
@@ -29,7 +29,8 @@ Widget corpo(BuildContext context) {
             child: ListView(
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  height: 200,
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 10),
                   width: double.infinity,
                   child: Image.asset(
                       'assets/img/arte_uergs/Logo_Juergs_original.png'),

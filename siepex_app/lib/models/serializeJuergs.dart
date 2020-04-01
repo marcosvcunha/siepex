@@ -10,6 +10,7 @@ class Estudante {
   String tipoParticipante;
   String indNecessidade;
 
+
   Estudante(
       {this.nome,
       this.cpf,
@@ -44,10 +45,14 @@ class Estudante {
     'tipoParticipante': this.tipoParticipante,
   };
 
-  void setName(String newNome){
-    this.nome = newNome;
-  }
-  void setEmail(String newEmail){
-    this.email = newEmail;
+  void logout(){
+    this.nome = null;
+    this.cpf = null;
+    this.email = null;
+    this.instituicao = null;
+    this.indUergs = null;
+    this.campoUergs = null;
+    this.tipoParticipante = null;
+    this.indNecessidade = null;
   }
 }

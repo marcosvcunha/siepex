@@ -30,6 +30,7 @@ Widget itemButton(GridItem item, BuildContext context,
             color: Color(0xff249FAB),
             borderRadius: BorderRadius.circular(20)),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
               item.icone,
@@ -82,6 +83,7 @@ Widget itemButtonPersonalizado(GridItem item, BuildContext context,
             color: Color(0xff249FAB),
             borderRadius: BorderRadius.circular(20)),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
               item.icone,

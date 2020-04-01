@@ -28,7 +28,7 @@ class InicioPage extends StatelessWidget {
             child: ListView(
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.only(top: 10, left: 20, right: 20),
                   width: double.infinity,
                   child: Image.asset(
                       'assets/img/arte_uergs/UergsBrancoHorizontal.png'),
