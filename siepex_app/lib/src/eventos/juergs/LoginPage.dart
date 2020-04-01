@@ -1,10 +1,12 @@
-import 'dart:ui';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:cpf_cnpj_validator/cpf_validator.dart';
-import 'package:siepex/models/serializeJuergs.dart'; 
-
+import 'package:siepex/models/serializeJuergs.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:http/http.dart' as http;
+import 'package:siepex/src/config.dart';
 
 class LoginJuergs extends StatefulWidget {
   @override
@@ -14,7 +16,8 @@ class LoginJuergs extends StatefulWidget {
 class _LoginJuergsState extends State<LoginJuergs> {
   TextEditingController cpfController = TextEditingController();
 
-  var maskFormatter = new MaskTextInputFormatter(mask: '###.###.###-##', filter: { "#": RegExp(r'[0-9]') });
+  var maskFormatter = new MaskTextInputFormatter(
+      mask: '###.###.###-##', filter: {"#": RegExp(r'[0-9]')});
   var _errorText = null;
 
   @override
@@ -25,19 +28,50 @@ class _LoginJuergsState extends State<LoginJuergs> {
   /*
     Fazer a verificação aqui e Caso esteja tudo certo, logar no usuario.
   */
-  void cpfVerifier(){
-    if(!CPFValidator.isValid(maskFormatter.getUnmaskedText()))
+  bool cpfVerifier(String cpf) {
+    if (!CPFValidator.isValid(cpf)) {
       _errorText = "Cpf invalido!";
-    else{
+      setState(() {});
+      return false;
+    } else {
       _errorText = null;
-      userJuergs.nome = "Marcos Vinicius Cunha";
-      userJuergs.email = "marcos-cunha@uergs.edu.br";
-      Navigator.popAndPushNamed(context, 'inicioJuergs');
+      setState(() {});
+      return true;
     }
-    
-      setState(() {
-        
-      });
+  }
+
+  logar(String cpf) async {
+    if (this.cpfVerifier(cpf)) {
+      try {
+        print("Enviando request.");
+        print(baseUrl + 'obtemParticipante/' + 'cpf:' + cpf);
+        var resposta = jsonDecode(
+            (await http.put(baseUrl + 'obtemParticipante/', body: {'cpf': cpf}))
+                .body);
+        print("Request enviado.");
+        print(resposta);
+        if (resposta['status'] != null) {
+          if (resposta['status'] == 'ok') {
+            Estudante estudante = new Estudante();
+            estudante.nome = resposta['data']['nome'];
+            estudante.email = resposta['data']['email'];
+            userJuergs.nome = estudante.nome;
+            userJuergs.email = estudante.email;
+            Navigator.popAndPushNamed(context, 'inicioJuergs');
+          } else if (resposta['status'] == 'nao_achou') {
+            Alert(
+                    context: context,
+                    title: "Erro",
+                    desc: "Participante não cadastrado")
+                .show();
+          }
+        }
+      } catch (e) {
+        print(e);
+        Alert(context: context, title: "Erro", desc: "Falha no Cadastro")
+            .show();
+      }
+    }
   }
 
   Widget corpo(BuildContext context) {
@@ -46,7 +80,6 @@ class _LoginJuergsState extends State<LoginJuergs> {
           elevation: 10,
           title: Text('Login'),
         ),
-        //drawer: HomeParticipante(),
         body: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -68,13 +101,14 @@ class _LoginJuergsState extends State<LoginJuergs> {
                 //mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(30,30,30,45),
+                    padding: const EdgeInsets.fromLTRB(30, 30, 30, 45),
                     child: TextField(
                       decoration: InputDecoration(
-                        labelText: 'CPF', 
-                        labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+                        labelText: 'CPF',
+                        labelStyle: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w400),
                         errorText: _errorText,
-                        ),
+                      ),
                       inputFormatters: [maskFormatter],
                       controller: cpfController,
                       keyboardType: TextInputType.number,
@@ -96,7 +130,7 @@ class _LoginJuergsState extends State<LoginJuergs> {
                           ]),
                     ),
                     child: FlatButton(
-                        onPressed: ()=>cpfVerifier(),
+                        onPressed: () => logar(maskFormatter.getUnmaskedText()),
                         child: Align(
                           child: Text(
                             "Entrar",
@@ -110,7 +144,7 @@ class _LoginJuergsState extends State<LoginJuergs> {
                         splashColor: Colors.transparent,
                         focusColor: Colors.transparent,
                         highlightColor: Colors.transparent,
-                        onPressed: (){
+                        onPressed: () {
                           Navigator.pushNamed(context, 'cadastraParticipante');
                         },
                         child: Text(

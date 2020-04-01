@@ -8,6 +8,7 @@ const express = require('express'),
   comissao_rotas = require("./src/comissao/comissao_routes"),
   trabalhos_rotas = require("./src/eventos/trabalhos.js"),
   cadastro_juergs_rotas = require("./src/eventos/cadastraJuergs.js"),
+  obtem_participante_rotas = require("./src/eventos/obterParticipante.js"),
   bodyParser = require('body-parser');
 
 const app = express();
@@ -38,6 +39,7 @@ app.use('/geral', geral_rotas);
 app.use('/comissao', comissao_rotas);
 app.use("/trabalhos", trabalhos_rotas);
 app.use("/cadastroJuergs", cadastro_juergs_rotas);
+app.use("/obtemParticipante", obtem_participante_rotas);
 app.get('/', function (req, res) {
   res.json("the server is on")
 })
