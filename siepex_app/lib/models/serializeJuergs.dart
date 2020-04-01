@@ -9,7 +9,7 @@ class Estudante {
   String campoUergs;
   String tipoParticipante;
   String indNecessidade;
-
+  bool isOn;
 
   Estudante(
       {this.nome,
@@ -19,7 +19,8 @@ class Estudante {
       this.indUergs,
       this.campoUergs,
       this.indNecessidade,
-      this.tipoParticipante});
+      this.tipoParticipante,
+      this.isOn = false});
 
   fromJson(Map<String, dynamic> json) {
     this.nome = json['nome'].toString();
@@ -54,5 +55,6 @@ class Estudante {
     this.campoUergs = null;
     this.tipoParticipante = null;
     this.indNecessidade = null;
+    this.isOn = false;
   }
 }

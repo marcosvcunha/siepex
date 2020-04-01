@@ -8,6 +8,7 @@ import 'package:siepex/src/areaParticipante/qr.dart';
 import 'package:siepex/src/comissao/comissao.dart';
 import 'package:siepex/src/eventos/eventos.dart';
 import 'package:siepex/src/eventos/geral/geral.dart';
+import 'package:siepex/src/eventos/juergs/AlternatePage.dart';
 import 'package:siepex/src/eventos/minicursos/minicursos.dart';
 import 'package:siepex/src/eventos/trabalhos/Trabalhos.dart';
 import 'package:siepex/src/eventos/visitas/visitas.dart';
@@ -78,6 +79,7 @@ class MyApp extends StatelessWidget {
         "defaultPage":(BuildContext context) => DefaultPage(),
         "participanteJuergs":(BuildContext context) => ParticipanteJuergs(),
         "cadastraParticipante":(BuildContext context) => CadastraParticipante(),
+        "alternatePage":(BuildContext context) => AlternatePage(),
       },
       title: 'Siepex App',
       theme: ThemeData(
