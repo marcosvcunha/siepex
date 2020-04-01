@@ -23,6 +23,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
   Widget build(BuildContext context) {
     return corpo(context);
   }
+
   bool _loading = false;
   String cpfError = null;
   String nomeError = null;
@@ -87,7 +88,8 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       return Padding(
         padding: const EdgeInsets.only(left: 5, right: 5),
         child: TextField(
-          decoration: InputDecoration(labelText: 'Campus', errorText: instError),
+          decoration:
+              InputDecoration(labelText: 'Campus', errorText: instError),
           controller: txtInstituicao,
           keyboardType: TextInputType.text,
           style:
@@ -98,7 +100,8 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       return Padding(
         padding: const EdgeInsets.only(left: 5, right: 5),
         child: TextField(
-          decoration: InputDecoration(labelText: 'Instituição', errorText: instError),
+          decoration:
+              InputDecoration(labelText: 'Instituição', errorText: instError),
           controller: txtInstituicao,
           keyboardType: TextInputType.text,
           style:
@@ -150,44 +153,49 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
     );
   }
 
-  validaCampos(Estudante estudante){
+  validaCampos(Estudante estudante) {
     bool valido = true;
-    if(!CPFValidator.isValid(estudante.cpf)){
+    if (!CPFValidator.isValid(estudante.cpf)) {
       cpfError = 'CPF inválido';
       valido = false;
-    }else
+    } else
       cpfError = null;
-    if(!EmailValidator.validate(estudante.email)){
+    if (!EmailValidator.validate(estudante.email)) {
       emailError = 'Email é Inválido';
       valido = false;
-    }
-      else
-        emailError = null;
-    if(estudante.nome.isEmpty){
+    } else
+      emailError = null;
+    if (estudante.nome.isEmpty) {
       nomeError = 'Nome é obrigatório';
       valido = false;
-    }else
+    } else
       nomeError = null;
-    if(estudante.instituicao.isEmpty){
+    if (estudante.instituicao.isEmpty) {
       instError = 'Instituição é obrigatório';
       valido = false;
-    }else{
-        if(estudante.instituicao == "Uergs" && estudante.campoUergs.isEmpty){
-          instError = 'Campus é obrigatório';
-          valido = false;
-        }else
-          instError = null;
+    } else {
+      if (estudante.instituicao == "Uergs" && estudante.campoUergs.isEmpty) {
+        instError = 'Campus é obrigatório';
+        valido = false;
+      } else
+        instError = null;
+    }
+    if (estudante.nome.isNotEmpty) {
+      if (!estudante.nome.contains(" ")) {
+        nomeError = 'Digite o nome completo';
+        valido = false;
+      } else {
+        nomeError = null;
       }
-    setState(() {
-    });
+    }
+    setState(() {});
     return valido;
   }
 
   Future cadastrar(Estudante estudante, BuildContext context) async {
     print("login");
     estudante.cpf = (estudante.cpf.replaceAll(".", "")).replaceAll("-", "");
-    if(!validaCampos(estudante))
-    {
+    if (!validaCampos(estudante)) {
       print("caiu");
       return false;
     }
@@ -221,8 +229,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           Navigator.pushNamed(context, 'inicioJuergs');
         } else if (resposta['status'] == 'erro') {
           Alert(context: context, title: 'Erro no cadastro').show();
-        }
-        else if(resposta['status'] == 'registro_existente') {
+        } else if (resposta['status'] == 'registro_existente') {
           Alert(context: context, title: 'Participante já cadastrado').show();
         }
       }
@@ -244,158 +251,161 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       body: _loading ? loadingScreen() : body(),
     );
   }
-  Widget loadingScreen(){
+
+  Widget loadingScreen() {
     return Center(
       child: CircularProgressIndicator(),
     );
   }
-  Widget body(){
+
+  Widget body() {
     return ListView(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: TextField(
-              decoration: InputDecoration(labelText: 'Nome', errorText: nomeError),
-              controller: txtNome,
-              keyboardType: TextInputType.text,
-              style: TextStyle(
-                  color: Colors.lightBlue, fontWeight: FontWeight.w300),
-            ),
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5),
+          child: TextField(
+            decoration:
+                InputDecoration(labelText: 'Nome', errorText: nomeError),
+            controller: txtNome,
+            keyboardType: TextInputType.text,
+            style:
+                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: TextField(
-              decoration: InputDecoration(labelText: 'CPF', errorText: cpfError),
-              controller: txtCpf,
-              inputFormatters: [cpfMask],
-              keyboardType: TextInputType.number,
-              style: TextStyle(
-                  color: Colors.lightBlue, fontWeight: FontWeight.w300),
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5),
+          child: TextField(
+            decoration: InputDecoration(labelText: 'CPF', errorText: cpfError),
+            controller: txtCpf,
+            inputFormatters: [cpfMask],
+            keyboardType: TextInputType.number,
+            style:
+                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: TextField(
-              decoration: InputDecoration(labelText: 'Email', errorText: emailError),
-              controller: txtEmail,
-              keyboardType: TextInputType.text,
-              style: TextStyle(
-                  color: Colors.lightBlue, fontWeight: FontWeight.w300),
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5),
+          child: TextField(
+            decoration:
+                InputDecoration(labelText: 'Email', errorText: emailError),
+            controller: txtEmail,
+            keyboardType: TextInputType.text,
+            style:
+                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                new Text(
-                  'Estudante UERGS ?',
-                  style: new TextStyle(
-                    color: Colors.black54,
-                    fontSize: 16.0,
-                  ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5),
+          child: new Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              new Text(
+                'Estudante UERGS ?',
+                style: new TextStyle(
+                  color: Colors.black54,
+                  fontSize: 16.0,
                 ),
-                new Radio(
-                  value: true,
-                  groupValue: this.checkIndUergs,
-                  onChanged: (newValue) {
-                    this.checkIndUergs = newValue;
-                    setState(() {});
-                  },
-                ),
-                new Text(
-                  'Sim',
-                  style: new TextStyle(color: Colors.black54, fontSize: 16.0),
-                ),
-                new Radio(
-                  value: false,
-                  groupValue: this.checkIndUergs,
-                  onChanged: (newValue) {
-                    this.checkIndUergs = newValue;
-                    setState(() {});
-                  },
-                ),
-                new Text(
-                  'Não',
-                  style: new TextStyle(
-                    color: Colors.black54,
-                    fontSize: 16.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          camposIndUergs(),
-          dropDown(context),
-          Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                new Text(
-                  'Necessidade Especial?',
-                  style: new TextStyle(
-                    color: Colors.black54,
-                    fontSize: 16.0,
-                  ),
-                ),
-                new Radio(
-                  value: true,
-                  groupValue: this.checkEhNecessitado,
-                  onChanged: (newValue) {
-                    this.checkEhNecessitado = newValue;
-                    setState(() {});
-                  },
-                ),
-                new Text(
-                  'Sim',
-                  style: new TextStyle(color: Colors.black54, fontSize: 16.0),
-                ),
-                new Radio(
-                  value: false,
-                  groupValue: this.checkEhNecessitado,
-                  onChanged: (newValue) {
-                    this.checkEhNecessitado = newValue;
-                    setState(() {});
-                  },
-                ),
-                new Text(
-                  'Não',
-                  style: new TextStyle(
-                    color: Colors.black54,
-                    fontSize: 16.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Center(
-            child: Container(
-              width: 120,
-              child: RaisedButton(
-                child: Text('Cadastrar'),
-                onPressed: () {
-                  Estudante estudante = new Estudante();
-                  estudante.nome = txtNome.text;
-                  estudante.cpf = cpfMask.getUnmaskedText();
-                  if (checkIndUergs) {
-                    estudante.campoUergs = txtInstituicao.text;
-                    estudante.instituicao = "Uergs";
-                  } else {
-                    estudante.campoUergs = "";
-                    estudante.instituicao = txtInstituicao.text;
-                  }
-                  estudante.email = txtEmail.text;
-                  estudante.indNecessidade = checkEhNecessitado.toString();
-                  estudante.indUergs = checkIndUergs.toString();
-                  estudante.tipoParticipante = comboTipoParticipante;
-                  this.cadastrar(estudante, context);
+              ),
+              new Radio(
+                value: true,
+                groupValue: this.checkIndUergs,
+                onChanged: (newValue) {
+                  this.checkIndUergs = newValue;
+                  setState(() {});
                 },
               ),
+              new Text(
+                'Sim',
+                style: new TextStyle(color: Colors.black54, fontSize: 16.0),
+              ),
+              new Radio(
+                value: false,
+                groupValue: this.checkIndUergs,
+                onChanged: (newValue) {
+                  this.checkIndUergs = newValue;
+                  setState(() {});
+                },
+              ),
+              new Text(
+                'Não',
+                style: new TextStyle(
+                  color: Colors.black54,
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+        camposIndUergs(),
+        dropDown(context),
+        Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5),
+          child: new Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              new Text(
+                'Necessidade Especial?',
+                style: new TextStyle(
+                  color: Colors.black54,
+                  fontSize: 16.0,
+                ),
+              ),
+              new Radio(
+                value: true,
+                groupValue: this.checkEhNecessitado,
+                onChanged: (newValue) {
+                  this.checkEhNecessitado = newValue;
+                  setState(() {});
+                },
+              ),
+              new Text(
+                'Sim',
+                style: new TextStyle(color: Colors.black54, fontSize: 16.0),
+              ),
+              new Radio(
+                value: false,
+                groupValue: this.checkEhNecessitado,
+                onChanged: (newValue) {
+                  this.checkEhNecessitado = newValue;
+                  setState(() {});
+                },
+              ),
+              new Text(
+                'Não',
+                style: new TextStyle(
+                  color: Colors.black54,
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Center(
+          child: Container(
+            width: 120,
+            child: RaisedButton(
+              child: Text('Cadastrar'),
+              onPressed: () {
+                Estudante estudante = new Estudante();
+                estudante.nome = txtNome.text;
+                estudante.cpf = cpfMask.getUnmaskedText();
+                if (checkIndUergs) {
+                  estudante.campoUergs = txtInstituicao.text;
+                  estudante.instituicao = "Uergs";
+                } else {
+                  estudante.campoUergs = "";
+                  estudante.instituicao = txtInstituicao.text;
+                }
+                estudante.email = txtEmail.text;
+                estudante.indNecessidade = checkEhNecessitado.toString();
+                estudante.indUergs = checkIndUergs.toString();
+                estudante.tipoParticipante = comboTipoParticipante;
+                this.cadastrar(estudante, context);
+              },
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
-
 }

@@ -19,7 +19,7 @@ Widget juergsDrawer() {
                   child: CircleAvatar(
                     backgroundColor: Color(0xff2595A6),
                     radius: 40,
-                    child: Text("M", style: TextStyle(fontSize: 24, color: Colors.black87)),
+                    child: Text(userJuergs.nome[0], style: TextStyle(fontSize: 24, color: Colors.black87)),
                   ),
                 ),
                 Padding(
