@@ -51,7 +51,7 @@ class JuergsDrawer extends StatelessWidget {
           ),
           listItem(context, 'Meu Perfil', Icons.person, null),
           listItem(context, 'Configurações', Icons.settings, null),
-          listItem(context, 'Sair', Icons.exit_to_app, null)
+          listItem(context, 'Sair', Icons.exit_to_app, () => userJuergs.logout())
         ],
       ),
     );
@@ -73,8 +73,10 @@ class JuergsDrawer extends StatelessWidget {
               color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w600),
         ),
         onTap: () {
-          if (func != null) func;
-          Navigator.popUntil(context, ModalRoute.withName('inicio'));
+          if (func != null){
+            func();
+            Navigator.popUntil(context, ModalRoute.withName('inicio'));
+          }
         },
       ),
     );

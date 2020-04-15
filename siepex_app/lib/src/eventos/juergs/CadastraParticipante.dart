@@ -225,6 +225,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       if (resposta['status'] != null) {
         if (resposta['status'] == 'sucesso') {
           userJuergs = estudante;
+          userJuergs.isOn = true; // Loga usuario
           Navigator.popUntil(context, ModalRoute.withName('inicio'));
           Navigator.pushNamed(context, 'inicioJuergs');
         } else if (resposta['status'] == 'erro') {

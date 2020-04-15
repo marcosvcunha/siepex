@@ -25,7 +25,7 @@ Widget corpo(BuildContext context) {
                 image: DecorationImage(
                     image: AssetImage(
                         'assets/img/arte_uergs/Background_App_Uergs.png'),
-                    fit: BoxFit.cover)),
+                    fit: BoxFit.fill)),
             child: ListView(
               children: <Widget>[
                 Container(

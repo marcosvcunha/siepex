@@ -74,6 +74,7 @@ class _LoginJuergsState extends State<LoginJuergs> {
             estudante.email = resposta['data']['email'];
             userJuergs.nome = estudante.nome;
             userJuergs.email = estudante.email;
+            userJuergs.isOn = true; // Loga usuario
             Navigator.popAndPushNamed(context, 'inicioJuergs');
           } else if (resposta['status'] == 'nao_achou') {
             Alert(
