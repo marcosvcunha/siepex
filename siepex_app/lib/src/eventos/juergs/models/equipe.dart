@@ -1,0 +1,3 @@
+class Equipe{
+  String nome;
+}

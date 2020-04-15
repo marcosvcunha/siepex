@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:siepex/models/modalidade.dart';
 
 class PaginaEquipes extends StatelessWidget {
   final Widget child;
+  final Modalidade modalidade;
 
-  PaginaEquipes({Key key, this.child}) : super(key: key);
+  PaginaEquipes({Key key, this.child, this.modalidade}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print(modalidade.nome);
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Equipe'),
+          title: Text('Equipes da modalidade: ' + modalidade.nome),
         ),
         body: Container(
             decoration: BoxDecoration(

@@ -16,21 +16,22 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-DROP TABLE modalidades_juergs;
+DROP TABLE IF EXISTS modalidades_juergs;
 
 CREATE TABLE modalidades_juergs (
-id INT(2) UNSIGNED PRIMARY KEY,
+id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 nome_modalidade VARCHAR(30) NOT NULL,
 maximo_participantes int(2) NOT NULL,
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
 
-INSERT INTO modalidades_juergs VALUES (1, 'futebol de salão', '15', current_timestamp());
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
+	VALUES ('futebol de salão', '15', current_timestamp());
 
-DROP TABLE equipes_juergs;
+DROP TABLE IF EXISTS equipes_juergs;
 
 CREATE TABLE equipes_juergs (
-id INT(2) UNSIGNED PRIMARY KEY,
+id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 id_modalidade int (2) unsigned not null,
 nome_equipe VARCHAR(30) NOT NULL,
 maximo_participantes int(2) NOT NULL,
@@ -38,7 +39,8 @@ numero_participantes int(2) not null,
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
 
-INSERT INTO quipes_juergs VALUES (1, 1, 'equipe teste', 15, 5, current_timestamp());
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, maximo_participantes, numero_participantes,
+	ult_atualizacao) VALUES (1, 'equipe teste', 15, 5, current_timestamp());
 
 DROP TABLE IF EXISTS cadastro_juergs;
 CREATE TABLE cadastro_juergs (

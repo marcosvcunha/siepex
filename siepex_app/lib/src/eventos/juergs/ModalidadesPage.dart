@@ -1,33 +1,47 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:siepex/src/eventos/juergs/PaginaEquipes.dart';
+import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import '../../../models/modalidade.dart';
 
-List modalidades = [
-  Modalidade(0, 'Ciclismo', 5, true),
-  Modalidade(1, 'Natação', 10, false),
-  Modalidade(2, 'Futebol', 22, true),
-  Modalidade(3, 'Ping Pong', 6, false),
-];
-
 class ModalidesPage extends StatelessWidget {
+  final HandleData _handleData = HandleData();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Modalidades"),        
+          title: Text("Modalitê"),
         ),
-        body: ListView.builder(
-          itemCount: 4,
-          itemBuilder: (context, index){
-            return modalidadesCard(context, modalidades[index]);
+        body: FutureBuilder(
+          future: _handleData.getModalidades(),
+          builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Mostra Isso quando os dados estão sendo carregados.
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            // Se a função Future retornar alguma coisa, mostra aqui.
+            if (snapshot.hasData) {
+              List<Modalidade> modalidades = snapshot.data;
+              return ListView.builder(
+                  itemCount: 4,
+                  itemBuilder: (context, index) {
+                    return modalidadesCard(context, modalidades[index]);
+                  });
+            } else {
+              // Se nenhuma modalidade for cadastrada.
+              return Center(
+                child: Text('Nenhuma Modalidade Cadastrada.'),
+              );
+            }
           }
-          ),
-    );
+        }));
   }
 }
 
-Widget modalidadesCard(BuildContext context, Modalidade modalidade){
+Widget modalidadesCard(BuildContext context, Modalidade modalidade) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
     child: Center(
@@ -51,8 +65,8 @@ Widget modalidadesCard(BuildContext context, Modalidade modalidade){
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border(
-                      right: BorderSide(width: 4, color: Color.fromRGBO(0, 60, 125, 1))
-                    ),
+                        right: BorderSide(
+                            width: 4, color: Color.fromRGBO(0, 60, 125, 1))),
                   ),
                   height: 100,
                   width: 100,
@@ -67,19 +81,24 @@ Widget modalidadesCard(BuildContext context, Modalidade modalidade){
                   children: <Widget>[
                     Align(
                       alignment: Alignment.centerLeft,
-                        child: Padding(
+                      child: Padding(
                         padding: const EdgeInsets.fromLTRB(15, 8, 0, 0),
-                        child: Text(modalidade.nome, style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600)),
+                        child: Text(modalidade.nome,
+                            style: TextStyle(
+                                fontSize: 26, fontWeight: FontWeight.w600)),
                       ),
                     ),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(15, 0, 0, 6),
-                        child: Text("Tamanho max. da equipe: ", 
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 14, fontWeight: FontWeight.w400),),
+                        child: Text(
+                          "Tamanho max. da equipe: ",
+                          style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
                       ),
                     ),
                     Expanded(
@@ -91,7 +110,8 @@ Widget modalidadesCard(BuildContext context, Modalidade modalidade){
                             activeColor: Colors.green,
                             value: modalidade.inscrito,
                             checkColor: Colors.white,
-                            onChanged: (value){},),
+                            onChanged: (value) {},
+                          ),
                         ],
                       ),
                     ),
@@ -100,8 +120,8 @@ Widget modalidadesCard(BuildContext context, Modalidade modalidade){
               ),
             ],
           ),
-          onPressed: (){
-            Navigator.pushNamed(context, 'paginaEquipes');
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaEquipes(modalidade: modalidade,)));
           },
         ),
       ),
