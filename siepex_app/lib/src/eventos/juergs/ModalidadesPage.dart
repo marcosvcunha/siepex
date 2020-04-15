@@ -20,14 +20,14 @@ class ModalidesPage extends StatelessWidget {
         body: ListView.builder(
           itemCount: 4,
           itemBuilder: (context, index){
-            return modalidadesCard(modalidades[index]);
+            return modalidadesCard(context, modalidades[index]);
           }
           ),
     );
   }
 }
 
-Widget modalidadesCard(Modalidade modalidade){
+Widget modalidadesCard(BuildContext context, Modalidade modalidade){
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
     child: Center(
@@ -100,7 +100,9 @@ Widget modalidadesCard(Modalidade modalidade){
               ),
             ],
           ),
-          onPressed: (){},
+          onPressed: (){
+            Navigator.pushNamed(context, 'paginaEquipes');
+          },
         ),
       ),
     ),

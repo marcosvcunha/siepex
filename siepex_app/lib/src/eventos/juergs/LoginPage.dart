@@ -85,8 +85,10 @@ class _LoginJuergsState extends State<LoginJuergs> {
         }
       } catch (e) {
         print(e);
-        Alert(context: context, title: "Erro", desc: "Falha no Cadastro")
-            .show();
+        Alert(context: context, title: "Erro", desc: "Falha no Login").show();
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }

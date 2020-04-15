@@ -10,7 +10,6 @@ class Estudante {
   String tipoParticipante;
   String indNecessidade;
 
-
   Estudante(
       {this.nome,
       this.cpf,
