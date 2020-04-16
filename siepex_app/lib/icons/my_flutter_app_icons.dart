@@ -24,4 +24,5 @@ class MyFlutterApp {
   static const IconData swimmer = IconData(0xe8a8, fontFamily: _kFontFam);
   static const IconData pingPong = IconData(0xe8c3, fontFamily: _kFontFam);
   static const IconData soccerBall = IconData(0xe8e9, fontFamily: _kFontFam);
+  static const IconData hand_grab_o = IconData(0xf255, fontFamily: _kFontFam);
 }
