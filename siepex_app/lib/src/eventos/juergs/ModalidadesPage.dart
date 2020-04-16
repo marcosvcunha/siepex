@@ -26,7 +26,7 @@ class ModalidesPage extends StatelessWidget {
             if (snapshot.hasData) {
               List<Modalidade> modalidades = snapshot.data;
               return ListView.builder(
-                  itemCount: 4,
+                  itemCount: modalidades.length,
                   itemBuilder: (context, index) {
                     return modalidadesCard(context, modalidades[index]);
                   });
@@ -93,7 +93,7 @@ Widget modalidadesCard(BuildContext context, Modalidade modalidade) {
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(15, 0, 0, 6),
                         child: Text(
-                          "Tamanho max. da equipe: ",
+                          "Tamanho max. da equipe: " + modalidade.maxParticipantes.toString(),
                           style: TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
