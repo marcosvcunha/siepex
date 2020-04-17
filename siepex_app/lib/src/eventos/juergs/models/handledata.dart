@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/models/serializeJuergs.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:http/http.dart' as http;
 import 'package:siepex/src/config.dart';
@@ -9,7 +12,6 @@ import 'package:siepex/src/config.dart';
 class HandleData {
   // Aqui vai pegar os dados do DB e retornar uma lista com as modalidades
   Future<List<Modalidade>> getModalidades() async {
-    await Future.delayed(Duration(seconds: 2)); // Delay
     try {
       var resposta = jsonDecode((await http.put(
         baseUrl + 'obtemModalidade/',
@@ -37,7 +39,45 @@ class HandleData {
   }
 
   // Pega as equipes registradas para a modalidade.
-  Future<List<Equipe>> getEquipes(int idModalidade) {
-    return null;
+  Future<List<Equipe>> getEquipes(int idModalidade) async {
+    try{
+      var resposta = jsonDecode((await http.put(baseUrl + 'obtemEquipes/', body: {'id_modalidade':idModalidade.toString()})).body);
+      if(resposta['count'] == 0)
+        return [];
+      else{
+        List<Equipe> equipesList = [];
+        for(int i=0; i<resposta['count']; i++){
+          equipesList.add(Equipe.fromJson(resposta['data'][i]));
+        }
+        return equipesList;
+      }
+    }catch(e){
+      print(e);
+      return [];
+    }
+  }
+
+  Future criarEquipe(BuildContext context, Modalidade modalidade, String nomeEquipe) async {
+
+    try{
+      var resposta = jsonDecode((await http.put(baseUrl + 'cadastraEquipe/', body: {
+        'id_modalidade': modalidade.id.toString(),
+        'nome_equipe':nomeEquipe,
+        'nome_modalidade': modalidade.nome,
+        'maximo_participantes': modalidade.maxParticipantes.toString(),
+        'user_name': userJuergs.nome,
+      })).body);
+      if(resposta['status'] == 'sucesso'){
+        errorDialog(context, 'Sucesso', 'Equipe Criada');
+        return;
+      }else{
+        if(resposta['erro'] == 'Equipe já existe'){
+          errorDialog(context, 'Erro ao criar equipe!','Já existe uma equipe com este nome.');
+          return;
+      }}
+    }catch(e){
+      print('Erro ao criar Equipe: ' + e.toString());
+      return;
+    }
   }
 }

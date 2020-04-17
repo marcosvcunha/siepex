@@ -10,6 +10,8 @@ const express = require('express'),
   cadastro_juergs_rotas = require("./src/eventos/cadastraJuergs.js"),
   obtem_participante_rotas = require("./src/eventos/obterParticipante.js"),
   obtem_modalidades_rotas = require("./src/eventos/obterModalidades.js"),
+  cadastra_equipe_rotas = require("./src/eventos/cadastraEquipe.js"),
+  obtem_equipes_rotas = require("./src/eventos/obterEquipes.js"),
   bodyParser = require('body-parser');
 
 const app = express();
@@ -42,6 +44,8 @@ app.use("/trabalhos", trabalhos_rotas);
 app.use("/cadastroJuergs", cadastro_juergs_rotas);
 app.use("/obtemParticipante", obtem_participante_rotas);
 app.use("/obtemModalidade", obtem_modalidades_rotas);
+app.use("/cadastraEquipe", cadastra_equipe_rotas);
+app.use('/obtemEquipes', obtem_equipes_rotas);
 app.get('/', function (req, res) {
   res.json("the server is on")
 })

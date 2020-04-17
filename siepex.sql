@@ -26,7 +26,19 @@ ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
 
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
-	VALUES ('futebol de salão', '15', current_timestamp());
+	VALUES ('Futebol de salão', '20', current_timestamp());
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
+	VALUES ('Ufc', '10', current_timestamp());
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
+	VALUES ('Vôlei', '18', current_timestamp());
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
+	VALUES ('Ciclismo', '8', current_timestamp());
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
+	VALUES ('Ping Pong', '10', current_timestamp());
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
+	VALUES ('Futebol', '25', current_timestamp());
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
+	VALUES ('Natação', '6', current_timestamp());
 
 DROP TABLE IF EXISTS equipes_juergs;
 
@@ -34,13 +46,14 @@ CREATE TABLE equipes_juergs (
 id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 id_modalidade int (2) unsigned not null,
 nome_equipe VARCHAR(30) NOT NULL,
+nome_modalidade VARCHAR(30) NOT NULL,
 maximo_participantes int(2) NOT NULL,
 numero_participantes int(2) not null,
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
 
-INSERT INTO equipes_juergs(id_modalidade, nome_equipe, maximo_participantes, numero_participantes,
-	ult_atualizacao) VALUES (1, 'equipe teste', 15, 5, current_timestamp());
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	ult_atualizacao) VALUES (1, 'equipe teste', 'futebol de salão',15, 5, current_timestamp());
 
 DROP TABLE IF EXISTS cadastro_juergs;
 CREATE TABLE cadastro_juergs (

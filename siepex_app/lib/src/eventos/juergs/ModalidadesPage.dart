@@ -11,7 +11,7 @@ class ModalidesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Modalitê"),
+          title: Text("Modalidades"),
         ),
         body: FutureBuilder(
           future: _handleData.getModalidades(),

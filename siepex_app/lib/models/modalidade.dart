@@ -4,7 +4,7 @@ import 'package:siepex/icons/my_flutter_app_icons.dart';
 
 Map<String, Icon> icons = {
   'Futebol de salão': Icon(MyFlutterApp.soccerBall, size: 65, color: Colors.black87,),
-  'Ufc': Icon(MyFlutterApp.hand_grab_o, size: 65, color: Colors.black87,),
+  'Ufc': Icon(Icons.people, size: 65, color: Colors.black87,),
   'Vôlei': Icon(MyFlutterApp.soccerBall, size: 65, color: Colors.black87,),
   'Ciclismo': Icon(MyFlutterApp.cyclist, size: 65, color: Colors.black87,),
   'Ping Pong': Icon(MyFlutterApp.pingPong, size: 60, color: Colors.black87,),
