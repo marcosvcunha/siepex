@@ -64,8 +64,9 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
               splashColor: Colors.transparent,
               focusColor: Colors.transparent,
               highlightColor: Colors.transparent,
-              onPressed: (){
-                textInputDialog(context, widget.modalidade);
+              onPressed: () async {
+                String nomeEquipe = await textInputDialog(context, widget.modalidade);
+                await HandleData().criarEquipe(context, widget.modalidade, nomeEquipe);
                 setState(() {
                 });
               },

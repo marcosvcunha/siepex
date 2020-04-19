@@ -30,15 +30,9 @@ async function getEquipe(equipe, modalidade){
 }
 
 // Confere se o participante já tem Equipe para esta modalidade.
+
 async function partTemTime(equipe, modalidade){
-    await equipes_juergs.findAndCountAll({
-        where: {nome_equipe: equipe, nome_modalidade: modalidade,}}).then((result) => {
-        console.log(result.count);
-        if(result.count == 0)
-            resolve(true);
-        else
-            return false;
-    })
+
 }
 
 function criarEquipe(req, res){

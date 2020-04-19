@@ -3,10 +3,12 @@ import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 
-void textInputDialog(BuildContext context, Modalidade modalidade){
+Future<String> textInputDialog(
+    BuildContext context, Modalidade modalidade) async {
   TextEditingController _controller = TextEditingController();
-  showDialog(
+  String returlVal = await showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
           title: Text(
@@ -23,26 +25,17 @@ void textInputDialog(BuildContext context, Modalidade modalidade){
           ),
           actions: <Widget>[
             FlatButton(
-                onPressed: (){
-                  if (_controller.text.isEmpty) {
-                    Navigator.pop(context);
-                    errorDialog(context, 'Erro', 'Nome é obrigatorio');
-                    return false;
-                  } else {
-                    HandleData()
-                        .criarEquipe(context, modalidade, _controller.text);
-                    Navigator.pop(context);
-                    return true;
-                  }
+                onPressed: () {
+                  Navigator.pop(context, _controller.text);
                 },
                 child: Text('Confimar')),
             FlatButton(
                 onPressed: () {
-                  Navigator.pop(context);
-                  return false;
+                  Navigator.pop(context, null);
                 },
                 child: Text('Cancelar')),
           ],
         );
       });
+    return returlVal;
 }

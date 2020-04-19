@@ -18,7 +18,10 @@ async function pegarTodasEquipes(idModalidade) {
         equipes_juergs.findAndCountAll({
             where:{
                 id_modalidade:idModalidade,
-            }
+            },
+            order:[
+                ['ult_atualizacao', 'DESC']
+            ],
         }).then((result) => {
             resolve(result);
         })
