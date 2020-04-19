@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/equipeCard.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/textinputdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 
@@ -40,10 +41,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                   return ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index){
-                    return ListTile(
-                      title: Text(equipesList[index].nome),
-                      subtitle: Text('Numero maximo de Participantes' + equipesList[index].maximoParticipantes.toString()),
-                    );
+                    return EquipeCard(equipe: equipesList[index],);
                   });
                 }else{
                   return Center(
