@@ -49,11 +49,12 @@ nome_equipe VARCHAR(30) NOT NULL,
 nome_modalidade VARCHAR(30) NOT NULL,
 maximo_participantes int(2) NOT NULL,
 numero_participantes int(2) not null,
+participantes_cadastrados varchar(500) not null,
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
 
-INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
-	ult_atualizacao) VALUES (1, 'equipe teste', 'futebol de salão',15, 5, current_timestamp());
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes, participantes_cadastrados,
+	ult_atualizacao) VALUES (1, 'equipe teste', 'futebol de salão',15, 5, '00000000191;',current_timestamp());
 
 DROP TABLE IF EXISTS cadastro_juergs;
 CREATE TABLE cadastro_juergs (
@@ -65,6 +66,7 @@ CREATE TABLE cadastro_juergs (
 	CAMPOS_UERGS VARCHAR(20),
 	TIPO_PARTICIPANTE CHAR(1),
 	IND_NECESSIDADES_ESPECIAIS tinyint(1),
+    	MODALIDADES_CADASTRADAS varchar(200),
 	ULT_ATUALIZACAO TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
