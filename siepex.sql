@@ -53,8 +53,9 @@ participantes_cadastrados varchar(500) not null,
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
 
-INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes, participantes_cadastrados,
-	ult_atualizacao) VALUES (1, 'equipe teste', 'futebol de salão',15, 5, '00000000191',current_timestamp());
+## Removi por que como o usuario nao existe, dá problema.
+##INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes, participantes_cadastrados,
+##	ult_atualizacao) VALUES (1, 'equipe teste', 'futebol de salão',15, 5, '00000000191;',current_timestamp());
 
 DROP TABLE IF EXISTS cadastro_juergs;
 CREATE TABLE cadastro_juergs (

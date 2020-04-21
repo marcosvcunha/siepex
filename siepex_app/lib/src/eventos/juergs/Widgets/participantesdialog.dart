@@ -19,7 +19,7 @@ void participantesDialog(BuildContext context, List<String> nomes){
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: createTextListFromStrings(['Marcos Cunha', 'Marcelo Souza', 'Rodrigo Andrade', 'Douglas Silva']),),
+        children: createTextListFromStrings(nomes)),
       actions: <Widget>[
         FlatButton(onPressed: (){
           Navigator.pop(context);

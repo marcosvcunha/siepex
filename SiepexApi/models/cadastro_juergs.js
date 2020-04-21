@@ -3,7 +3,7 @@
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('cadastro_juergs', {
     cpf: {
-      type: DataTypes.INTEGER(11),
+      type: DataTypes.STRING(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: false

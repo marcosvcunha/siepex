@@ -14,9 +14,8 @@ router.put('/', async (req, res) => {
             data: equipes.rows,
             count: equipes.count,
         })
-    }else if('user_cpf' in req.body){
+    } else if ('user_cpf' in req.body) {
         equipes = await pegarTodasEquipesPorUsuario(req.body['user_cpf']);
-        console.log(equipes);
         res.json({
             data: equipes.rows,
             count: equipes.count,
@@ -33,11 +32,19 @@ async function pegarTodasEquipesPorModalidade(idModalidade) {
             order: [
                 ['ult_atualizacao', 'DESC']
             ],
-        }).then((result) => {
+        }).then(async (result) => {
+            for (var i = 0; i < result.rows.length; i++) { // Repete para cada equipe encontrada.
+                userCpfs = result.rows[i]['dataValues']['participantes_cadastrados'].split(';');
+                userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
+                result.rows[i]['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
+                result.rows[i]['dataValues']['nomes_participantes'] = [];
+                result.rows[i]['dataValues']['nomes_participantes'] = await pegarNomes(userCpfs);
+            }
             resolve(result);
         })
     })
 }
+
 // Função para pegar todas as equipes de um dado usuario
 async function pegarTodasEquipesPorUsuario(userCpf) {
     return new Promise(function (resolve, reject) {
@@ -54,11 +61,39 @@ async function pegarTodasEquipesPorUsuario(userCpf) {
             equipes_juergs.findAndCountAll({
                 where: {
                     id: equipesIds, // Passo todas as IDs
+                },
+                order: [
+                    ['ult_atualizacao', 'DESC']
+                ],
+            }).then(async (result) => {
+                for (var i = 0; i < result.rows.length; i++) { // Repete para cada equipe encontrada.
+                    userCpfs = result.rows[i]['dataValues']['participantes_cadastrados'].split(';');
+                    userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
+                    result.rows[i]['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
+                    result.rows[i]['dataValues']['nomes_participantes'] = [];
+                    result.rows[i]['dataValues']['nomes_participantes'] = await pegarNomes(userCpfs);
                 }
-            }).then((result) => {
                 resolve(result)
             })
         })
+    })
+}
+
+// Dado os cpfs dos users, retorna uma lista com os nomes dos mesmos.
+function pegarNomes(userCpfs) {
+    return new Promise(function (resolve, reject) {
+        var nomes_participantes = [];
+        cadastro_juergs.findAll({ // pega os nomes de todos participantes da equipe
+            attributes: ['nome'],
+            where: {
+                cpf: userCpfs,
+            }
+        }).then((result2) => {
+            for (var j = 0; j < result2.length; j++) { // adiciona cada nome ao resultado
+                nomes_participantes.push(result2[j]['dataValues']['nome']);
+            }
+            resolve(nomes_participantes);
+        });
     })
 }
 

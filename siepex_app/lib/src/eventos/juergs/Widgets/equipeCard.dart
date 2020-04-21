@@ -95,7 +95,7 @@ class EquipeCard extends StatelessWidget {
                           highlightColor: Colors.transparent,
                           splashColor: Colors.transparent,
                           onPressed: () {
-                            participantesDialog(context, ['']);
+                            participantesDialog(context, equipe.participantesNomes);
                           },
                             child: Text(
                               'Ver Participantes',

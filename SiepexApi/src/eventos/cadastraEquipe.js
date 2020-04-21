@@ -45,11 +45,6 @@ async function getEquipe(equipe, modalidade) {
     )
 }
 
-// Confere se o participante já tem Equipe para esta modalidade.
-async function partTemTime(equipe, modalidade) {
-
-}
-
 async function criarEquipe(req, res) {
     equipes_juergs.create(
         {
@@ -57,7 +52,7 @@ async function criarEquipe(req, res) {
             nome_equipe: req.body['nome_equipe'],
             nome_modalidade: req.body['nome_modalidade'],
             maximo_participantes: req.body['maximo_participantes'],
-            participantes_cadastrados: req.body['user_cpf'],
+            participantes_cadastrados: req.body['user_cpf'] + ';',
             numero_participantes: 1,
         }
     ).then((result) => {
@@ -72,6 +67,10 @@ async function criarEquipe(req, res) {
             })
             
         }).then((otherResult) => {
+            result['dataValues']['nomes_participantes'] = ['Marcos Cunha'];
+            userCpfs = result['dataValues']['participantes_cadastrados'].split(';');
+            userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
+            result['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
             res.json({
                 status: 'sucesso',
                 data: result['dataValues'],
