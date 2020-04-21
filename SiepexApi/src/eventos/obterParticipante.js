@@ -5,10 +5,8 @@ const {
 } = require('../../models');
 
 router.put('/', async (req, res) => {
-      console.log(req.body['cpf']),
       retorno = await obter(req.body['cpf']);
     if (retorno) {
-        console.log(retorno.cpf);
       res.json({
         status: 'ok',
         data: retorno.dataValues,
@@ -24,7 +22,6 @@ router.put('/', async (req, res) => {
 async function obter(estudanteCpf) {
     return new Promise(function (resolve, reject) {
       cadastro_juergs.findByPk(estudanteCpf).then((result) => {
-        console.log(result)
         resolve(result);
       })
     })

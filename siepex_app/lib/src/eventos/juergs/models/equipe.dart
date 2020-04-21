@@ -10,7 +10,7 @@ class Equipe{
     this.id = jsonData['id'];
     this.idModalidade = jsonData['id_modalidade'];
     this.nomeModalidade = jsonData['nome_modalidade'];
-    this.maximoParticipantes = jsonData['maximo_participantes'];
-    this.numeroParticipantes = jsonData['numero_participantes'];
+    this.maximoParticipantes = int.parse(jsonData['maximo_participantes'].toString()); // Nao entendo por que, mas as vezes a api
+    this.numeroParticipantes = int.parse(jsonData['numero_participantes'].toString()); // retorna int, outras retorna string. ??
   }
 }

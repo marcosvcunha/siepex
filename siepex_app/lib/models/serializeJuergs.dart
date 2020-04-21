@@ -1,3 +1,5 @@
+import 'package:siepex/src/eventos/juergs/models/equipe.dart';
+
 Estudante userJuergs = new Estudante();
 
 class Estudante {
@@ -10,6 +12,7 @@ class Estudante {
   String tipoParticipante;
   String indNecessidade;
   bool isOn;
+  List<Equipe> minhasEquipes = <Equipe>[];
 
 
   Estudante(
@@ -57,5 +60,14 @@ class Estudante {
     this.tipoParticipante = null;
     this.indNecessidade = null;
     this.isOn = false;
+  }
+
+  // Determina se o usuario já possui equipe para dada modalidade.
+  bool temEquipe(String modalidade){
+    for(Equipe equipe in minhasEquipes){
+      if(equipe.nomeModalidade == modalidade)
+        return true;
+    }
+    return false;
   }
 }

@@ -64,6 +64,27 @@ class HandleData {
     }
   }
 
+  Future<List<Equipe>> getMyEquipes(String userCpf) async {
+    try {
+      var resposta = jsonDecode((await http.put(baseUrl + 'obtemEquipes/',
+              body: {'user_cpf': userCpf}))
+          .body);
+      if (resposta['count'] == 0)
+        return [];
+      else {
+        List<Equipe> equipesList = [];
+        for (int i = 0; i < resposta['count']; i++) {
+          equipesList.add(Equipe.fromJson(resposta['data'][i]));
+        }
+        return equipesList;
+      }
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+
   Future criarEquipe(
       BuildContext context, Modalidade modalidade, String nomeEquipe) async {
     try {
@@ -79,6 +100,7 @@ class HandleData {
         }))
                 .body);
         if (resposta['status'] == 'sucesso') {
+          userJuergs.minhasEquipes.add(Equipe.fromJson(resposta['data']));
           errorDialog(context, 'Sucesso', 'Equipe Criada');
           return;
         } else if(resposta['erro'] == 'Equipe já existe'){       

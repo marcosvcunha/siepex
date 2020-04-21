@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/equipeCard.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/textinputdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
@@ -19,10 +19,11 @@ class PaginaEquipes extends StatefulWidget {
 class _PaginaEquipesState extends State<PaginaEquipes> {
   @override
   Widget build(BuildContext context) {
+    bool temEquipe = userJuergs.temEquipe(widget.modalidade.nome);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Equipes da modalidade: ' + widget.modalidade.nome),
+        title: Text(widget.modalidade.nome),
       ),
       body: Container(
           decoration: BoxDecoration(
@@ -41,7 +42,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                   return ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index){
-                    return EquipeCard(equipe: equipesList[index],);
+                    return EquipeCard(equipe: equipesList[index], temEquipe: temEquipe);
                   });
                 }else{
                   return Center(

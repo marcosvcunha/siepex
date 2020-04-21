@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/eventos/juergs/PaginaEquipes.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import '../../../models/modalidade.dart';
@@ -28,7 +29,7 @@ class ModalidesPage extends StatelessWidget {
               return ListView.builder(
                   itemCount: modalidades.length,
                   itemBuilder: (context, index) {
-                    return modalidadesCard(context, modalidades[index]);
+                    return modalidadesCard(context, modalidades[index], userJuergs.temEquipe(modalidades[index].nome));
                   });
             } else {
               // Se nenhuma modalidade for cadastrada.
@@ -41,7 +42,7 @@ class ModalidesPage extends StatelessWidget {
   }
 }
 
-Widget modalidadesCard(BuildContext context, Modalidade modalidade) {
+Widget modalidadesCard(BuildContext context, Modalidade modalidade, bool temEquipe) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
     child: Center(
@@ -108,7 +109,7 @@ Widget modalidadesCard(BuildContext context, Modalidade modalidade) {
                           Text("Inscrito:"),
                           Checkbox(
                             activeColor: Colors.green,
-                            value: modalidade.inscrito,
+                            value: temEquipe,
                             checkColor: Colors.white,
                             onChanged: (value) {},
                           ),

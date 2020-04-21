@@ -6,7 +6,8 @@ import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 
 class EquipeCard extends StatelessWidget {
   final Equipe equipe;
-  EquipeCard({@required this.equipe});
+  final bool temEquipe;
+  EquipeCard({@required this.equipe, @required this.temEquipe});
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
@@ -58,18 +59,21 @@ class EquipeCard extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 5.0),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.green[600],
+                          color: temEquipe == true ? Colors.grey[600] : Colors.green[600],
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
                         child: SizedBox.expand(
                           child: FlatButton(
+                            
                             focusColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
-                            onPressed: () {},
+                            //disabledTextColor: Colors.black,
+                            onPressed: temEquipe == true ? null : (){},
                             child: Center(
                                 child: Text(
-                              'Entrar',
+                              temEquipe ? 'Já Possui Equipe' : 'Entrar',
+                              textAlign: TextAlign.center,
                               style: TextStyle(fontWeight: FontWeight.w600),
                             )),
                           ),

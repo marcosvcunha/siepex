@@ -7,6 +7,8 @@ import 'package:siepex/models/serializeJuergs.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:http/http.dart' as http;
 import 'package:siepex/src/config.dart';
+import 'package:siepex/src/eventos/juergs/models/equipe.dart';
+import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 
 class LoginJuergs extends StatefulWidget {
   @override
@@ -64,9 +66,6 @@ class _LoginJuergsState extends State<LoginJuergs> {
         var resposta = jsonDecode(
             (await http.put(baseUrl + 'obtemParticipante/', body: {'cpf': cpf}))
                 .body);
-        setState(() {
-          _isLoading = false;
-        });
         if (resposta['status'] != null) {
           if (resposta['status'] == 'ok') {
             Estudante estudante = new Estudante();
@@ -76,8 +75,17 @@ class _LoginJuergsState extends State<LoginJuergs> {
             userJuergs.cpf = resposta['data']['cpf'];
             userJuergs.email = estudante.email;
             userJuergs.isOn = true; // Loga usuario
+            userJuergs.minhasEquipes =
+                await HandleData().getMyEquipes(userJuergs.cpf);
+            //print(minhasEquipes);
+            setState(() {
+              _isLoading = false;
+            });
             Navigator.popAndPushNamed(context, 'inicioJuergs');
           } else if (resposta['status'] == 'nao_achou') {
+            setState(() {
+              _isLoading = false;
+            });
             Alert(
                     context: context,
                     title: "Erro",

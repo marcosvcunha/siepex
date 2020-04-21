@@ -7,7 +7,6 @@ const {
 router.put('/', async (req, res) => {
     retorno = await listar();
     if (retorno) {
-        console.log(retorno);
         res.json({
             status: 'ok',
             data: retorno.rows,
@@ -24,7 +23,6 @@ router.put('/', async (req, res) => {
 async function listar(estudanteCpf) {
     return new Promise(function (resolve, reject) {
         modalidades_juergs.findAndCountAll().then((result) => {
-            console.log(result)
             resolve(result);
         })
     })

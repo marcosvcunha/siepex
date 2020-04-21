@@ -2,11 +2,11 @@ const express = require('express'),
     router = express.Router();
 const {
     equipes_juergs,
+    cadastro_juergs,
 } = require('../../models');
 
 router.put('/', async (req, res) => {
     var equipe = await getEquipe(req.body['nome_equipe'], req.body['nome_modalidade']);
-    console.log(equipe.count);
     if (equipe.count != 0) {
         //criarEquipe(req, res);
         res.json({
@@ -29,7 +29,7 @@ router.put('/', async (req, res) => {
             }
         }
     }
-    criarEquipe(req, res);
+    await criarEquipe(req, res);
     return;
 })
 
@@ -50,7 +50,7 @@ async function partTemTime(equipe, modalidade) {
 
 }
 
-function criarEquipe(req, res) {
+async function criarEquipe(req, res) {
     equipes_juergs.create(
         {
             id_modalidade: parseInt(req.body['id_modalidade']),
@@ -61,10 +61,23 @@ function criarEquipe(req, res) {
             numero_participantes: 1,
         }
     ).then((result) => {
-        console.log('Equipe criada')
-        res.json({
-            status: 'sucesso',
+         cadastro_juergs.findByPk(req.body['user_cpf']).then((participante)=> {
+            cadastro_juergs.update({
+                // Armazena o id da equipe cadastrada na lista de equipes do participante.
+                minhas_equipes: participante.minhas_equipes + result['dataValues']['id'].toString() + ';'
+            }, {
+                where: {
+                    'cpf' :req.body['user_cpf']
+                }
+            })
+            
+        }).then((otherResult) => {
+            res.json({
+                status: 'sucesso',
+                data: result['dataValues'],
+            })
         })
+
     }).catch((err) => {
         console.log("Erro na criação de equipe.")
         console.log(err)
