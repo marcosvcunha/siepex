@@ -7,6 +7,7 @@ import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 
 import 'models/equipe.dart';
 
+
 class PaginaEquipes extends StatefulWidget {
   final Widget child;
   final Modalidade modalidade;
@@ -19,6 +20,7 @@ class PaginaEquipes extends StatefulWidget {
 class _PaginaEquipesState extends State<PaginaEquipes> {
   @override
   Widget build(BuildContext context) {
+    print('Pagina Equipes State');
     bool temEquipe = userJuergs.temEquipe(widget.modalidade.nome);
     return Scaffold(
       appBar: AppBar(

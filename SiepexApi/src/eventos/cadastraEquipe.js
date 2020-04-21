@@ -5,7 +5,7 @@ const {
     cadastro_juergs,
 } = require('../../models');
 
-router.put('/', async (req, res) => {
+router.put('/cadastra', async (req, res) => {
     var equipe = await getEquipe(req.body['nome_equipe'], req.body['nome_modalidade']);
     if (equipe.count != 0) {
         //criarEquipe(req, res);
@@ -31,6 +31,27 @@ router.put('/', async (req, res) => {
     }
     await criarEquipe(req, res);
     return;
+})
+
+router.put('/entra', async (req, res) => {
+    equipeId = parseInt(req.body['equipe_id']);
+    //userName = req['userName'];
+    userCpf = req.body['user_cpf'];
+    // Colocar o cpf e o nome do usuario na lista de membros da equipe.
+    // Aumentar o número de participantes da equipe.
+    equipes_juergs.findByPk(equipeId).then((equipe) => {
+        equipes_juergs.update({
+            numero_participantes: equipe.numero_participantes + 1,
+            participantes_cadastrados: equipe.participantes_cadastrados + userCpf + ';',
+        },{
+            where: {
+                id: equipeId,
+            }
+        })
+    })
+
+
+    //Colocar o id da equipe na lista de equipes do usuario
 })
 
 // Confere já existe uma equipe com este nome.

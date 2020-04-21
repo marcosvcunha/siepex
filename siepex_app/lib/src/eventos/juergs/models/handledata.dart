@@ -90,7 +90,7 @@ class HandleData {
     try {
       if (nomeEquipe.isNotEmpty) {
         var resposta =
-            jsonDecode((await http.put(baseUrl + 'cadastraEquipe/', body: {
+            jsonDecode((await http.put(baseUrl + 'equipe/cadastra', body: {
           'id_modalidade': modalidade.id.toString(),
           'nome_equipe': nomeEquipe,
           'nome_modalidade': modalidade.nome,
@@ -120,6 +120,17 @@ class HandleData {
     } catch (e) {
       print('Erro ao criar Equipe: ' + e.toString());
       return;
+    }
+  }
+  Future entrarEquipe(BuildContext context, int equipeId) async {
+    try{
+      var resposta =
+            jsonDecode((await http.put(baseUrl + 'equipe/entra', body: {
+          'user_cpf': userJuergs.cpf,
+          'equipe_id': equipeId.toString(),
+        })).body);
+    }catch(e){
+      print("Erro ao entrar na equipe: " + e.toString());
     }
   }
 }

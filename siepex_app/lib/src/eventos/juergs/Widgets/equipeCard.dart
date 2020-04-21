@@ -1,8 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:siepex/src/eventos/juergs/PaginaEquipes.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
+import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 
 class EquipeCard extends StatelessWidget {
   final Equipe equipe;
@@ -69,7 +69,9 @@ class EquipeCard extends StatelessWidget {
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
                             //disabledTextColor: Colors.black,
-                            onPressed: temEquipe == true ? null : (){},
+                            onPressed: temEquipe == true ? null : () async {
+                              await HandleData().entrarEquipe(context, equipe.id);
+                            },
                             child: Center(
                                 child: Text(
                               temEquipe ? 'Já Possui Equipe' : 'Entrar',

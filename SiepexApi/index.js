@@ -44,7 +44,7 @@ app.use("/trabalhos", trabalhos_rotas);
 app.use("/cadastroJuergs", cadastro_juergs_rotas);
 app.use("/obtemParticipante", obtem_participante_rotas);
 app.use("/obtemModalidade", obtem_modalidades_rotas);
-app.use("/cadastraEquipe", cadastra_equipe_rotas);
+app.use("/equipe", cadastra_equipe_rotas);
 app.use('/obtemEquipes', obtem_equipes_rotas);
 app.get('/', function (req, res) {
   res.json("the server is on")
