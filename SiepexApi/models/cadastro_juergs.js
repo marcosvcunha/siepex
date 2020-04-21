@@ -36,6 +36,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN(1),
       allowNull: true
     },
+    modalidades_cadastradas: {
+      type: DataTypes.STRING(200),
+      allowNull: true
+    },
     ult_atualizacao: {
       type: DataTypes.DATE(11),
       allowNull: true

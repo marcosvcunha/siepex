@@ -75,17 +75,21 @@ class HandleData {
           'nome_modalidade': modalidade.nome,
           'maximo_participantes': modalidade.maxParticipantes.toString(),
           'user_name': userJuergs.nome,
+          'user_cpf' : userJuergs.cpf,
         }))
                 .body);
         if (resposta['status'] == 'sucesso') {
           errorDialog(context, 'Sucesso', 'Equipe Criada');
           return;
-        } else {
-          if (resposta['erro'] == 'Equipe já existe') {
+        } else if(resposta['erro'] == 'Equipe já existe'){       
             errorDialog(context, 'Erro ao criar equipe!',
                 'Já existe uma equipe com este nome.');
-            return;
-          }
+            return;          
+        }
+        else if(resposta['erro'] == 'ja_cadastrado_na_modalidade'){
+          errorDialog(context, 'Erro ao criar equipe!',
+                'Você ja esta cadastrado nesta modalidade.');
+            return;   
         }
       } else {
         errorDialog(context, 'Erro ao criar equipe!',

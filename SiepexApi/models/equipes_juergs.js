@@ -27,6 +27,10 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.INTEGER(2),
             allowNull: false,
         },
+        participantes_cadastrados: {
+            type: DataTypes.STRING(500),
+            allowNull: true
+          },
         ult_atualizacao:{
             type: DataTypes.DATE(11),
             allowNull: true,

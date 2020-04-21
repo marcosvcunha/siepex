@@ -73,6 +73,7 @@ class _LoginJuergsState extends State<LoginJuergs> {
             estudante.nome = resposta['data']['nome'];
             estudante.email = resposta['data']['email'];
             userJuergs.nome = estudante.nome;
+            userJuergs.cpf = resposta['data']['cpf'];
             userJuergs.email = estudante.email;
             userJuergs.isOn = true; // Loga usuario
             Navigator.popAndPushNamed(context, 'inicioJuergs');
