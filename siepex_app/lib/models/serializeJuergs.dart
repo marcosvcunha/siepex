@@ -12,6 +12,12 @@ class Estudante {
   String tipoParticipante;
   String indNecessidade;
   bool isOn;
+  /*
+    Minhas equipes contem as equipes do usuario atual.
+    É utilizada na página Modalidade, para saber quais as modalidades que o usuario já está inscrito.
+    A lista é preenchida quando o usuario faz login, e é atualizada (pelo app) quando o usuario cria
+    ou entra em uma equipe.
+   */
   List<Equipe> minhasEquipes = <Equipe>[];
 
 

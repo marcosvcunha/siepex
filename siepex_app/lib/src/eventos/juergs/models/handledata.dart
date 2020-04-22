@@ -122,15 +122,19 @@ class HandleData {
       return;
     }
   }
-  Future entrarEquipe(BuildContext context, int equipeId) async {
+  Future<void> entrarEquipe(BuildContext context, int equipeId) async {
     try{
       var resposta =
             jsonDecode((await http.put(baseUrl + 'equipe/entra', body: {
           'user_cpf': userJuergs.cpf,
           'equipe_id': equipeId.toString(),
         })).body);
+        print(resposta['data']);
+        userJuergs.minhasEquipes.add(Equipe.fromJson(resposta['data']));
+        return;
     }catch(e){
       print("Erro ao entrar na equipe: " + e.toString());
+      return;
     }
   }
 }

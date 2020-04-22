@@ -47,12 +47,57 @@ router.put('/entra', async (req, res) => {
             where: {
                 id: equipeId,
             }
+        }).then((result) => {
+            cadastro_juergs.findByPk(userCpf).then((user) => {
+                cadastro_juergs.update({
+                    minhas_equipes: user.minhas_equipes + req.body['equipe_id'] + ';',
+                },
+                {
+                    where: {
+                    cpf: userCpf
+                }})
+            }).then((_) => {
+            equipes_juergs.findByPk(equipeId).then( async (updatedEquipe) => {
+                userCpfs = updatedEquipe['dataValues']['participantes_cadastrados'].split(';');
+                userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
+                updatedEquipe['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
+                updatedEquipe['dataValues']['nomes_participantes'] = [];
+                updatedEquipe['dataValues']['nomes_participantes'] = await pegarNomes(userCpfs);
+                console.log(updatedEquipe);
+                res.json({
+                    status: 'sucesso',
+                    data: updatedEquipe,
+                });
+            });
         })
-    })
+        })
+    }).catch((err) =>{
+        res.json({
+            status: 'erro',
+        })
+    }
+    );
 
 
     //Colocar o id da equipe na lista de equipes do usuario
 })
+
+function pegarNomes(userCpfs) {
+    return new Promise(function (resolve, reject) {
+        var nomes_participantes = [];
+        cadastro_juergs.findAll({ // pega os nomes de todos participantes da equipe
+            attributes: ['nome'],
+            where: {
+                cpf: userCpfs,
+            }
+        }).then((result2) => {
+            for (var j = 0; j < result2.length; j++) { // adiciona cada nome ao resultado
+                nomes_participantes.push(result2[j]['dataValues']['nome']);
+            }
+            resolve(nomes_participantes);
+        });
+    })
+}
 
 // Confere já existe uma equipe com este nome.
 async function getEquipe(equipe, modalidade) {

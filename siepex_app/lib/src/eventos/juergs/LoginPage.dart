@@ -57,7 +57,7 @@ class _LoginJuergsState extends State<LoginJuergs> {
     }
   }
 
-  logar(String cpf) async {
+  logar(BuildContext context, String cpf) async {
     if (this.cpfVerifier(cpf)) {
       try {
         setState(() {
@@ -147,7 +147,7 @@ class _LoginJuergsState extends State<LoginJuergs> {
                   ]),
             ),
             child: FlatButton(
-                onPressed: () => logar(maskFormatter.getUnmaskedText()),
+                onPressed: () => logar(context, maskFormatter.getUnmaskedText()),
                 child: Align(
                   child: Text(
                     "Entrar",
