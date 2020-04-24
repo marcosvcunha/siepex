@@ -5,8 +5,6 @@ import 'package:siepex/src/eventos/juergs/Widgets/equipeCard.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/textinputdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
-import 'package:siepex/src/eventos/juergs/notifier/equipesnotifier.dart';
-import 'package:provider/provider.dart';
 import 'models/equipe.dart';
 
 class PaginaEquipes extends StatefulWidget {

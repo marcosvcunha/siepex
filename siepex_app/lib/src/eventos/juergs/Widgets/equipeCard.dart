@@ -3,7 +3,6 @@ import 'package:siepex/src/eventos/juergs/PaginaEquipes.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
-import 'package:siepex/src/eventos/juergs/notifier/equipesnotifier.dart';
 import 'package:provider/provider.dart';
 
 class EquipeCard extends StatelessWidget {
@@ -11,7 +10,6 @@ class EquipeCard extends StatelessWidget {
   final bool temEquipe;
   EquipeCard({@required this.equipe, @required this.temEquipe});
   Widget build(BuildContext context) {
-    EquipesNotifier _notifier = Provider.of<EquipesNotifier>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
       child: Container(
