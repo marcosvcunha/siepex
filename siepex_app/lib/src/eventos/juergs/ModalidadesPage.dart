@@ -55,7 +55,7 @@ Widget modalidadesCard(BuildContext context, Modalidade modalidade, bool temEqui
           borderRadius: BorderRadius.all(Radius.circular(15)),
           color: Colors.blue,
         ),
-        height: 100,
+        height: 125,
         //width: 300,
         child: FlatButton(
           child: Row(
@@ -97,6 +97,19 @@ Widget modalidadesCard(BuildContext context, Modalidade modalidade, bool temEqui
                           "Tamanho max. da equipe: " + modalidade.maxParticipantes.toString(),
                           style: TextStyle(
                               color: Colors.black54,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 0, 6),
+                        child: Text(
+                          "Fim das inscrições: " + modalidade.dataLimiteString,
+                          style: TextStyle(
+                              color: Colors.black,
                               fontSize: 14,
                               fontWeight: FontWeight.w400),
                         ),

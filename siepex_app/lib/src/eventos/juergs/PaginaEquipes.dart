@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/models/serializeJuergs.dart';
-import 'package:siepex/src/config.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/textinputdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import 'models/equipe.dart';
-import 'package:http/http.dart' as http;
 
 class PaginaEquipes extends StatefulWidget {
   final Widget child;
@@ -20,8 +16,11 @@ class PaginaEquipes extends StatefulWidget {
 }
 
 class _PaginaEquipesState extends State<PaginaEquipes> {
+  bool isActive = true;
   @override
   Widget build(BuildContext context) {
+    isActive = widget.modalidade.nome == 'Rústica' ? true 
+      : widget.modalidade.dataLimite.isAfter(DateTime.now()); // Vê se a data limite de inscrição já passou.
     bool temEquipe = userJuergs.temEquipe(widget.modalidade.nome);
     return Scaffold(
       //appBar: titulo(),
@@ -105,7 +104,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
           padding: EdgeInsets.all(8),
           onPressed: () async {
             await HandleData()
-                .criarEquipe(context, widget.modalidade, userJuergs.nome);
+                .criarEquipe(context, widget.modalidade, userJuergs.nome, isActive);
             setState(() {});
           },
           child: Center(
@@ -124,7 +123,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
             String nomeEquipe =
                 await textInputDialog(context, widget.modalidade);
             await HandleData()
-                .criarEquipe(context, widget.modalidade, nomeEquipe);
+                .criarEquipe(context, widget.modalidade, nomeEquipe, isActive);
             setState(() {});
           },
           child: Center(
@@ -186,7 +185,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                         padding: const EdgeInsets.only(right: 5.0),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: temEquipe == true
+                            color: temEquipe
                                 ? Colors.grey[600]
                                 : Colors.green[600],
                             borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -199,12 +198,11 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                               //disabledTextColor: Colors.black,
                               onPressed: () async {
                                 await HandleData()
-                                    .entrarEquipe(context, equipe.id);
+                                    .entrarEquipe(context, equipe.id, isActive);
                                 setState(() {});
                               },
                               child: Center(
-                                  child: Text(
-                                temEquipe ? 'Já Possui Equipe' : 'Entrar',
+                                  child: Text( temEquipe ? 'Já Possui Equipe' : 'Entrar',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontWeight: FontWeight.w600),
                               )),

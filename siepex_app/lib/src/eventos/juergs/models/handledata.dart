@@ -21,12 +21,13 @@ class HandleData {
       if (resposta['status'] != null) {
         if (resposta['status'] == 'ok') {
           for (var i = 0; i != resposta['count']; i++) {
+            DateTime date = DateTime.parse(resposta['data'][i]['limit_date']);
             Modalidade modalidade = new Modalidade(
                 resposta['data'][i]['id'],
                 resposta['data'][i]['nome_modalidade'],
                 int.tryParse(
                     resposta['data'][i]['maximo_participantes'].toString()),
-                false);
+                false, date);
             listaModalidade.add(modalidade);
           }
         } else if (resposta['status'] == 'nao_achou') {
@@ -35,11 +36,8 @@ class HandleData {
       }
       return listaModalidade;
     } catch (e) {
-      print(e);
-      List<Modalidade> modalidades = [
-        Modalidade(0, 'Ciclismo', 5, true),
-      ];
-      return modalidades;
+      print('Erro');
+      return [];
     }
   }
 
@@ -86,8 +84,12 @@ class HandleData {
 
 
   Future criarEquipe(
-      BuildContext context, Modalidade modalidade, String nomeEquipe) async {
+      BuildContext context, Modalidade modalidade, String nomeEquipe, bool isActive) async {
     try {
+      if(!isActive){
+        errorDialog(context, 'Erro', 'Inscrições Encerradas');
+        return;
+      }
       if (nomeEquipe.isNotEmpty) {
         var resposta =
             jsonDecode((await http.put(baseUrl + 'equipe/cadastra', body: {
@@ -122,8 +124,12 @@ class HandleData {
       return;
     }
   }
-  Future<void> entrarEquipe(BuildContext context, int equipeId) async {
+  Future<void> entrarEquipe(BuildContext context, int equipeId, bool isActive) async {
     try{
+      if(!isActive){
+        errorDialog(context, 'Erro', 'Inscrições Encerradas');
+        return;
+      }
       var resposta =
             jsonDecode((await http.put(baseUrl + 'equipe/entra', body: {
           'user_cpf': userJuergs.cpf,
