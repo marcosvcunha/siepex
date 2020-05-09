@@ -3,13 +3,13 @@ import 'package:siepex/icons/my_flutter_app_icons.dart';
 
 
 Map<String, Icon> icons = {
-  'Futebol de salão': Icon(MyFlutterApp.soccerBall, size: 65, color: Colors.black87,),
-  'Ufc': Icon(Icons.people, size: 65, color: Colors.black87,),
-  'Vôlei': Icon(MyFlutterApp.soccerBall, size: 65, color: Colors.black87,),
-  'Ciclismo': Icon(MyFlutterApp.cyclist, size: 65, color: Colors.black87,),
-  'Ping Pong': Icon(MyFlutterApp.pingPong, size: 60, color: Colors.black87,),
-  'Futebol': Icon(MyFlutterApp.soccerBall, size: 40, color: Colors.black87,),
-  'Natação': Icon(MyFlutterApp.swimmer, size: 60, color: Colors.black87,),};
+  'Futsal Masculino': Icon(MyFlutterApp.soccerBall, size: 65, color: Colors.black87,),
+  'Futsal Feminino': Icon(MyFlutterApp.soccerBall, size: 65, color: Colors.black87,),
+  'Rústica': Icon(Icons.people, size: 65, color: Colors.black87,),
+  'Vôlei Misto': Icon(MyFlutterApp.soccerBall, size: 65, color: Colors.black87,),
+  'Handebol Masculino': Icon(MyFlutterApp.soccerBall, size: 65, color: Colors.black87,),
+  'Handebol Feminino': Icon(MyFlutterApp.soccerBall, size: 65, color: Colors.black87,),
+  };
   
 
 class Modalidade{

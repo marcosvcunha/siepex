@@ -26,42 +26,24 @@ ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
 
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
-	VALUES ('Futebol de salão', '20', current_timestamp());
+	VALUES ('Futsal Masculino', '10', current_timestamp());
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
-	VALUES ('Ufc', '10', current_timestamp());
+	VALUES ('Futsal Feminino', '10', current_timestamp());
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
-	VALUES ('Vôlei', '18', current_timestamp());
+	VALUES ('Vôlei Misto', '10', current_timestamp());
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
-	VALUES ('Ciclismo', '8', current_timestamp());
+	VALUES ('Handebol Masculino', '10', current_timestamp());
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
-	VALUES ('Ping Pong', '10', current_timestamp());
+	VALUES ('Handebol Feminino', '10', current_timestamp());
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
-	VALUES ('Futebol', '25', current_timestamp());
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
-	VALUES ('Natação', '6', current_timestamp());
-
-DROP TABLE IF EXISTS equipes_juergs;
-
-CREATE TABLE equipes_juergs (
-id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-id_modalidade int (2) unsigned not null,
-nome_equipe VARCHAR(30) NOT NULL,
-nome_modalidade VARCHAR(30) NOT NULL,
-maximo_participantes int(2) NOT NULL,
-numero_participantes int(2) not null,
-participantes_cadastrados varchar(500) not null,
-ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
-);
-
-## Removi por que como o usuario nao existe, dá problema.
-##INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes, participantes_cadastrados,
-##	ult_atualizacao) VALUES (1, 'equipe teste', 'futebol de salão',15, 5, '00000000191;',current_timestamp());
+	VALUES ('Rústica', '99', current_timestamp());
 
 DROP TABLE IF EXISTS cadastro_juergs;
 CREATE TABLE cadastro_juergs (
 	CPF VARCHAR(11) PRIMARY KEY,
 	NOME VARCHAR(40) NOT NULL,
 	EMAIL VARCHAR(40),
+    	CELULAR varchar(10),
 	INSTITUICAO VARCHAR(10),
 	IND_UERGS tinyint(1),
 	CAMPOS_UERGS VARCHAR(20),
@@ -70,7 +52,6 @@ CREATE TABLE cadastro_juergs (
     	MINHAS_EQUIPES varchar(200),
 	ULT_ATUALIZACAO TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
 --
 -- Table structure for table `SequelizeMeta`
 --

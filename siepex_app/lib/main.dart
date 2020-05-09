@@ -9,7 +9,6 @@ import 'package:siepex/src/comissao/comissao.dart';
 import 'package:siepex/src/eventos/eventos.dart';
 import 'package:siepex/src/eventos/geral/geral.dart';
 import 'package:siepex/src/eventos/juergs/AlternatePage.dart';
-import 'package:siepex/src/eventos/juergs/notifier/equipesnotifier.dart';
 import 'package:siepex/src/eventos/minicursos/minicursos.dart';
 import 'package:siepex/src/eventos/trabalhos/Trabalhos.dart';
 import 'package:siepex/src/eventos/visitas/visitas.dart';
@@ -36,7 +35,6 @@ import 'package:siepex/src/eventos/juergs/PaginaEquipes.dart';
 import 'package:siepex/src/eventos/forumAreas/forumAreas.dart';
 import 'package:siepex/src/inicio/inicioSiepex.dart';
 import 'package:siepex/src/tabs/tabs.dart';
-import 'package:provider/provider.dart';
 void main() => runApp(MyApp());
 
 // flutter build --build-number=x --build-name=y

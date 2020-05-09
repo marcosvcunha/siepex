@@ -3,7 +3,6 @@ import 'package:siepex/src/eventos/juergs/PaginaEquipes.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
-import 'package:provider/provider.dart';
 
 class EquipeCard extends StatelessWidget {
   final Equipe equipe;
@@ -73,7 +72,7 @@ class EquipeCard extends StatelessWidget {
                             onPressed: () async {
                               await HandleData().entrarEquipe(context, equipe.id);
                               print("Aqui");
-                              _notifier.reloadEquipes();
+                              //_notifier.reloadEquipes();
                             },
                             child: Center(
                                 child: Text(
