@@ -38,6 +38,19 @@ INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atuali
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, ult_atualizacao) 
 	VALUES ('Rústica', '99', current_timestamp());
 
+DROP TABLE IF EXISTS equipes_juergs;
+
+CREATE TABLE equipes_juergs (
+id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+id_modalidade int (2) unsigned not null,
+nome_equipe VARCHAR(30) NOT NULL,
+nome_modalidade VARCHAR(30) NOT NULL,
+maximo_participantes int(2) NOT NULL,
+numero_participantes int(2) not null,
+participantes_cadastrados varchar(500) not null,
+ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
+);
+
 DROP TABLE IF EXISTS cadastro_juergs;
 CREATE TABLE cadastro_juergs (
 	CPF VARCHAR(11) PRIMARY KEY,
