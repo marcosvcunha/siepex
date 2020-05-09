@@ -22,7 +22,7 @@ class JuergsDrawer extends StatelessWidget {
                   child: CircleAvatar(
                     backgroundColor: Color(0xff2595A6),
                     radius: 40,
-                    child: Text(userJuergs.nome[0],
+                    child: Text(userJuergs.nome[0].toUpperCase(),
                         style: TextStyle(fontSize: 24, color: Colors.black87)),
                   ),
                 ),

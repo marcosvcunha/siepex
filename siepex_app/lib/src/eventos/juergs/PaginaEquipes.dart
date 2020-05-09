@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/models/serializeJuergs.dart';
-import 'package:siepex/src/eventos/juergs/Widgets/equipeCard.dart';
+import 'package:siepex/src/config.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/textinputdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import 'models/equipe.dart';
+import 'package:http/http.dart' as http;
 
 class PaginaEquipes extends StatefulWidget {
   final Widget child;
@@ -21,6 +24,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
   Widget build(BuildContext context) {
     bool temEquipe = userJuergs.temEquipe(widget.modalidade.nome);
     return Scaffold(
+      //appBar: titulo(),
       appBar: AppBar(
         centerTitle: true,
         title: Text(widget.modalidade.nome),
@@ -46,7 +50,8 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                   return ListView.builder(
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
-                        return _equipeCard(context, equipesList[index], temEquipe);
+                        return _equipeCard(
+                            context, equipesList[index], temEquipe);
                       });
                 } else {
                   return Center(
@@ -65,122 +70,166 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
             borderRadius: BorderRadius.all(Radius.circular(60))),
         height: 60,
         width: 80,
-        child: SizedBox.expand(
-          child: FlatButton(
-              splashColor: Colors.transparent,
-              focusColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () async {
-                String nomeEquipe =
-                    await textInputDialog(context, widget.modalidade);
-                await HandleData()
-                    .criarEquipe(context, widget.modalidade, nomeEquipe);
-                setState(() {});
-              },
-              child: Center(
-                child: Text(
-                  'Criar Equipe',
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-              )),
-        ),
+        child: SizedBox.expand(child: selecionaBotao()),
       ),
     );
   }
 
-  Widget _equipeCard(BuildContext context, Equipe equipe, bool temEquipe) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
-      child: Container(
-        decoration: BoxDecoration(
-            //color: Colors.grey[200],
-            //color: Color(0xff45D5E6),
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            //gradient: LinearGradient(colors: [Color(0xFF34B8B7), Color(0xFF7dd0a2)])
-            gradient:
-                LinearGradient(colors: [Color(0xFF3498B7), Color(0xFF7db0a2)])),
-        height: 130,
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              title: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  equipe.nome,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Participantes: ${equipe.numeroParticipantes}/${equipe.maximoParticipantes}',
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ],
-                ),
-              ),
+/* TODO: ARRUMAR DEPOIS PARA O TITULO PEGAR O NUMERO DE PARTICIPANTES INSCRITOS
+  Widget titulo() {
+    if (widget.modalidade.nome != 'Rústica') {
+      return AppBar(
+        centerTitle: true,
+        title: Text(widget.modalidade.nome),
+      );
+    } else {
+                var resposta =
+          jsonDecode((await http.put(baseUrl + 'equipe/contaRustica',))
+              .body);
+            return AppBar(
+        centerTitle: true,
+        title: Text(
+          'aaa'),
+          //resposta.data.cont),
+          //widget.modalidade.nome),
+      );
+    }
+  }
+*/
+  Widget selecionaBotao() {
+    if (widget.modalidade.nome == 'Rústica') {
+      return FlatButton(
+          splashColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          padding: EdgeInsets.all(8),
+          onPressed: () async {
+            await HandleData()
+                .criarEquipe(context, widget.modalidade, userJuergs.nome);
+            setState(() {});
+          },
+          child: Center(
+            child: Text(
+              'Participar',
+              style: TextStyle(fontSize: 14),
+              textAlign: TextAlign.center,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 5.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: temEquipe == true ? Colors.grey[600] : Colors.green[600],
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
+          ));
+    } else {
+      return FlatButton(
+          splashColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          onPressed: () async {
+            String nomeEquipe =
+                await textInputDialog(context, widget.modalidade);
+            await HandleData()
+                .criarEquipe(context, widget.modalidade, nomeEquipe);
+            setState(() {});
+          },
+          child: Center(
+            child: Text(
+              'Criar Equipe',
+              style: TextStyle(fontSize: 14),
+              textAlign: TextAlign.center,
+            ),
+          ));
+    }
+  }
+
+  Widget _equipeCard(BuildContext context, Equipe equipe, bool temEquipe) {
+    if (widget.modalidade.nome != 'Rústica') {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              gradient: LinearGradient(
+                  colors: [Color(0xFF3498B7), Color(0xFF7db0a2)])),
+          height: 130,
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                title: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    equipe.nome,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Participantes: ${equipe.numeroParticipantes}/${equipe.maximoParticipantes}',
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: temEquipe == true
+                                ? Colors.grey[600]
+                                : Colors.green[600],
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: SizedBox.expand(
+                            child: FlatButton(
+                              focusColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              splashColor: Colors.transparent,
+                              //disabledTextColor: Colors.black,
+                              onPressed: () async {
+                                await HandleData()
+                                    .entrarEquipe(context, equipe.id);
+                                setState(() {});
+                              },
+                              child: Center(
+                                  child: Text(
+                                temEquipe ? 'Já Possui Equipe' : 'Entrar',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              )),
+                            ),
+                          ),
+                          height: 40,
+                          width: 120,
                         ),
-                        child: SizedBox.expand(
-                          child: FlatButton(
-                            
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xffFFE569),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: SizedBox.expand(
+                              child: FlatButton(
                             focusColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
-                            //disabledTextColor: Colors.black,
-                            onPressed: () async {
-                              await HandleData().entrarEquipe(context, equipe.id);
-                              setState(() {});
+                            onPressed: () {
+                              participantesDialog(
+                                  context, equipe.participantesNomes);
                             },
-                            child: Center(
-                                child: Text(
-                              temEquipe ? 'Já Possui Equipe' : 'Entrar',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            )),
-                          ),
-                        ),
-                        height: 40,
-                        width: 120,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xffFFE569),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                        child: SizedBox.expand(
-                            child: FlatButton(
-                          focusColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          onPressed: () {
-                            participantesDialog(context, equipe.participantesNomes);
-                          },
                             child: Text(
                               'Ver Participantes',
                               style: TextStyle(
@@ -188,18 +237,52 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                                   fontWeight: FontWeight.w600),
                               textAlign: TextAlign.center,
                             ),
-                        )),
-                        height: 40,
-                        width: 120,
+                          )),
+                          height: 40,
+                          width: 120,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              gradient: LinearGradient(
+                  colors: [Color(0xFF3498B7), Color(0xFF7db0a2)])),
+          height: 50,
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                title: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    equipe.nome,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

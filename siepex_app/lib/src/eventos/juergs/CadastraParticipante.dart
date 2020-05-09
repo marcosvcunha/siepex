@@ -30,9 +30,17 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
   String emailError = null;
   String instError = null;
 
+  //checkbox
+  bool futbol = false;
+  bool handbol = false;
+  bool volei = false;
+  bool rustica = false;
+
   TextEditingController txtNome = TextEditingController();
 
   TextEditingController txtCpf = TextEditingController();
+
+  TextEditingController txtCelular = TextEditingController();
 
   TextEditingController txtEmail = TextEditingController();
 
@@ -42,10 +50,13 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
 
   bool checkEhNecessitado = false;
 
-  String comboTipoParticipante = "Jogador";
+  String comboTipoParticipante = "Atleta";
 
   var cpfMask = new MaskTextInputFormatter(
       mask: '###.###.###-##', filter: {"#": RegExp(r'[0-9]')});
+
+  var celularMask = new MaskTextInputFormatter(
+      mask: '#####-####', filter: {"#": RegExp(r'[0-9]')});
 
   showAlertDialog1(BuildContext context) {
     // configura o button
@@ -140,8 +151,13 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
                 comboTipoParticipante = newValue;
               });
             },
-            items: <String>['Jogador', 'Espectador', 'Juiz', 'Outro']
-                .map<DropdownMenuItem<String>>((String value) {
+            items: <String>[
+              'Atleta',
+              'Espectador',
+              'Juiz',
+              'Corpo Docente',
+              'Auxiliar'
+            ].map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -192,9 +208,102 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
     return valido;
   }
 
+  Widget juizCheckCox() {
+    if (comboTipoParticipante == 'Juiz') {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Futsal",
+            style: TextStyle(color: Colors.lightBlue),
+          ),
+          Checkbox(
+            value: futbol,
+            onChanged: (bool value) {
+              setState(() {
+                futbol = value;
+              });
+            },
+          ),
+          Text(
+            "Vôlei",
+            style: TextStyle(color: Colors.lightBlue),
+          ),
+          Checkbox(
+            value: volei,
+            onChanged: (bool value) {
+              setState(() {
+                volei = value;
+              });
+            },
+          ),
+          Text(
+            "Handebol",
+            style: TextStyle(color: Colors.lightBlue),
+          ),
+          Checkbox(
+            value: handbol,
+            onChanged: (bool value) {
+              setState(() {
+                handbol = value;
+              });
+            },
+          ),
+          Text(
+            "Rústica",
+            style: TextStyle(color: Colors.lightBlue),
+          ),
+          Checkbox(
+            value: rustica,
+            onChanged: (bool value) {
+              setState(() {
+                rustica = value;
+              });
+            },
+          ),
+        ],
+      );
+    } else {
+      return Row();
+    }
+  }
+
   Future cadastrar(Estudante estudante, BuildContext context) async {
     print("login");
     estudante.cpf = (estudante.cpf.replaceAll(".", "")).replaceAll("-", "");
+    if (estudante.celular != null) {
+      estudante.celular = estudante.celular.replaceAll("-", "");
+    } else {
+      //api nao aceita null aparentemente :(
+      estudante.celular = '0';
+    }
+    estudante.cpf = (estudante.cpf.replaceAll(".", "")).replaceAll("-", "");
+    if (comboTipoParticipante != 'Juiz') {
+      futbol = false;
+      handbol = false;
+      rustica = false;
+      volei = false;
+      estudante.modalidadesJuiz = 'nEhJuiz';
+    } else {
+      String modalidadesJuiz = '';
+      if (futbol == true) {
+        modalidadesJuiz += 'Futebol, ';
+      }
+      if (handbol == true) {
+        modalidadesJuiz += 'Handebol, ';
+      }
+      if (volei == true) {
+        modalidadesJuiz += 'Volei, ';
+      }
+      if (rustica == true) {
+        modalidadesJuiz += 'Rustica,';
+      }
+      if (modalidadesJuiz.isNotEmpty) {
+        estudante.modalidadesJuiz = modalidadesJuiz;
+      } else {
+        estudante.modalidadesJuiz = 'null';
+      }
+    }
     if (!validaCampos(estudante)) {
       print("caiu");
       return false;
@@ -214,7 +323,9 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
         'campusUergs': estudante.campoUergs,
         'indUergs': estudante.indUergs,
         'indNecessidade': estudante.indNecessidade,
-        'tipoParticipante': estudante.tipoParticipante
+        'celular': estudante.celular,
+        'tipoParticipante': estudante.tipoParticipante,
+        'modalidadesJuiz': estudante.modalidadesJuiz
       }))
               .body);
       setState(() {
@@ -297,6 +408,18 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 5, right: 5),
+          child: TextField(
+            decoration:
+                InputDecoration(labelText: 'Telefone', errorText: cpfError),
+            controller: txtCelular,
+            inputFormatters: [celularMask],
+            keyboardType: TextInputType.number,
+            style:
+                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5),
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -339,6 +462,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
         ),
         camposIndUergs(),
         dropDown(context),
+        juizCheckCox(),
         Padding(
           padding: const EdgeInsets.only(left: 5, right: 5),
           child: new Row(
@@ -396,6 +520,9 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
                 } else {
                   estudante.campoUergs = "";
                   estudante.instituicao = txtInstituicao.text;
+                }
+                if (txtCelular.text.isNotEmpty) {
+                  estudante.celular = txtCelular.text;
                 }
                 estudante.email = txtEmail.text;
                 estudante.indNecessidade = checkEhNecessitado.toString();

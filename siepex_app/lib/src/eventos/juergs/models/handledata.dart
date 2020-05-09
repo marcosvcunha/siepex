@@ -52,7 +52,7 @@ class HandleData {
       if (resposta['count'] == 0)
         return [];
       else {
-        List<Equipe> equipesList = [];
+        List<Equipe> equipesList = new List<Equipe>();
         for (int i = 0; i < resposta['count']; i++) {
           equipesList.add(Equipe.fromJson(resposta['data'][i]));
         }
