@@ -12,7 +12,7 @@ class Estudante {
   String tipoParticipante;
   String indNecessidade;
   String celular;
-  String modalidadesJuiz;
+  Map<String,bool> modalidadesJuiz;
   bool isOn;
   /*
     Minhas equipes contem as equipes do usuario atual.
@@ -46,7 +46,7 @@ class Estudante {
     this.celular = json['celular'].toString();
     this.indNecessidade = json['indNecessidade'].toString();
     this.tipoParticipante = json['tipoParticipante'].toString();
-    this.modalidadesJuiz = json['modalidadesJuiz'].toString();
+    //this.modalidadesJuiz = json['modalidadesJuiz'].toString();
     return this;
   }
 

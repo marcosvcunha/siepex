@@ -7,7 +7,8 @@ import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 class EquipeCard extends StatelessWidget {
   final Equipe equipe;
   final bool temEquipe;
-  EquipeCard({@required this.equipe, @required this.temEquipe});
+  final bool isActive;
+  EquipeCard({@required this.equipe, @required this.temEquipe, @required this.isActive});
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
@@ -70,7 +71,7 @@ class EquipeCard extends StatelessWidget {
                             splashColor: Colors.transparent,
                             //disabledTextColor: Colors.black,
                             onPressed: () async {
-                              await HandleData().entrarEquipe(context, equipe.id);
+                              await HandleData().entrarEquipe(context, equipe.id, isActive);
                               print("Aqui");
                               //_notifier.reloadEquipes();
                             },

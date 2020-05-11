@@ -16,6 +16,10 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.STRING(40),
         allowNull: false,
       },
+      limit_date:{
+        type: DataTypes.DATE(11),
+        allowNull: true,
+      },
       ult_atualizacao: {
         type: DataTypes.DATE(11),
         allowNull: true

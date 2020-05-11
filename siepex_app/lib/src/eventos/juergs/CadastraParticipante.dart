@@ -122,7 +122,6 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
     }
   }
 
-  @override
   Widget dropDown(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -283,27 +282,14 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       handbol = false;
       rustica = false;
       volei = false;
-      estudante.modalidadesJuiz = 'nEhJuiz';
-    } else {
-      String modalidadesJuiz = '';
-      if (futbol == true) {
-        modalidadesJuiz += 'Futebol, ';
-      }
-      if (handbol == true) {
-        modalidadesJuiz += 'Handebol, ';
-      }
-      if (volei == true) {
-        modalidadesJuiz += 'Volei, ';
-      }
-      if (rustica == true) {
-        modalidadesJuiz += 'Rustica,';
-      }
-      if (modalidadesJuiz.isNotEmpty) {
-        estudante.modalidadesJuiz = modalidadesJuiz;
-      } else {
-        estudante.modalidadesJuiz = 'null';
-      }
-    }
+    } 
+    estudante.modalidadesJuiz = {
+        'futebol': futbol,
+        'handbol': handbol,
+        'volei': volei,
+        'rustica': rustica,
+    };
+    
     if (!validaCampos(estudante)) {
       print("caiu");
       return false;
