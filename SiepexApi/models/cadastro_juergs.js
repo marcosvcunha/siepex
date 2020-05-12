@@ -29,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     tipo_participante: {
-      type: DataTypes.CHAR(1),
+      type: DataTypes.STRING(15),
       allowNull: true
     },
     ind_necessidades_especiais: {
@@ -40,6 +40,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(200),
       allowNull: true,
       defaultValue: ''
+    },
+    celular : {
+      type: DataTypes.STRING(10),
+      allowNull: true,
+    },
+    modalidades_juiz : {
+      type: DataTypes.STRING(50),
+      allowNull: true,
     },
     ult_atualizacao: {
       type: DataTypes.DATE(11),

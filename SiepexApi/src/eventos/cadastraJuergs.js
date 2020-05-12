@@ -20,10 +20,12 @@ router.put('/', async (req, res) => {
         nome: req.body['nome'],
         email: req.body['email'],
         instituicao: req.body['instituicao'],
+        celular : req.body['celular'],
         ind_uergs: req.body['indUergs'],
         campos_uergs: req.body['campusUergs'],
-        tipo_participante: req.body['tipoParticipante'][0],
+        tipo_participante: req.body['tipoParticipante'],
         ind_necessidades_especiais: req.body['indNecessidade'],
+        modalidades_juiz: req.body['modalidadesJuiz'],
       }).then((result) => {
         console.log("Cadastro realizado com sucesso.")
         res.json({
