@@ -268,7 +268,6 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
   }
 
   Future cadastrar(Estudante estudante, BuildContext context) async {
-    print("login");
     estudante.cpf = (estudante.cpf.replaceAll(".", "")).replaceAll("-", "");
     if (estudante.celular != null) {
       estudante.celular = estudante.celular.replaceAll("-", "");
@@ -311,7 +310,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
         'indNecessidade': estudante.indNecessidade,
         'celular': estudante.celular,
         'tipoParticipante': estudante.tipoParticipante,
-        'modalidadesJuiz': estudante.modalidadesJuiz
+        'modalidadesJuiz': estudante.modalidadesJuiz.toString()
       }))
               .body);
       setState(() {

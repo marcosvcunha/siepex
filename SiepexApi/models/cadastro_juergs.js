@@ -46,7 +46,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
     },
     modalidades_juiz : {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(100),
       allowNull: true,
     },
     ult_atualizacao: {
