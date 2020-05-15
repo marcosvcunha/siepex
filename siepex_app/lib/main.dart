@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
           "loginJuergs":(BuildContext context) => LoginJuergs(),
           "inicioJuergs":(BuildContext context) => InicioJuergs(),
           "hoteisJuergs":(BuildContext context) => HoteisJuergs(),
-          "modalidadesJuergs":(BuildContext context) => ModalidesPage(),
+          "modalidadesJuergs":(BuildContext context) => ModalidadesPage(),
           "restaurantesJuergs":(BuildContext context) => RestaurantesJuergs(),
           "defaultPage":(BuildContext context) => DefaultPage(),
           "participanteJuergs":(BuildContext context) => ParticipanteJuergs(),

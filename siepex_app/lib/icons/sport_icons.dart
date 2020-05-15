@@ -23,6 +23,19 @@ class Sport {
   Sport._();
 
   static const _kFontFam = 'Sport';
+  static const _kFontPkg = null;
 
-  static const IconData truck = IconData(0xe800, fontFamily: _kFontFam);
+  static const IconData truck = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData athlete = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData basketball_player_silhouette_with_the_ball = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData trail_running_shoe = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData volleyball_silhouette = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData soccer_player_running_with_the_ball = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData soccer_ball = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData soccer_ball_1 = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData soccer_field_from_top_view = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData soccer_goal = IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData runner = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData volleyball_ball = IconData(0xe80b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData shot_putter = IconData(0xe80c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

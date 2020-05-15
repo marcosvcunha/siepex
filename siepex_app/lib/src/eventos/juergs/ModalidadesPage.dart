@@ -6,15 +6,11 @@ import 'package:siepex/src/eventos/juergs/PaginaEquipes.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import '../../../models/modalidade.dart';
 
-class ModalidesPage extends StatelessWidget {
+class ModalidadesPage extends StatelessWidget {
   final HandleData _handleData = HandleData();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Modalidades"),
-        ),
-        body: FutureBuilder(
+    return FutureBuilder(
           future: _handleData.getModalidades(),
           builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -38,7 +34,7 @@ class ModalidesPage extends StatelessWidget {
               );
             }
           }
-        }));
+        });
   }
 }
 
