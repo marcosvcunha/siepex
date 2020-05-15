@@ -12,7 +12,7 @@ class Estudante {
   String tipoParticipante;
   String indNecessidade;
   String celular;
-  Map<String,bool> modalidadesJuiz;
+  String modalidadesJuiz;
   bool isOn;
   /*
     Minhas equipes contem as equipes do usuario atual.
@@ -21,7 +21,6 @@ class Estudante {
     ou entra em uma equipe.
    */
   List<Equipe> minhasEquipes = <Equipe>[];
-
 
   Estudante(
       {this.nome,

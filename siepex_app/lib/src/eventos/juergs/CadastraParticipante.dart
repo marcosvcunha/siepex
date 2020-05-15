@@ -281,14 +281,27 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       handbol = false;
       rustica = false;
       volei = false;
-    } 
-    estudante.modalidadesJuiz = {
-        'futebol': futbol,
-        'handbol': handbol,
-        'volei': volei,
-        'rustica': rustica,
-    };
-    
+    } else{
+      String modalidadesJuiz = '';
+      if (futbol == true) {
+        modalidadesJuiz += 'Futebol, ';
+      }
+      if (handbol == true) {
+        modalidadesJuiz += 'Handebol, ';
+      }
+      if (volei == true) {
+        modalidadesJuiz += 'Volei, ';
+      }
+      if (rustica == true) {
+        modalidadesJuiz += 'Rustica,';
+      }
+      if (modalidadesJuiz.isNotEmpty) {
+        estudante.modalidadesJuiz = modalidadesJuiz;
+      } else {
+        estudante.modalidadesJuiz = 'null';
+      }
+    }
+
     if (!validaCampos(estudante)) {
       print("caiu");
       return false;

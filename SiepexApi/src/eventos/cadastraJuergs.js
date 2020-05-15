@@ -14,6 +14,7 @@ router.put('/', async (req, res) => {
     })
   }
   else {
+    console.log(req.body['modalidadesJuiz'])
     cadastro_juergs.create(
       {
         cpf: req.body['cpf'],
