@@ -18,11 +18,12 @@ environment:
 
 dependencies:
   flutter:
-    sdk: flutter    
-   
+    sdk: flutter
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  flutter_plugin_pdf_viewer: ^1.0.7
 
 dev_dependencies:
   flutter_test:
@@ -39,7 +40,7 @@ dev_dependencies:
   rflutter_alert: ^1.0.2
   material_design_icons_flutter: ^3.2.3595
   flutter_webview_plugin: 0.3.3
-  extended_image : ^0.5.6
+  extended_image: ^0.5.6
   url_launcher: ^5.0.3
   shared_preferences:
 # For information on the generic Dart part of this file, see the
@@ -47,7 +48,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -58,6 +58,7 @@ flutter:
     - assets/img/download.jpeg
     - assets/img/logo_uergs.png
     - assets/img/Untitled.png
+    - assets/img/regulamento.pdf
     - assets/img/arte_uergs/Background_App_Siepex.png
     - assets/img/arte_uergs/Icon_Siepex.png
     - assets/img/arte_uergs/imagem-cabecalho-uergs-siepex-inove.png
@@ -91,10 +92,10 @@ flutter:
         - asset: assets/fonts/Mdi.ttf
     - family: MyFlutterApp
       fonts:
-       - asset: assets/fonts/MyFlutterApp.ttf
+        - asset: assets/fonts/MyFlutterApp.ttf
     - family: Sport
       fonts:
-       - asset: assets/fonts/Sport.ttf
-        #
+        - asset: assets/fonts/Sport.ttf
+          #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
