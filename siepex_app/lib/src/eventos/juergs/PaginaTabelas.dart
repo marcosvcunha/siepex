@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:siepex/icons/sport_icons.dart';
 
 class PaginaTabelas extends StatelessWidget {
-  Widget competicaoButton(String comp, String fase){
+  Widget competicaoButton(BuildContext context, IconData icone, String comp, String fase){
     return Container(
               //color: Colors.blue,
               height: 65,
               child: ListTile(
-                leading: Icon(Sport.soccer_ball, size: 35, color: Color(0xff372554)),
+                leading: Icon(icone, size: 35, color: Color(0xff372554)),
                 title: Text(comp, style: TextStyle(fontSize: 22, color: Colors.black87, fontWeight: FontWeight.w600),),
                 subtitle: Text(fase, style: TextStyle(color: Colors.black87),),
-                onTap: (){},
+                onTap: () => Navigator.pushNamed(context, 'tabelaPage'),
               ),
             );
   }
@@ -36,11 +36,11 @@ class PaginaTabelas extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 16.0, top: 16, bottom: 12),
                 child: Text('Competições', style: TextStyle(color: Colors.black, fontSize: 26, fontWeight: FontWeight.w600),),
               ),
-              competicaoButton('Futsal Masculino', '1ª Fase'),
-              competicaoButton('Futsal Feminino', '2ª Fase'),
-              competicaoButton('Voleybol', 'Final'),
-              competicaoButton('Handbol Masculino', 'Semi-final'),
-              competicaoButton('Handbol Feminino', 'Quartas de final'),
+              competicaoButton(context, Sport.soccer_ball, 'Futsal Masculino', '1ª Fase'),
+              competicaoButton(context, Sport.soccer_ball,'Futsal Feminino', '2ª Fase'),
+              competicaoButton(context, Sport.volleyball_ball, 'Voleybol', 'Final'),
+              competicaoButton(context, Sport.shot_putter, 'Handbol Masculino', 'Semi-final'),
+              competicaoButton(context, Sport.shot_putter, 'Handbol Feminino', 'Quartas de final'),
             ],
           ),
         ),

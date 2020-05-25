@@ -75,9 +75,8 @@ class _LoginJuergsState extends State<LoginJuergs> {
             userJuergs.cpf = resposta['data']['cpf'];
             userJuergs.email = estudante.email;
             userJuergs.isOn = true; // Loga usuario
-            //userJuergs.minhasEquipes =
-            //    await HandleData().getMyEquipes(userJuergs.cpf);
-            //print(minhasEquipes);
+            userJuergs.minhasEquipes =
+                await HandleData().getMyEquipes(userJuergs.cpf);
             setState(() {
               _isLoading = false;
             });

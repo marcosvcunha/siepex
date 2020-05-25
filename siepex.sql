@@ -30,15 +30,15 @@ ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao) 
 	VALUES ('Futsal Masculino', '10', '2020-10-10 23:59:59', current_timestamp());
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao) 
-	VALUES ('Futsal Feminino', '10', '2020-05-09 17:45:59', current_timestamp());
+	VALUES ('Futsal Feminino', '10', '2020-06-25 17:45:59', current_timestamp());
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao) 
-	VALUES ('Vôlei Misto', '10', '2020-05-09 17:40:00', current_timestamp());
+	VALUES ('Vôlei Misto', '10', '2020-06-22 17:40:00', current_timestamp());
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao) 
-	VALUES ('Handebol Masculino', '10', '2020-05-09 17:35:59', current_timestamp());
+	VALUES ('Handebol Masculino', '10', '2020-06-12 17:35:59', current_timestamp());
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao) 
-	VALUES ('Handebol Feminino', '10', '2020-05-09 17:30:00', current_timestamp());
+	VALUES ('Handebol Feminino', '10', '2020-05-25 14:50:00', current_timestamp());
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao) 
-	VALUES ('Rústica', '99', '2020-05-09 00:05:09', current_timestamp());
+	VALUES ('Rústica', '99', '2020-05-25 00:05:09', current_timestamp());
 
 DROP TABLE IF EXISTS equipes_juergs;
 

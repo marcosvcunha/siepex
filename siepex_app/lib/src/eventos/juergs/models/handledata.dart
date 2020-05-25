@@ -135,7 +135,6 @@ class HandleData {
           'user_cpf': userJuergs.cpf,
           'equipe_id': equipeId.toString(),
         })).body);
-        print(resposta['data']);
         userJuergs.minhasEquipes.add(Equipe.fromJson(resposta['data']));
         return;
     }catch(e){
