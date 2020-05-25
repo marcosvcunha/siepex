@@ -50,7 +50,7 @@ class JuergsDrawer extends StatelessWidget {
             ),
           ),
           listItem(context, 'Meu Perfil', Icons.person, null),
-          listItem(context, 'Regulamento', Icons.short_text, () => Navigator.pushNamed(context, "regulamentoPage")),
+          listItem(context, 'Regulamento', Icons.short_text, () => Navigator.popAndPushNamed(context, "regulamentoPage")),
           listItem(context, 'Configurações', Icons.settings, null),
           listItem(context, 'Sair', Icons.exit_to_app, (){
             userJuergs.logout();

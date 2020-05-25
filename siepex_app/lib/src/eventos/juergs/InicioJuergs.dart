@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siepex/icons/my_flutter_app_icons.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/areaParticipante/homeParticipante.dart';
+import 'package:siepex/src/eventos/juergs/PaginaTabelas.dart';
 import 'package:siepex/src/inicio/itemButton.dart';
 import 'package:siepex/mdi.dart';
 import '../../../icons/sport_icons.dart';
@@ -21,6 +22,7 @@ class InicioJuergs extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        backgroundColor: Colors.grey[400],
         appBar: AppBar(
           elevation: 10,
           title: Text('Inicio'),
@@ -30,7 +32,7 @@ class InicioJuergs extends StatelessWidget {
           children: <Widget>[
             Container(child: Center(child: Text('Meus Jogos',style: TextStyle(color: Colors.black),))),
             ModalidadesPage(),
-            Container(child: Center(child: Text('Tabelas',style: TextStyle(color: Colors.black),))),
+            PaginaTabelas(),
           ],
         ),
         bottomNavigationBar: Container(

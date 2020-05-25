@@ -57,7 +57,7 @@ class HandleData {
         return equipesList;
       }
     } catch (e) {
-      print(e);
+      print('Erro ao pegar Equipes ' + e.toString());
       return [];
     }
   }

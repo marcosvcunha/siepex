@@ -40,16 +40,26 @@ class ModalidadesPage extends StatelessWidget {
 
 Widget modalidadesCard(BuildContext context, Modalidade modalidade, bool temEquipe) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
     child: Center(
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
             color: Color.fromRGBO(0, 60, 125, 1),
+            //color: Color(0xff56FBFB),
             width: 2,
           ),
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          color: Colors.blue,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          //color: Colors.blue,
+          color: Color(0xff86A5D9),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 2,
+              color: Colors.black54,
+              offset: Offset(2, 2),
+              spreadRadius: 1,
+            ),
+          ]
         ),
         height: 125,
         //width: 300,
@@ -63,7 +73,10 @@ Widget modalidadesCard(BuildContext context, Modalidade modalidade, bool temEqui
                   decoration: BoxDecoration(
                     border: Border(
                         right: BorderSide(
-                            width: 4, color: Color.fromRGBO(0, 60, 125, 1))),
+                            width: 4, 
+                            color: Color.fromRGBO(0, 60, 125, 1),
+                            //color: Color(0xff5F4BB6),
+                            )),
                   ),
                   height: 100,
                   width: 100,
