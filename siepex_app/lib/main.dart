@@ -9,7 +9,7 @@ import 'package:siepex/src/comissao/comissao.dart';
 import 'package:siepex/src/eventos/eventos.dart';
 import 'package:siepex/src/eventos/geral/geral.dart';
 import 'package:siepex/src/eventos/juergs/AlternatePage.dart';
-import 'package:siepex/src/eventos/juergs/PaginaTabela.dart';
+import 'package:siepex/src/eventos/juergs/tabelas/PaginaTabela.dart';
 import 'package:siepex/src/eventos/juergs/RegulamentoPage.dart';
 import 'package:siepex/src/eventos/minicursos/minicursos.dart';
 import 'package:siepex/src/eventos/trabalhos/Trabalhos.dart';

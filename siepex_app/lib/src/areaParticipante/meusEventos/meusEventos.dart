@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/models/participante.dart';
+//import 'package:siepex/models/participante.dart';
 import 'package:siepex/src/eventos/minicursos/minicursosView.dart';
-import 'package:siepex/src/eventos/visitas/visitas.dart';
+//import 'package:siepex/src/eventos/visitas/visitas.dart';
 import 'package:siepex/src/eventos/visitas/visitasView.dart';
 
 class MeusEventosPage extends StatefulWidget {

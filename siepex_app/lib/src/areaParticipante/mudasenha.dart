@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:siepex/models/participante.dart';
 import 'package:siepex/src/config.dart';
-import 'package:siepex/src/inicio/inicio.dart';
 import 'package:siepex/src/input.dart';
 import 'package:http/http.dart' as http;
 import 'package:rflutter_alert/rflutter_alert.dart';
