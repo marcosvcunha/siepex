@@ -50,7 +50,6 @@ Widget modalidadesCard(BuildContext context, Modalidade modalidade, bool temEqui
             width: 2,
           ),
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          //color: Colors.blue,
           color: Color(0xff86A5D9),
           boxShadow: [
             BoxShadow(
@@ -74,8 +73,8 @@ Widget modalidadesCard(BuildContext context, Modalidade modalidade, bool temEqui
                     border: Border(
                         right: BorderSide(
                             width: 4, 
-                            color: Color.fromRGBO(0, 60, 125, 1),
-                            //color: Color(0xff5F4BB6),
+                            //color: Color.fromRGBO(0, 60, 125, 1),
+                            color: Color(0xff5F4BB6),
                             )),
                   ),
                   height: 100,
@@ -94,8 +93,10 @@ Widget modalidadesCard(BuildContext context, Modalidade modalidade, bool temEqui
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(15, 8, 0, 0),
                         child: Text(modalidade.nome,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontSize: 26, fontWeight: FontWeight.w600)),
+                                fontSize: 26, fontWeight: FontWeight.w600),),
                       ),
                     ),
                     Align(

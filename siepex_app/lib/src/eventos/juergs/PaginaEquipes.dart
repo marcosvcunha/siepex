@@ -145,7 +145,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
               borderRadius: BorderRadius.all(Radius.circular(8)),
               gradient: LinearGradient(
                   colors: [Color(0xFF3498B7), Color(0xFF7db0a2)])),
-          height: 130,
+          //height: 130,
           child: Column(
             children: <Widget>[
               ListTile(
@@ -164,10 +164,14 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      Text('Capitão: ' + equipe.nomeCapitao, style: TextStyle(
+                            color: Colors.blueGrey[900],
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400),),
                       Text(
                         'Participantes: ${equipe.numeroParticipantes}/${equipe.maximoParticipantes}',
                         style: TextStyle(
-                            color: Colors.grey[800],
+                            color: Colors.blueGrey[900],
                             fontSize: 16,
                             fontWeight: FontWeight.w400),
                       ),
@@ -175,6 +179,12 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                   ),
                 ),
               ),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Padding(
+              //     padding: const EdgeInsets.only(left: 16.0),
+              //     child: Text('Capitão: Marcos'),
+              //   )),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
@@ -196,7 +206,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                               highlightColor: Colors.transparent,
                               splashColor: Colors.transparent,
                               //disabledTextColor: Colors.black,
-                              onPressed: () async {
+                              onPressed: temEquipe ? null : () async {
                                 await HandleData()
                                     .entrarEquipe(context, equipe.id, isActive);
                                 setState(() {});
@@ -204,7 +214,8 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                               child: Center(
                                   child: Text( temEquipe ? 'Já Possui Equipe' : 'Entrar',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontWeight: FontWeight.w600),
+                                style: TextStyle(fontWeight: FontWeight.w600, 
+                                  color: temEquipe ? Colors.blueGrey[800] : Colors.black),
                               )),
                             ),
                           ),
@@ -226,7 +237,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                             splashColor: Colors.transparent,
                             onPressed: () {
                               participantesDialog(
-                                  context, equipe.participantesNomes);
+                                  context, equipe.participantesNomes, equipe.indexCapitao());
                             },
                             child: Text(
                               'Ver Participantes',
@@ -267,7 +278,8 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 22,
-                        fontWeight: FontWeight.w600),
+                        fontWeight: FontWeight.w600,),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 subtitle: Padding(

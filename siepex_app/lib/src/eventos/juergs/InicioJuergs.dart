@@ -48,26 +48,20 @@ class InicioJuergs extends StatelessWidget {
               )
             ]
           ),
-          height: 70,
+          height: 60,
           child: TabBar(     
             indicatorColor: Colors.yellow,     
             tabs: [
             Tab(
-              icon: Icon(Sport.soccer_field_from_top_view, size: 40,),
-              text: 'Meus Jogos',
+              icon: Icon(Icons.home, size: 26,),
+              text: 'Home',
             ),
             Tab(
-              icon: Padding(
-                padding: EdgeInsets.all(5),
-                child: Icon(Sport.volleyball_silhouette, size: 30,), 
-              ),
-              text: 'Modalidades',
+              icon: Icon(Sport.volleyball_silhouette, size: 26,), 
+              text: 'Competições',
             ),
             Tab(
-              icon: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Icon(Icons.table_chart, size: 30,),
-              ),
+              icon: Icon(Icons.table_chart, size: 26,),
               text: 'Tabelas'),
           ]),
         ),

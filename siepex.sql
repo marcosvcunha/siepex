@@ -49,6 +49,7 @@ nome_equipe VARCHAR(30) NOT NULL,
 nome_modalidade VARCHAR(30) NOT NULL,
 maximo_participantes int(2) NOT NULL,
 numero_participantes int(2) not null,
+cpf_capitao VARCHAR(11) NOT NULL,
 participantes_cadastrados varchar(500) not null,
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );

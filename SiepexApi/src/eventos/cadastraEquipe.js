@@ -120,6 +120,7 @@ async function criarEquipe(req, res) {
             maximo_participantes: req.body['maximo_participantes'],
             participantes_cadastrados: req.body['user_cpf'] + ';',
             numero_participantes: 1,
+            cpf_capitao: req.body['user_cpf'],
         }
     ).then((result) => {
          cadastro_juergs.findByPk(req.body['user_cpf']).then((participante)=> {
@@ -137,6 +138,7 @@ async function criarEquipe(req, res) {
             userCpfs = result['dataValues']['participantes_cadastrados'].split(';');
             userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
             result['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
+            result['dataValues']['cpf_capitao'] = req.body['user_cpf'],
             res.json({
                 status: 'sucesso',
                 data: result['dataValues'],

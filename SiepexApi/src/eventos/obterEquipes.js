@@ -80,22 +80,46 @@ async function pegarTodasEquipesPorUsuario(userCpf) {
 }
 
 // Dado os cpfs dos users, retorna uma lista com os nomes dos mesmos.
-function pegarNomes(userCpfs) {
-    return new Promise(function (resolve, reject) {
-        var nomes_participantes = [];
-        cadastro_juergs.findAll({ // pega os nomes de todos participantes da equipe
-            attributes: ['nome'],
-            where: {
-                cpf: userCpfs,
-            }
-        }).then((result2) => {
-            for (var j = 0; j < result2.length; j++) { // adiciona cada nome ao resultado
-                nomes_participantes.push(result2[j]['dataValues']['nome']);
-            }
-            resolve(nomes_participantes);
-        });
+// function pegarNomes(userCpfs) {
+//     console.log('CPF dos usurarios: ' + userCpfs.toString())
+//     return new Promise(function (resolve, reject) {
+//         var nomes_participantes = [];
+//         cadastro_juergs.findAll({ // pega os nomes de todos participantes da equipe
+//             attributes: ['nome'],
+//             where: {
+//                 cpf: userCpfs,
+//             }
+//         }).then((result2) => {
+//             for (var j = result2.length - 1; j >= 0; j--) { // adiciona cada nome ao resultado
+//                 console.log('Nome do usuario: ' + result2[j]['dataValues']['nome'].toString())
+//                 nomes_participantes.push(result2[j]['dataValues']['nome']);
+//             }
+//             resolve(nomes_participantes);
+//         });
+//     })
+// }
+
+async function pegarNomes(userCpfs) {
+    // Faz desta forma (pega um nome por vez) para que os nomes estejam na mesma ordem dos cpfs.
+    console.log('CPF dos usurarios: ' + userCpfs.toString())
+    var nomes_participantes = [];
+    return new Promise(async function (resolve, reject) {
+        for(var i = 0; i < userCpfs.length; i ++){
+            var nome = await pegarNome(userCpfs[i]);
+            nomes_participantes.push(nome);
+        }
+        console.log('Terminando funcao');
+        resolve(nomes_participantes);
     })
 }
 
+function pegarNome(cpf){
+    return new Promise(function (resolve, reject){
+        cadastro_juergs.findByPk(cpf).then((result2) => {
+            console.log(result2['dataValues']);
+            resolve(result2['dataValues']['nome']);
+        });
+    });
+}
 
 module.exports = router;

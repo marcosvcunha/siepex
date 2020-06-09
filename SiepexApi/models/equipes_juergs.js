@@ -27,6 +27,10 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.INTEGER(2),
             allowNull: false,
         },
+        cpf_capitao:{
+            type: DataTypes.STRING(11),
+            allowNull: false,
+        },
         participantes_cadastrados: {
             type: DataTypes.STRING(500),
             allowNull: true

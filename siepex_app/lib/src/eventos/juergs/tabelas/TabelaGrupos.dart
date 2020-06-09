@@ -237,7 +237,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
             //bottom: BorderSide(color: Colors.deepPurple, width: 2)
             ),
       ),
-      height: 42,
+      height: 60,
       //width: 240,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -305,7 +305,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                   )),
             ],
           ),
-          //Text('Ginasio Local, 23/09 17:30', style: TextStyle(fontSize: 14, color: Colors.grey[700]),)
+          Text('Ginasio Local, 23/09 17:30', style: TextStyle(fontSize: 14, color: Colors.grey[800]),),
         ],
       ),
     );
@@ -317,7 +317,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
       key: ValueKey(2),
       padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
       child: Container(
-        height: 230,
+        height: 290,
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
