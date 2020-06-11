@@ -65,7 +65,8 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
       ),
       floatingActionButton: Container(
         decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
+            //color: Theme.of(context).primaryColor,
+            color: Colors.green[600],
             borderRadius: BorderRadius.all(Radius.circular(60))),
         height: 60,
         width: 80,
@@ -155,7 +156,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                     equipe.nome,
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 22,
+                        fontSize: 24,
                         fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -168,6 +169,12 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                             color: Colors.blueGrey[900],
                             fontSize: 18,
                             fontWeight: FontWeight.w400),),
+                      SizedBox(height: 2),
+                      Text('Contato: ' + equipe.celCapitaoFormated, style: TextStyle(
+                            color: Colors.blueGrey[900],
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),),
+                      SizedBox(height: 2),
                       Text(
                         'Participantes: ${equipe.numeroParticipantes}/${equipe.maximoParticipantes}',
                         style: TextStyle(
@@ -240,7 +247,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                                   context, equipe.participantesNomes, equipe.indexCapitao());
                             },
                             child: Text(
-                              'Ver Participantes',
+                              'Participantes',
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600),

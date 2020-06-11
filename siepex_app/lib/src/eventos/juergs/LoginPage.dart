@@ -68,13 +68,8 @@ class _LoginJuergsState extends State<LoginJuergs> {
                 .body);
         if (resposta['status'] != null) {
           if (resposta['status'] == 'ok') {
-            Estudante estudante = new Estudante();
-            estudante.nome = resposta['data']['nome'];
-            estudante.email = resposta['data']['email'];
-            userJuergs.nome = estudante.nome;
-            userJuergs.cpf = resposta['data']['cpf'];
-            userJuergs.email = estudante.email;
-            userJuergs.isOn = true; // Loga usuario
+            Estudante estudante = new Estudante.fromJson(resposta['data']);
+            userJuergs = estudante;// Loga usuario
             userJuergs.minhasEquipes =
                 await HandleData().getMyEquipes(userJuergs.cpf);
             setState(() {

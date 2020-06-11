@@ -99,8 +99,8 @@ class HandleData {
           'maximo_participantes': modalidade.maxParticipantes.toString(),
           'user_name': userJuergs.nome,
           'user_cpf' : userJuergs.cpf,
-        }))
-                .body);
+          'user_cel': userJuergs.celular,
+        })).body);
         if (resposta['status'] == 'sucesso') {
           userJuergs.minhasEquipes.add(Equipe.fromJson(resposta['data']));
           errorDialog(context, 'Sucesso', 'Equipe Criada');

@@ -6,11 +6,12 @@ class Equipe {
   int maximoParticipantes;
   int numeroParticipantes;
   String cpfCapitao;
+  String celCapitao;
   List<String> participantesCpf = <String>[];
   List<String> participantesNomes = <String>[];
 
   get nomeCapitao => participantesNomes[indexCapitao()];
-
+  get celCapitaoFormated => celCapitao.substring(0, 5) + '-' + celCapitao.substring(5);
   Equipe.fromJson(jsonData) {
     this.nome = jsonData['nome_equipe'];
     this.id = jsonData['id'];
@@ -21,7 +22,9 @@ class Equipe {
     this.numeroParticipantes = int.parse(jsonData['numero_participantes']
         .toString()); // retorna int, outras retorna string. ??
     this.cpfCapitao = jsonData['cpf_capitao'];
+    this.celCapitao = jsonData['celular_capitao'];
     try {
+      
       for (int i = 0; i < jsonData['participantes_cadastrados'].length; i++) {
         participantesCpf.add(jsonData['participantes_cadastrados'][i]);
         participantesNomes.add(jsonData['nomes_participantes'][i]);

@@ -112,6 +112,7 @@ async function getEquipe(equipe, modalidade) {
 }
 
 async function criarEquipe(req, res) {
+    console.log('Criando Equipe')
     equipes_juergs.create(
         {
             id_modalidade: parseInt(req.body['id_modalidade']),
@@ -121,6 +122,7 @@ async function criarEquipe(req, res) {
             participantes_cadastrados: req.body['user_cpf'] + ';',
             numero_participantes: 1,
             cpf_capitao: req.body['user_cpf'],
+            celular_capitao: req.body['user_cel'],
         }
     ).then((result) => {
          cadastro_juergs.findByPk(req.body['user_cpf']).then((participante)=> {

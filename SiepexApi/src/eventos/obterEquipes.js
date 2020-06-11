@@ -101,14 +101,14 @@ async function pegarTodasEquipesPorUsuario(userCpf) {
 
 async function pegarNomes(userCpfs) {
     // Faz desta forma (pega um nome por vez) para que os nomes estejam na mesma ordem dos cpfs.
-    console.log('CPF dos usurarios: ' + userCpfs.toString())
+    //console.log('CPF dos usurarios: ' + userCpfs.toString())
     var nomes_participantes = [];
     return new Promise(async function (resolve, reject) {
         for(var i = 0; i < userCpfs.length; i ++){
             var nome = await pegarNome(userCpfs[i]);
             nomes_participantes.push(nome);
         }
-        console.log('Terminando funcao');
+        //console.log('Terminando funcao');
         resolve(nomes_participantes);
     })
 }
@@ -116,7 +116,6 @@ async function pegarNomes(userCpfs) {
 function pegarNome(cpf){
     return new Promise(function (resolve, reject){
         cadastro_juergs.findByPk(cpf).then((result2) => {
-            console.log(result2['dataValues']);
             resolve(result2['dataValues']['nome']);
         });
     });
