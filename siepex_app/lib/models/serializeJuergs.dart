@@ -86,4 +86,14 @@ class Estudante {
     return false;
   }
 
+  // Determina se este usuário é membro da equipe.
+  bool isInTeam(int id){
+    for(Equipe eq in minhasEquipes){
+      if(eq.id == id){
+        return true;
+      }
+    }
+    return false;
+  }
+
 }
