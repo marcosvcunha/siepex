@@ -112,7 +112,7 @@ async function getEquipe(equipe, modalidade) {
 }
 
 async function criarEquipe(req, res) {
-    console.log('Criando Equipe')
+    console.log('Criando Equipe');
     equipes_juergs.create(
         {
             id_modalidade: parseInt(req.body['id_modalidade']),

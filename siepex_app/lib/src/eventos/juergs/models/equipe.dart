@@ -11,6 +11,7 @@ class Equipe {
   List<String> participantesNomes = <String>[];
 
   get nomeCapitao => participantesNomes[indexCapitao()];
+  // Retorna a string do cel com o traço no meio.
   get celCapitaoFormated => celCapitao.substring(0, 5) + '-' + celCapitao.substring(5);
   Equipe.fromJson(jsonData) {
     this.nome = jsonData['nome_equipe'];
@@ -35,8 +36,6 @@ class Equipe {
   }
 
   int indexCapitao(){
-    print(participantesCpf);
-    print(participantesNomes);
     for(int i = 0; i < this.participantesCpf.length; i++){
       if(this.cpfCapitao == this.participantesCpf[i]){
         return i;
