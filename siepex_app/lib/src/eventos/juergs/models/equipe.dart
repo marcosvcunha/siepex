@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:siepex/src/config.dart';
 import 'package:siepex/models/serializeJuergs.dart';
 
-class Equipe {
+class Equipe extends ChangeNotifier{
   String nome;
   int id;
   int idModalidade;
@@ -20,6 +21,10 @@ class Equipe {
   get celCapitaoFormated => celCapitao.substring(0, 5) + '-' + celCapitao.substring(5);
   // Retorna a string com numero de participantes / maximo de participantes
   get partFormat => numeroParticipantes.toString() + '/' + maximoParticipantes.toString();
+
+  Equipe(){
+    
+  }
 
   Equipe.fromJson(jsonData) {
     this.nome = jsonData['nome_equipe'];
@@ -66,10 +71,11 @@ class Equipe {
         }else{
           nome = newName;
           userJuergs.updateTeamName(id, nome);
-          print('Mudou o Nome');
+          notifyListeners();
+          // print('Mudou o Nome');
         }
       }else{
-        print('Não Mudou o nome');
+        // print('Não Mudou o nome');
       }
     }catch(e){
       print('Erro ao mudar nome da Equipe: ' + e.toString());
