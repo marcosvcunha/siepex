@@ -159,7 +159,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
           ),
           //height: 130,
           child: FlatButton(
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaEquipe())),
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaEquipe(equipe: equipe,))),
             child: Column(
               children: <Widget>[
                 ListTile(

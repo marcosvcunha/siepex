@@ -82,6 +82,37 @@ router.put('/entra', async (req, res) => {
     //Colocar o id da equipe na lista de equipes do usuario
 })
 
+router.put('/changeName', async (req, res) =>{
+    var equipe = await getEquipe(req.body['nome_equipe'], req.body['nome_modalidade']);
+    if (equipe.count != 0) {
+        //criarEquipe(req, res);
+        res.json({
+            status: 'erro',
+            erro: 'Equipe já existe'
+        })
+        return;
+    }else{
+        equipes_juergs.update({
+            nome_equipe: req.body['nome_equipe'],
+        }, {
+            where:{
+                id: parseInt(req.body['id_equipe']),
+            }
+        }).then((resul) =>{
+            res.json({
+                status:'sucesso',
+            })
+            return;
+        }).catch((err) =>{
+            res.json({
+                status:'erro',
+            })
+            return;
+        })
+    }
+    return;
+})
+
 function pegarNomes(userCpfs) {
     return new Promise(function (resolve, reject) {
         var nomes_participantes = [];

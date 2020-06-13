@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 import 'package:siepex/icons/sport_icons.dart' as sportIcon;
-import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
+import './Widgets/ColumnBuilder.dart';
+import './tabelas/widgets.dart';
+import 'models/equipe.dart';
+import 'package:siepex/models/serializeJuergs.dart';
 
 class PaginaEquipe extends StatefulWidget {
+  final Equipe equipe;
+  PaginaEquipe({this.equipe});
   @override
   _PaginaEquipeState createState() => _PaginaEquipeState();
 }
 
 class _PaginaEquipeState extends State<PaginaEquipe> {
+  bool isCap; // Diz se o User é Capitão
+  bool isInTeam; // Diz se o User está nesta equipe
+  bool temEquipe; // Diz se o User já tem equipe para esta modalidade.
+  bool editName = false;
+  TextEditingController nameController = TextEditingController();
+
   TextStyle txtStyle1(bool bold) {
     return TextStyle(
         color: Colors.black,
@@ -16,7 +27,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
         fontWeight: bold ? FontWeight.w600 : FontWeight.w400);
   }
 
-  Widget roundButton(String text) {
+  Widget roundButton(String text, dynamic color, IconData icon) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(top: 4.0),
@@ -25,7 +36,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
           //width: 95,
           width: 130,
           decoration: BoxDecoration(
-            color: Colors.green[700],
+            color: color,
             borderRadius: BorderRadius.circular(28),
           ),
           child: ClipRRect(
@@ -39,15 +50,19 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   // crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Icon(Icons.swap_horiz, size: 26, color: Colors.white,),
+                    Icon(
+                      icon,
+                      size: 26,
+                      color: Colors.white,
+                    ),
                     Expanded(
                       child: Text(
-                          text,
-                          maxLines: 2,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
+                        text,
+                        maxLines: 2,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, color: Colors.white),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ],
                 ),
@@ -59,9 +74,102 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
     );
   }
 
-  var _controller = ScrollController();
+  Widget selectButton() {
+    if (isCap && isInTeam) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          roundButton('Alterar Capitão', Colors.green[700], Icons.swap_horiz),
+          SizedBox(
+            width: 20,
+          ),
+          roundButton('Sair da Equipe', Colors.red, Icons.exit_to_app),
+        ],
+      );
+    } else if (!temEquipe) {
+      return roundButton('Entrar', Colors.green[700], Icons.arrow_forward);
+    } else {
+      return Container();
+    }
+  }
+
+  Widget excludePartButton() {
+    if (isCap && isInTeam) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: roundButton('Excluir Membro', Colors.red, Icons.arrow_upward),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget nomeEquipe() {
+    if (!editName)
+      return Container(
+        constraints: BoxConstraints(maxWidth: 235),
+        child: Text(widget.equipe.nome,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: TextStyle(
+              color: Colors.blue[800],
+              fontSize: 30,
+              fontWeight: FontWeight.w600,
+            )),
+      );
+    else
+      return Container(
+        width: 235,
+        child: TextField(
+          controller: nameController,
+          textCapitalization: TextCapitalization.words,
+          style: TextStyle(color: Colors.blue[800], fontSize: 30),
+          autocorrect: false,
+          enableSuggestions: false,
+          decoration: InputDecoration(),
+        ),
+      );
+  }
+
+  Widget editButton() {
+    if (isCap) {
+      if (!editName) {
+        return IconButton(
+          onPressed: () => setState(() {
+            editName = true;
+          }),
+          icon: Icon(
+            Icons.edit,
+            size: 28,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        return IconButton(
+          onPressed: () async {
+            await widget.equipe.updateName(nameController.text);
+            setState(() {
+              editName = false;
+            });
+          },
+          icon: Icon(
+            Icons.done,
+            size: 28,
+            color: Colors.green,
+          ),
+        );
+      }
+    } else {
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    isCap = widget.equipe.cpfCapitao == userJuergs.cpf;
+    isInTeam = userJuergs.isInTeam(widget.equipe.id);
+    temEquipe = userJuergs.temEquipe(widget.equipe.nomeModalidade);
+    nameController.text = widget.equipe.nome;
     return Scaffold(
       appBar: AppBar(
         title: Text('Página da Equipe'),
@@ -75,23 +183,11 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Text('Equipe Legal',
-                        style: TextStyle(
-                          color: Colors.blue[800],
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
-                        )),
+                    nomeEquipe(),
                     SizedBox(
                       width: 8,
                     ),
-                    IconButton(
-                      onPressed: (){},
-                                          icon: Icon(
-                        Icons.edit,
-                        size: 28,
-                        color: Colors.green,
-                      ),
-                    ),
+                    editButton(),
                   ],
                 ),
                 Padding(
@@ -120,7 +216,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
                           fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      'Marcos Vinicius Cunha',
+                      widget.equipe.nomeCapitao,
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -135,7 +231,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
                   children: <Widget>[
                     Text('Contato: ', style: txtStyle1(true)),
                     Text(
-                      '99387-5092',
+                      widget.equipe.celCapitaoFormated,
                       style: txtStyle1(false),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -147,7 +243,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
                   children: <Widget>[
                     Text('Modalidade: ', style: txtStyle1(true)),
                     Text(
-                      'Futsal Masculino',
+                      widget.equipe.nomeModalidade,
                       style: txtStyle1(false),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -159,7 +255,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
                   children: <Widget>[
                     Text('Participantes: ', style: txtStyle1(true)),
                     Text(
-                      '8/12',
+                      widget.equipe.partFormat,
                       style: txtStyle1(false),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -168,7 +264,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
               ],
             ),
           ),
-          roundButton('Alterar Capitão'),
+          selectButton(),
           Divider(
             height: 30,
             color: Colors.black87,
@@ -190,36 +286,54 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
           Padding(
             padding: const EdgeInsets.only(left: 40.0, top: 12),
             child: Container(
-                width: double.infinity,
-                constraints: BoxConstraints(
-                  maxHeight: 200,
-                ),
-                child: FadingEdgeScrollView.fromScrollView(
-                  child: ListView.builder(
-                    controller: _controller,
-                    itemCount: 12,
-                    itemBuilder: (context, index) => Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: Container(
-                            height: 7,
-                            width: 7,
-                            decoration: new BoxDecoration(
-                              color: Colors.deepPurple[700],
-                              shape: BoxShape.circle,
-                            ),
-                          ),
+              width: double.infinity,
+              child: ColumnBuilder(
+                itemCount: widget.equipe.numeroParticipantes,
+                itemBuilder: (context, index) => Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Container(
+                        height: 7,
+                        width: 7,
+                        decoration: new BoxDecoration(
+                          color: Colors.deepPurple[700],
+                          shape: BoxShape.circle,
                         ),
-                        Text(
-                          faker.person.name(),
-                          style: TextStyle(color: Colors.black, fontSize: 18),
-                          overflow: TextOverflow.fade,
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                )),
+                    Text(
+                      widget.equipe.participantesNomes[index],
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      overflow: TextOverflow.fade,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          excludePartButton(),
+          Divider(
+            height: 30,
+            color: Colors.black87,
+            thickness: 1,
+            indent: 60,
+            endIndent: 60,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 24.0, bottom: 12),
+            child: Text(
+              'Jogos',
+              style: TextStyle(
+                color: Colors.blue[800],
+                fontSize: 30,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          ColumnBuilder(
+            itemCount: 6,
+            itemBuilder: (context, index) => jogoCard(),
           ),
         ],
       ),

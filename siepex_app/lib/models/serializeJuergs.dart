@@ -77,10 +77,30 @@ class Estudante {
     this.modalidadesJuiz = null;
   }
 
+
+  // Recebe o id de uma equipe e o novo nome e atualiza na lista das minhas equipes.
+  void updateTeamName(int id, String newName){
+    for(Equipe eq in minhasEquipes){
+      if(eq.id == id){
+        eq.nome = newName;
+        return;
+      }
+    }
+  }
+
   // Determina se o usuario já possui equipe para dada modalidade.
   bool temEquipe(String modalidade){
     for(Equipe equipe in minhasEquipes){
       if(equipe.nomeModalidade == modalidade)
+        return true;
+    }
+    return false;
+  }
+
+  // Determina se o usuario já possui equipe para dada modalidade.
+  bool temEquipeId(int id){
+    for(Equipe equipe in minhasEquipes){
+      if(equipe.idModalidade == id)
         return true;
     }
     return false;
