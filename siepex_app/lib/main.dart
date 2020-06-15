@@ -33,7 +33,7 @@ import 'package:siepex/src/eventos/juergs/ParticipanteJuergs.dart';
 import 'package:siepex/src/eventos/juergs/CadastraParticipante.dart';
 import 'package:siepex/src/eventos/juergs/LoginPage.dart';
 import 'package:siepex/src/eventos/juergs/ModalidadesPage.dart';
-import 'package:siepex/src/eventos/juergs/PaginaEquipes.dart';
+import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipes.dart';
 import 'package:siepex/src/eventos/forumAreas/forumAreas.dart';
 import 'package:siepex/src/inicio/inicioSiepex.dart';
 import 'package:siepex/src/tabs/tabs.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:siepex/models/modalidade.dart';
 // import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipe.dart';
@@ -114,6 +115,7 @@ class EquipeCard extends StatelessWidget {
                                     : () async {
                                         await equipe.entrarEquipe(
                                             context, isActive);
+                                        
                                       },
                                 child: Center(
                                     child: Text(

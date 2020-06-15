@@ -21,6 +21,13 @@ class PaginaEquipes extends StatefulWidget {
 
 class _PaginaEquipesState extends State<PaginaEquipes> {
   bool isActive = true;
+
+  Future<bool> _doPop() async {
+    Navigator.pop(context, (){
+       setState((){});
+     });
+    return false;
+  }
   @override
   Widget build(BuildContext context) {
     isActive = widget.modalidade.nome == 'Rústica'
@@ -28,58 +35,58 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
         : widget.modalidade.dataLimite.isAfter(
             DateTime.now()); // Vê se a data limite de inscrição já passou.
     return Scaffold(
-      //appBar: titulo(),
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(widget.modalidade.nome),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(
-                    'assets/img/arte_uergs/Background_App_Uergs.png'),
-                fit: BoxFit.fill)),
-        child: FutureBuilder(
-            future: HandleData().getEquipes(widget.modalidade.id),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.blue,
-                  ),
-                );
-              } else {
-                List<Equipe> equipesList = snapshot.data;
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, index) {
-                        return ChangeNotifierProvider(
-                          create: (_) => equipesList[index],
-                          child: _equipeCard(equipesList[index]),
-                        );
-                      });
-                } else {
+        //appBar: titulo(),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(widget.modalidade.nome),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(
+                      'assets/img/arte_uergs/Background_App_Uergs.png'),
+                  fit: BoxFit.fill)),
+          child: FutureBuilder(
+              future: HandleData().getEquipes(widget.modalidade.id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
-                    child: Text(
-                      'Nenhuma equipe cadastrada.',
-                      style: TextStyle(color: Colors.black),
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.blue,
                     ),
                   );
+                } else {
+                  List<Equipe> equipesList = snapshot.data;
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return ChangeNotifierProvider(
+                            create: (_) => equipesList[index],
+                            child: _equipeCard(equipesList[index]),
+                          );
+                        });
+                  } else {
+                    return Center(
+                      child: Text(
+                        'Nenhuma equipe cadastrada.',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    );
+                  }
                 }
-              }
-            }),
-      ),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-            //color: Theme.of(context).primaryColor,
-            color: Colors.green[600],
-            borderRadius: BorderRadius.all(Radius.circular(60))),
-        height: 60,
-        width: 80,
-        child: SizedBox.expand(child: selecionaBotao()),
-      ),
-    );
+              }),
+        ),
+        floatingActionButton: Container(
+          decoration: BoxDecoration(
+              //color: Theme.of(context).primaryColor,
+              color: Colors.green[600],
+              borderRadius: BorderRadius.all(Radius.circular(60))),
+          height: 60,
+          width: 80,
+          child: SizedBox.expand(child: selecionaBotao()),
+        ),
+      );
   }
 
 /* TODO: ARRUMAR DEPOIS PARA O TITULO PEGAR O NUMERO DE PARTICIPANTES INSCRITOS

@@ -4,7 +4,12 @@ import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipes.dart';
 
-class ModalidadeCard extends StatelessWidget {
+class ModalidadeCard extends StatefulWidget {
+  @override
+  _ModalidadeCardState createState() => _ModalidadeCardState();
+}
+
+class _ModalidadeCardState extends State<ModalidadeCard> {
   @override
   Widget build(BuildContext context) {
     Modalidade modalidade = Provider.of<Modalidade>(context);
@@ -113,8 +118,9 @@ class ModalidadeCard extends StatelessWidget {
               ),
             ],
           ),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaEquipes(modalidade: modalidade)));
+          onPressed: () async {
+            var f = await Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaEquipes(modalidade: modalidade)));
+            setState((){});
           },
         ),
       ),
