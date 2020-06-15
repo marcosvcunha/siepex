@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/models/serializeJuergs.dart';
-import 'package:siepex/src/eventos/juergs/PaginaEquipe.dart';
+import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipe.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';

@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:siepex/src/config.dart';
 import 'package:siepex/models/serializeJuergs.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 
 class Equipe extends ChangeNotifier{
   String nome;
@@ -15,6 +16,7 @@ class Equipe extends ChangeNotifier{
   String celCapitao;
   List<String> participantesCpf = <String>[];
   List<String> participantesNomes = <String>[];
+  bool isLoading = false;
 
   get nomeCapitao => participantesNomes[indexCapitao()];
   // Retorna a string do cel com o traço no meio.
@@ -22,9 +24,6 @@ class Equipe extends ChangeNotifier{
   // Retorna a string com numero de participantes / maximo de participantes
   get partFormat => numeroParticipantes.toString() + '/' + maximoParticipantes.toString();
 
-  Equipe(){
-    
-  }
 
   Equipe.fromJson(jsonData) {
     this.nome = jsonData['nome_equipe'];
@@ -57,7 +56,36 @@ class Equipe extends ChangeNotifier{
     return -1;
   }
 
-  Future updateName(String newName) async {
+  Future entrarEquipe(BuildContext context, bool isActive) async {
+    try{
+      if(!isActive){
+        errorDialog(context, 'Erro', 'Inscrições Encerradas.');
+        return;
+      }else if(numeroParticipantes == maximoParticipantes){
+        errorDialog(context, 'Erro', 'A equipe está cheia.');
+      }
+      isLoading = true;
+      notifyListeners();
+      var resposta =
+            jsonDecode((await http.put(baseUrl + 'equipe/entra', body: {
+          'user_cpf': userJuergs.cpf,
+          'equipe_id': id.toString()
+        })).body);
+        Equipe updatedTeam = Equipe.fromJson(resposta['data']);
+        participantesNomes = updatedTeam.participantesNomes;
+        participantesCpf = updatedTeam.participantesCpf;
+        numeroParticipantes = updatedTeam.numeroParticipantes;
+        userJuergs.minhasEquipes.add(updatedTeam);
+        isLoading = false;
+        notifyListeners();
+        return;
+    }catch(e){
+      print("Erro ao entrar na equipe: " + e.toString());
+      return;
+    }
+  }
+
+  Future updateName(BuildContext context, String newName) async {
     try{
       if(newName != nome){
         var resposta = jsonDecode((await http.put(baseUrl + 'equipe/changeName', body: {
@@ -68,6 +96,7 @@ class Equipe extends ChangeNotifier{
         })).body);
         if(resposta['status'] == 'erro'){
           print(resposta['erro']);
+          errorDialog(context, 'Erro', 'Nome da Equipe já existe.');
         }else{
           nome = newName;
           userJuergs.updateTeamName(id, nome);

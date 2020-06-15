@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/icons/my_flutter_app_icons.dart';
 import 'package:siepex/icons/sport_icons.dart';
+import 'package:siepex/models/serializeJuergs.dart';
 
 
 Map<String, Icon> icons = {
@@ -13,7 +14,7 @@ Map<String, Icon> icons = {
   };
   
 
-class Modalidade{
+class Modalidade extends ChangeNotifier{
   int id;
   String nome;
   String dataLimiteString;
@@ -22,6 +23,7 @@ class Modalidade{
   bool inscrito;
   Icon icon;
 
+  
   Modalidade(int modId, String modNome, int modMaxParticipantes, bool modInscrito, DateTime modDataLimite){
     id = modId;
     nome = modNome;

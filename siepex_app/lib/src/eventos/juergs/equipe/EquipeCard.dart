@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:siepex/models/modalidade.dart';
+// import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/models/serializeJuergs.dart';
-import 'package:siepex/src/eventos/juergs/PaginaEquipe.dart';
-import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
+import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipe.dart';
+// import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
-import 'package:siepex/src/eventos/juergs/models/handledata.dart';
+// import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 
 class EquipeCard extends StatelessWidget {
   final bool isActive;
   EquipeCard({@required this.isActive});
-  @override
-  Widget build(BuildContext context) {
-      Equipe equipe = Provider.of<Equipe>(context);
-      bool temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);
-      return Padding(
+  
+  Widget body(BuildContext context, Equipe equipe){
+    bool temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);
+    return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
         child: Container(
           decoration: BoxDecoration(
@@ -30,9 +29,7 @@ class EquipeCard extends StatelessWidget {
             ],
           ),
           //height: 130,
-          child: FlatButton(
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaEquipe(equipe: equipe,))),
-            child: Column(
+          child: Column(
               children: <Widget>[
                 ListTile(
                   title: Padding(
@@ -115,8 +112,8 @@ class EquipeCard extends StatelessWidget {
                                 onPressed: temEquipe
                                     ? null
                                     : () async {
-                                        await HandleData().entrarEquipe(
-                                            context, equipe.id, isActive);
+                                        await equipe.entrarEquipe(
+                                            context, isActive);
                                       },
                                 child: Center(
                                     child: Text(
@@ -126,7 +123,7 @@ class EquipeCard extends StatelessWidget {
                                       fontWeight: FontWeight.w600,
                                       color: temEquipe
                                           ? Colors.blueGrey[800]
-                                          : Colors.black),
+                                          : Colors.black87),
                                 )),
                               ),
                             ),
@@ -138,7 +135,9 @@ class EquipeCard extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 5.0),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Color(0xffFFE569),
+                              //color: Color(0xffFFE569),
+                              //color: Color(0xff4071FE),
+                              color: Color(0xff1C61EA),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20)),
                               boxShadow: [
@@ -154,16 +153,11 @@ class EquipeCard extends StatelessWidget {
                               focusColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               splashColor: Colors.transparent,
-                              onPressed: () {
-                                participantesDialog(
-                                    context,
-                                    equipe.participantesNomes,
-                                    equipe.indexCapitao());
-                              },
+                              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaEquipe(equipe: equipe,))),
                               child: Text(
-                                'Participantes',
+                                'Mais Informações',
                                 style: TextStyle(
-                                    color: Colors.black,
+                                    color: Colors.black87,
                                     fontWeight: FontWeight.w600),
                                 textAlign: TextAlign.center,
                               ),
@@ -178,8 +172,12 @@ class EquipeCard extends StatelessWidget {
                 ),
               ],
             ),
-          ),
         ),
       );
+  }
+  @override
+  Widget build(BuildContext context) {
+      Equipe equipe = Provider.of<Equipe>(context);
+      return equipe.isLoading ? Center(child: CircularProgressIndicator(),) : body(context, equipe);
   }
 }

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/models/serializeJuergs.dart';
-import 'package:siepex/src/eventos/juergs/PaginaEquipe.dart';
+import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipe.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/textinputdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
-import 'models/equipe.dart';
+import '../models/equipe.dart';
 import 'package:provider/provider.dart';
-import './Widgets/EquipeCard.dart';
-import './Widgets/RusticaCard.dart';
+import './EquipeCard.dart';
+import './RusticaCard.dart';
 
 class PaginaEquipes extends StatefulWidget {
   final Widget child;
@@ -27,7 +27,6 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
         ? true
         : widget.modalidade.dataLimite.isAfter(
             DateTime.now()); // Vê se a data limite de inscrição já passou.
-    bool temEquipe = userJuergs.temEquipe(widget.modalidade.nome);
     return Scaffold(
       //appBar: titulo(),
       appBar: AppBar(

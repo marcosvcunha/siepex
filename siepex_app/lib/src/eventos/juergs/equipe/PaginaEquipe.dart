@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 import 'package:siepex/icons/sport_icons.dart' as sportIcon;
-import './Widgets/ColumnBuilder.dart';
-import './tabelas/widgets.dart';
-import 'models/equipe.dart';
+import 'package:siepex/src/eventos/juergs/equipe/changeCapitanPage.dart';
+import '../Widgets/ColumnBuilder.dart';
+import '../tabelas/widgets.dart';
+import '../models/equipe.dart';
 import 'package:siepex/models/serializeJuergs.dart';
+import 'package:animations/animations.dart';
 
 class PaginaEquipe extends StatefulWidget {
   final Equipe equipe;
@@ -27,7 +29,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
         fontWeight: bold ? FontWeight.w600 : FontWeight.w400);
   }
 
-  Widget roundButton(String text, dynamic color, IconData icon) {
+  Widget roundButton(String text, dynamic color, IconData icon, Function func) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(top: 4.0),
@@ -42,7 +44,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(28),
             child: FlatButton(
-              onPressed: () {},
+              onPressed: func != null ? func : null,
               child: Center(
                   child: Padding(
                 padding: const EdgeInsets.all(4.0),
@@ -79,15 +81,21 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          roundButton('Alterar Capitão', Colors.green[700], Icons.swap_horiz),
+          roundButton('Alterar Capitão', Colors.green[700], Icons.swap_horiz, (){
+            Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (BuildContext context){
+                return ChangeCapitan();
+              }
+            ));
+          }),
           SizedBox(
             width: 20,
           ),
-          roundButton('Sair da Equipe', Colors.red, Icons.exit_to_app),
+          roundButton('Sair da Equipe', Colors.red, Icons.exit_to_app, null),
         ],
       );
     } else if (!temEquipe) {
-      return roundButton('Entrar', Colors.green[700], Icons.arrow_forward);
+      return roundButton('Entrar', Colors.green[700], Icons.arrow_forward, null);
     } else {
       return Container();
     }
@@ -97,7 +105,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
     if (isCap && isInTeam) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: roundButton('Excluir Membro', Colors.red, Icons.arrow_upward),
+        child: roundButton('Excluir Membro', Colors.red, Icons.arrow_upward, null),
       );
     } else {
       return Container();
@@ -147,7 +155,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
       } else {
         return IconButton(
           onPressed: () async {
-            await widget.equipe.updateName(nameController.text);
+            await widget.equipe.updateName(context, nameController.text);
             setState(() {
               editName = false;
             });

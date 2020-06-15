@@ -124,22 +124,5 @@ class HandleData {
       return;
     }
   }
-  Future<void> entrarEquipe(BuildContext context, int equipeId, bool isActive) async {
-    try{
-      if(!isActive){
-        errorDialog(context, 'Erro', 'Inscrições Encerradas');
-        return;
-      }
-      var resposta =
-            jsonDecode((await http.put(baseUrl + 'equipe/entra', body: {
-          'user_cpf': userJuergs.cpf,
-          'equipe_id': equipeId.toString(),
-        })).body);
-        userJuergs.minhasEquipes.add(Equipe.fromJson(resposta['data']));
-        return;
-    }catch(e){
-      print("Erro ao entrar na equipe: " + e.toString());
-      return;
-    }
-  }
+  
 }
