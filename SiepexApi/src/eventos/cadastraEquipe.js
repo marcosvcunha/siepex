@@ -43,7 +43,7 @@ router.put('/entra', async (req, res) => {
         equipes_juergs.update({
             numero_participantes: equipe.numero_participantes + 1,
             participantes_cadastrados: equipe.participantes_cadastrados + userCpf + ';',
-        },{
+        }, {
             where: {
                 id: equipeId,
             }
@@ -52,26 +52,27 @@ router.put('/entra', async (req, res) => {
                 cadastro_juergs.update({
                     minhas_equipes: user.minhas_equipes + req.body['equipe_id'] + ';',
                 },
-                {
-                    where: {
-                    cpf: userCpf
-                }})
+                    {
+                        where: {
+                            cpf: userCpf
+                        }
+                    })
             }).then((_) => {
-            equipes_juergs.findByPk(equipeId).then( async (updatedEquipe) => {
-                userCpfs = updatedEquipe['dataValues']['participantes_cadastrados'].split(';');
-                userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
-                updatedEquipe['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
-                updatedEquipe['dataValues']['nomes_participantes'] = [];
-                updatedEquipe['dataValues']['nomes_participantes'] = await pegarNomes(userCpfs);
-                console.log(updatedEquipe);
-                res.json({
-                    status: 'sucesso',
-                    data: updatedEquipe,
+                equipes_juergs.findByPk(equipeId).then(async (updatedEquipe) => {
+                    userCpfs = updatedEquipe['dataValues']['participantes_cadastrados'].split(';');
+                    userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
+                    updatedEquipe['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
+                    updatedEquipe['dataValues']['nomes_participantes'] = [];
+                    updatedEquipe['dataValues']['nomes_participantes'] = await pegarNomes(userCpfs);
+                    console.log(updatedEquipe);
+                    res.json({
+                        status: 'sucesso',
+                        data: updatedEquipe,
+                    });
                 });
-            });
+            })
         })
-        })
-    }).catch((err) =>{
+    }).catch((err) => {
         res.json({
             status: 'erro',
         })
@@ -82,7 +83,7 @@ router.put('/entra', async (req, res) => {
     //Colocar o id da equipe na lista de equipes do usuario
 })
 
-router.put('/changeName', async (req, res) =>{
+router.put('/changeName', async (req, res) => {
     var equipe = await getEquipe(req.body['nome_equipe'], req.body['nome_modalidade']);
     if (equipe.count != 0) {
         //criarEquipe(req, res);
@@ -91,26 +92,46 @@ router.put('/changeName', async (req, res) =>{
             erro: 'Equipe já existe'
         })
         return;
-    }else{
+    } else {
         equipes_juergs.update({
             nome_equipe: req.body['nome_equipe'],
         }, {
-            where:{
+            where: {
                 id: parseInt(req.body['id_equipe']),
             }
-        }).then((resul) =>{
+        }).then((resul) => {
             res.json({
-                status:'sucesso',
+                status: 'sucesso',
             })
             return;
-        }).catch((err) =>{
+        }).catch((err) => {
             res.json({
-                status:'erro',
+                status: 'erro',
             })
             return;
         })
     }
     return;
+})
+
+router.put('/changeCaptain', async (req, res) => {
+    newCapCpf = req.body['newcap_cpf'];
+    equipeId = parseInt(req.body['equipe_id']);
+    await cadastro_juergs.findByPk(newCapCpf, {
+        attributes: ['celular']
+    }).then(async (user) => {
+        await equipes_juergs.update({
+            cpf_capitao: newCapCpf,
+            celular_capitao: user['dataValues']['celular']
+        }, { where: { id: equipeId } }).then((result) => {
+            res.json({
+                status: 'sucesso',
+                newCapCel: user['dataValues']['celular']
+            })
+        }).catch((err)=>res.json({status:'erro'}))
+
+    }).catch((err)=>res.json({status:'erro'}))
+
 })
 
 function pegarNomes(userCpfs) {
@@ -143,7 +164,6 @@ async function getEquipe(equipe, modalidade) {
 }
 
 async function criarEquipe(req, res) {
-    console.log('Criando Equipe');
     equipes_juergs.create(
         {
             id_modalidade: parseInt(req.body['id_modalidade']),
@@ -156,26 +176,26 @@ async function criarEquipe(req, res) {
             celular_capitao: req.body['user_cel'],
         }
     ).then((result) => {
-         cadastro_juergs.findByPk(req.body['user_cpf']).then((participante)=> {
+        cadastro_juergs.findByPk(req.body['user_cpf']).then((participante) => {
             cadastro_juergs.update({
                 // Armazena o id da equipe cadastrada na lista de equipes do participante.
                 minhas_equipes: participante.minhas_equipes + result['dataValues']['id'].toString() + ';'
             }, {
                 where: {
-                    'cpf' :req.body['user_cpf']
+                    'cpf': req.body['user_cpf']
                 }
             })
-            
+
         }).then((otherResult) => {
             result['dataValues']['nomes_participantes'] = ['Marcos Cunha'];
             userCpfs = result['dataValues']['participantes_cadastrados'].split(';');
             userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
             result['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
             result['dataValues']['cpf_capitao'] = req.body['user_cpf'],
-            res.json({
-                status: 'sucesso',
-                data: result['dataValues'],
-            })
+                res.json({
+                    status: 'sucesso',
+                    data: result['dataValues'],
+                })
         })
 
     }).catch((err) => {

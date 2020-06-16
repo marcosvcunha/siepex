@@ -37,11 +37,11 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          roundButton('Alterar Capitão', Colors.green[700], Icons.swap_horiz, (){
+          roundButton('Alterar Capitão', Colors.green[700], Icons.swap_horiz, equipe.numeroParticipantes > 1 ? (){
             Navigator.of(context).push(MaterialPageRoute<void>(
               builder: (BuildContext context) => ChangeNotifierProvider.value(value: equipe, child: ChangeCaptain()),
             ));
-          }),
+          } : null),
           SizedBox(
             width: 20,
           ),
@@ -129,7 +129,6 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
   @override
   Widget build(BuildContext context) {
     equipe = Provider.of<Equipe>(context);
-    print('Usando provider');
     isCap = equipe.cpfCapitao == userJuergs.cpf;
     isInTeam = userJuergs.isInTeam(equipe.id);
     temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);

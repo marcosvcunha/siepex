@@ -116,18 +116,16 @@ class Equipe extends ChangeNotifier{
       print('Aqui');
       isLoading = true;
       notifyListeners();
-      // var resposta = jsonDecode((await http.put(baseUrl + 'equipe/changeCaptain', body: {
-      //     'newcap_cpf': newCapCpf,
-      //     'equipe_id': id,
-      //   })).body);
-      // if(resposta['status'] == 'erro'){
-      //   errorDialog(context, 'Erro', 'Erro ao alterar o capitão');
-      // }else{
-
-      // }
-      cpfCapitao = newCapCpf;
-      notifyListeners();
-      await Future.delayed(Duration(seconds:2));
+      var resposta = jsonDecode((await http.put(baseUrl + 'equipe/changeCaptain', body: {
+          'newcap_cpf': newCapCpf,
+          'equipe_id': id.toString(),
+        })).body);
+      if(resposta['status'] == 'erro'){
+        errorDialog(context, 'Erro', 'Erro ao alterar o capitão');
+      }else{
+        cpfCapitao = newCapCpf;
+        celCapitao = resposta['newCapCel'];
+      }
       isLoading = false;
       notifyListeners();
     }catch(e){
