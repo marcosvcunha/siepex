@@ -110,4 +110,28 @@ class Equipe extends ChangeNotifier{
       print('Erro ao mudar nome da Equipe: ' + e.toString());
     }
   }
+
+  Future changeCaptain(BuildContext context, String newCapCpf) async {
+    try{
+      print('Aqui');
+      isLoading = true;
+      notifyListeners();
+      // var resposta = jsonDecode((await http.put(baseUrl + 'equipe/changeCaptain', body: {
+      //     'newcap_cpf': newCapCpf,
+      //     'equipe_id': id,
+      //   })).body);
+      // if(resposta['status'] == 'erro'){
+      //   errorDialog(context, 'Erro', 'Erro ao alterar o capitão');
+      // }else{
+
+      // }
+      cpfCapitao = newCapCpf;
+      notifyListeners();
+      await Future.delayed(Duration(seconds:2));
+      isLoading = false;
+      notifyListeners();
+    }catch(e){
+      print('Erro ao mudar o capitão: ' + e.toString());
+    }
+  }
 }

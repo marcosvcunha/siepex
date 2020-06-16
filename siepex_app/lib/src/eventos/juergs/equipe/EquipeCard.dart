@@ -155,7 +155,9 @@ class EquipeCard extends StatelessWidget {
                               focusColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               splashColor: Colors.transparent,
-                              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaginaEquipe(equipe: equipe,))),
+                              onPressed: () => Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => ChangeNotifierProvider.value(value: equipe,
+                              child: PaginaEquipe()))),
                               child: Text(
                                 'Mais Informações',
                                 style: TextStyle(
