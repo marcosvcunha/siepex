@@ -20,15 +20,22 @@ class Modalidade extends ChangeNotifier{
   String dataLimiteString;
   DateTime dataLimite;
   int maxParticipantes; // # maximo por equipes
-  bool inscrito;
+  bool _inscrito; // O usuario é inscrito nesta modalidade?
   Icon icon;
 
+  get inscrito => _inscrito;
+
+  set inscrito(bool newVal){
+      _inscrito = newVal;
+      print("Notificando modalidade");
+      notifyListeners();
+  }
   
   Modalidade(int modId, String modNome, int modMaxParticipantes, bool modInscrito, DateTime modDataLimite){
     id = modId;
     nome = modNome;
     maxParticipantes = modMaxParticipantes;
-    inscrito = modInscrito;
+    _inscrito = modInscrito;
     icon = icons[nome];
     dataLimite = modDataLimite;
     dataLimiteString = '${dataLimite.day.toString()}/${dataLimite.month.toString()} ${dataLimite.hour.toString()}:${dataLimite.minute.toString()}';

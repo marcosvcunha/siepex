@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 import 'package:siepex/icons/sport_icons.dart' as sportIcon;
+import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/roundButton.dart';
 import 'package:siepex/src/eventos/juergs/equipe/changeCaptainPage.dart';
+import 'package:siepex/src/eventos/juergs/equipe/excludeMemberPage.dart';
 import '../Widgets/ColumnBuilder.dart';
 import '../tabelas/widgets.dart';
 import '../models/equipe.dart';
@@ -24,6 +27,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
   bool editName = false;
   TextEditingController nameController = TextEditingController();
   Equipe equipe;
+  Modalidade modalidade;
 
   TextStyle txtStyle1(bool bold) {
     return TextStyle(
@@ -45,7 +49,19 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
           SizedBox(
             width: 20,
           ),
-          roundButton('Sair da Equipe', Colors.red, Icons.exit_to_app, null),
+          roundButton('Sair da Equipe', Colors.red, Icons.exit_to_app, (){
+            confirmDialog(context, 'Sair da equipe', 'Tem certeza que deseja sair da equipe? A equipe será excluida por ficar sem capitão.', 
+              () async {
+                print('Deletando Equipe');
+                await equipe.deleteTeam(context);
+                modalidade.inscrito = userJuergs.temEquipe(modalidade.nome);
+                Navigator.pop(context);
+                Navigator.pop(context);                
+              }, (){
+                print('Cancelou');
+                Navigator.pop(context);
+              });
+          }),
         ],
       );
     } else if (!temEquipe) {
@@ -59,7 +75,11 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
     if (isCap && isInTeam) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: roundButton('Excluir Membro', Colors.red, Icons.arrow_upward, null),
+        child: roundButton('Excluir Membro', Colors.red, Icons.arrow_upward, (){
+          Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (BuildContext context) => ChangeNotifierProvider.value(value: equipe, child: ExcludeMemberPage()),
+            ));
+        }),
       );
     } else {
       return Container();
@@ -129,6 +149,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
   @override
   Widget build(BuildContext context) {
     equipe = Provider.of<Equipe>(context);
+    modalidade = Provider.of<Modalidade>(context);
     isCap = equipe.cpfCapitao == userJuergs.cpf;
     isInTeam = userJuergs.isInTeam(equipe.id);
     temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);

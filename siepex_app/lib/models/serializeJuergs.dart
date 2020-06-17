@@ -90,6 +90,7 @@ class Estudante {
 
   // Determina se o usuario já possui equipe para dada modalidade.
   bool temEquipe(String modalidade){
+    // Determina se o usuario já possui equipe para dada modalidade.    
     for(Equipe equipe in minhasEquipes){
       if(equipe.nomeModalidade == modalidade)
         return true;

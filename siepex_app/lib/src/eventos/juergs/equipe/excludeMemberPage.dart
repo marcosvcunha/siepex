@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/ColumnBuilder.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/roundButton.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:provider/provider.dart';
-class ChangeCaptain extends StatefulWidget {
-  // final Equipe equipe;
-  // ChangeCaptain({this.equipe});
+
+class ExcludeMemberPage extends StatefulWidget {
   @override
-  _ChangeCaptainState createState() => _ChangeCaptainState();
+  _ExcludeMemberPageState createState() => _ExcludeMemberPageState();
 }
 
-class _ChangeCaptainState extends State<ChangeCaptain> {
-  int selectedButton = 0;
+class _ExcludeMemberPageState extends State<ExcludeMemberPage> {
   List<String> part;
   List<String> partCpf;
   Equipe equipe;
+  List<bool> checkBoxValues = List.generate(30, (index) => false);
 
   // @override
   // void initState(){
@@ -34,7 +32,7 @@ class _ChangeCaptainState extends State<ChangeCaptain> {
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 16),
             child: Text(
-                'Escolha o novo capitão:',
+                'Selecione os membros que deseja excluir:',
                 style: TextStyle(
                   color: Colors.blue[800],
                   fontSize: 30,
@@ -51,24 +49,20 @@ class _ChangeCaptainState extends State<ChangeCaptain> {
                 child: Center(
                   child: FlatButton(
                     onPressed: (){
-                      selectedButton = index;
+                      checkBoxValues[index] = !checkBoxValues[index];
                             setState(() {
                       });
                     },
                     child: Row(
                       children: <Widget>[
-                        Radio(
-                          value: index,
-                          groupValue: selectedButton,
-                          activeColor: Colors.blue,
-                          onChanged: (val){
-                            selectedButton = val;
-                            setState(() {
-                            });
-                          },
+                        Checkbox(value: checkBoxValues[index], onChanged: (newVal){
+                          setState(() {
+                            checkBoxValues[index] = newVal;
+                          });
+                        },
                         ),
                       Text(part[index], style: TextStyle(
-                        color: selectedButton == index ? Colors.blue : Colors.black87, fontSize: 22, fontWeight: FontWeight.w400)),
+                        color: checkBoxValues[index] ? Colors.blue : Colors.black87, fontSize: 22, fontWeight: FontWeight.w400)),
                       ],
                     ),
                   ),
@@ -80,11 +74,28 @@ class _ChangeCaptainState extends State<ChangeCaptain> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 roundButton('Confimar', Colors.green, Icons.done, (){
-                  confirmDialog(context, 'Mudar Capitão', 'Deseja confimar ' + part[selectedButton] + ' como novo capitão?', 
+                  String excludedMembers = '';
+                  for(int i = 0; i < part.length; i++){
+                    if(checkBoxValues[i]){
+                      if(excludedMembers.length > 0)
+                        excludedMembers += ', ';
+                      excludedMembers += part[i];
+                    }
+                  }
+                  if(excludedMembers.length > 0)
+                    excludedMembers += '.';
+                  else
+                    excludedMembers = 'Nenhum participante selecionado.';
+                  confirmDialog(context, 'Excluir Membros', 'Confirmar exclusão dos seguintes membros: ' + excludedMembers, 
                   () async {
-                    await equipe.changeCaptain(context, partCpf[selectedButton]);
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
+                    List<String> membersCpf = [];
+                    for(int i = 0; i < part.length; i++){
+                      if(checkBoxValues[i])
+                        membersCpf.add(partCpf[i]);
+                    }
+                    await equipe.excludeMembers(context, membersCpf);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                   }, (){
                     Navigator.of(context).pop();
                   });

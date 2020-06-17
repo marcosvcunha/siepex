@@ -102,6 +102,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           decoration:
               InputDecoration(labelText: 'Campus', errorText: instError),
           controller: txtInstituicao,
+          textCapitalization: TextCapitalization.words,
           keyboardType: TextInputType.text,
           style:
               TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
@@ -114,6 +115,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           decoration:
               InputDecoration(labelText: 'Instituição', errorText: instError),
           controller: txtInstituicao,
+          textCapitalization: TextCapitalization.words,
           keyboardType: TextInputType.text,
           style:
               TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
@@ -377,6 +379,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
             decoration:
                 InputDecoration(labelText: 'Nome', errorText: nomeError),
             controller: txtNome,
+            textCapitalization: TextCapitalization.words,
             keyboardType: TextInputType.text,
             style:
                 TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),

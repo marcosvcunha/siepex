@@ -4,6 +4,7 @@ const {
     equipes_juergs,
     cadastro_juergs,
 } = require('../../models');
+const { json } = require('body-parser');
 
 router.put('/cadastra', async (req, res) => {
     var equipe = await getEquipe(req.body['nome_equipe'], req.body['nome_modalidade']);
@@ -128,10 +129,115 @@ router.put('/changeCaptain', async (req, res) => {
                 status: 'sucesso',
                 newCapCel: user['dataValues']['celular']
             })
-        }).catch((err)=>res.json({status:'erro'}))
+        }).catch((err) => res.json({ status: 'erro' }))
 
-    }).catch((err)=>res.json({status:'erro'}))
+    }).catch((err) => res.json({ status: 'erro' }))
 
+})
+
+router.put('/remove', async (req, res) => {
+    console.log('Removendo Equipe')
+    try {
+        id = parseInt(req.body['equipe_id'])
+        // Remove a Equipe da lista de Equipes de cada participante.
+        await equipes_juergs.findByPk(id, {
+            attributes: ['participantes_cadastrados'],
+        }).then(async (participantes) => {
+            userCpfs = participantes['dataValues']['participantes_cadastrados'].split(';');
+            userCpfs = userCpfs.slice(0, userCpfs.length - 1);
+            await cadastro_juergs.findAll({
+                where: {
+                    cpf: userCpfs
+                },
+            }, {
+                attributes: ['minhas_equipes'],
+            }).then(async (players) => {
+                for (i = 0; i < players.length; i++) {
+                    await cadastro_juergs.update({
+                        'minhas_equipes': players[i].minhas_equipes.replace(id.toString() + ';', '')
+                    }, {
+                        where: {
+                            cpf: players[i].cpf,
+                        }
+                    })
+                }
+            });
+        }).catch((e) => {
+            res.json({ status: 'erro' })
+        })
+        // Remove a Equipe
+        equipes_juergs.destroy({
+            where: {
+                id: id,
+            }
+        }).then((result) => {
+            res.json({ status: 'sucesso' });
+        })
+    } catch (e) {
+        res.json({ status: 'erro' });
+        return;
+    }
+    console.log('Aqui3');
+})
+
+router.put('/excludeMembers', async (req, res) => {
+    try{
+        id = parseInt(req.body['equipe_id']);
+        userCpfs = JSON.parse(req.body['members_cpf']);
+        
+        console.log(userCpfs);
+        // Apagar Equipe da lista de Equipe dos Membros excluidos.
+        await cadastro_juergs.findAll({
+            where:{
+                cpf:userCpfs
+            },
+            attributes:['cpf', 'minhas_equipes']
+        }).then(async (users) => {
+            console.log(users);
+            for(i = 0; i < users.length; i ++){
+                await cadastro_juergs.update({
+                    'minhas_equipes':users[i].minhas_equipes.replace(id + ';', ''),
+                },{
+                    where: {
+                        cpf: users[i].cpf,
+                    }
+                })
+            }
+
+        }).catch((e) => {
+            res.json({
+                status:'erro'
+            });
+            return;
+        });
+        // Apagar cpf dos membros excluidos da lista de participantes da equipe e mudar número de participantes na equipe.
+        await equipes_juergs.findByPk(id,{
+            attributes: ['numero_participantes', 'participantes_cadastrados'],
+        }).then( async (equipe) => {
+            newMemberList = equipe.participantes_cadastrados;
+            for(i = 0; i < userCpfs.length; i++){
+                newMemberList = newMemberList.replace(userCpfs[i] + ';', '');
+            }
+            await equipes_juergs.update({
+                'participantes_cadastrados': newMemberList,
+                'numero_participantes': equipe.numero_participantes - userCpfs.length,
+            },{
+                where:{
+                    id: id,
+                }
+            })
+        })
+        res.json({
+            status:'sucesso',
+        });
+        return;
+    }catch(e){
+        console.log('Erro ao excluir membros: ' + e.toString())
+        res.json({
+            status:'erro'
+        });
+        return;
+    }
 })
 
 function pegarNomes(userCpfs) {

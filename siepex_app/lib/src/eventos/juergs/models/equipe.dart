@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:siepex/models/modalidade.dart';
 import 'dart:convert';
 import 'package:siepex/src/config.dart';
 import 'package:siepex/models/serializeJuergs.dart';
+import 'package:provider/provider.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 
 class Equipe extends ChangeNotifier{
@@ -113,7 +115,6 @@ class Equipe extends ChangeNotifier{
 
   Future changeCaptain(BuildContext context, String newCapCpf) async {
     try{
-      print('Aqui');
       isLoading = true;
       notifyListeners();
       var resposta = jsonDecode((await http.put(baseUrl + 'equipe/changeCaptain', body: {
@@ -130,6 +131,60 @@ class Equipe extends ChangeNotifier{
       notifyListeners();
     }catch(e){
       print('Erro ao mudar o capitão: ' + e.toString());
+    }
+  }
+
+  Future deleteTeam(BuildContext context) async {
+    try{
+      // Modalidade modalidade = Provider.of<Modalidade>(context);
+      // print(modalidade.nome);
+      isLoading = true;
+      notifyListeners();
+      var resposta = jsonDecode((await http.put(baseUrl + 'equipe/remove', body: {
+          'equipe_id': id.toString(),
+        })).body);
+      if(resposta['status'] == 'erro'){
+        print('Erro ao apagar Equipe');
+        errorDialog(context, 'Erro', 'Erro ao excluir Equipe');
+      }else{
+        userJuergs.minhasEquipes.removeWhere((element) => element.id == id);
+        // modalidade.inscrito = false;
+        //userJuergs.minhasEquipes.removeWhere((element) => element.id == id);
+      }
+      isLoading = false;
+      notifyListeners();
+    }catch(e){
+      print('Erro Ao Deletar Equipe: ' + e.toString());
+    }
+  }
+
+    Future excludeMembers(BuildContext context, List<String> membersCpf) async {
+    try{
+      // Modalidade modalidade = Provider.of<Modalidade>(context);
+      // print(modalidade.nome);
+      isLoading = true;
+      notifyListeners();
+      var resposta = jsonDecode((await http.put(baseUrl + 'equipe/excludeMembers', body: {
+          'equipe_id': id.toString(),
+          'members_cpf': json.encode(membersCpf),
+        })).body);
+      if(resposta['status'] == 'erro'){
+        print('Erro excluir membros.');
+        errorDialog(context, 'Erro', 'Erro ao excluir membros da equipe.');
+      }else{
+        print('Membros excluidos da equipe com sucesso');
+        for(int i = 0; i < numeroParticipantes; i++){
+          if(membersCpf.contains(participantesCpf[i])){
+            participantesCpf.elementAt(i);
+            participantesNomes.removeAt(i);
+          }
+        }
+        numeroParticipantes -= membersCpf.length;
+      }
+      isLoading = false;
+      notifyListeners();
+    }catch(e){
+      print('Erro Ao Excluir Membros Equipe: ' + e.toString());
     }
   }
 }

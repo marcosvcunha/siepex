@@ -12,8 +12,7 @@ import './RusticaCard.dart';
 
 class PaginaEquipes extends StatefulWidget {
   final Widget child;
-  final Modalidade modalidade;
-  PaginaEquipes({Key key, this.child, this.modalidade}) : super(key: key);
+  PaginaEquipes({Key key, this.child}) : super(key: key);
 
   @override
   _PaginaEquipesState createState() => _PaginaEquipesState();
@@ -21,24 +20,20 @@ class PaginaEquipes extends StatefulWidget {
 
 class _PaginaEquipesState extends State<PaginaEquipes> {
   bool isActive = true;
+  Modalidade modalidade;
 
-  Future<bool> _doPop() async {
-    Navigator.pop(context, (){
-       setState((){});
-     });
-    return false;
-  }
   @override
   Widget build(BuildContext context) {
-    isActive = widget.modalidade.nome == 'Rústica'
+    modalidade = Provider.of<Modalidade>(context);
+    isActive = modalidade.nome == 'Rústica'
         ? true
-        : widget.modalidade.dataLimite.isAfter(
+        : modalidade.dataLimite.isAfter(
             DateTime.now()); // Vê se a data limite de inscrição já passou.
     return Scaffold(
         //appBar: titulo(),
         appBar: AppBar(
           centerTitle: true,
-          title: Text(widget.modalidade.nome),
+          title: Text(modalidade.nome),
         ),
         body: Container(
           decoration: BoxDecoration(
@@ -47,7 +42,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                       'assets/img/arte_uergs/Background_App_Uergs.png'),
                   fit: BoxFit.fill)),
           child: FutureBuilder(
-              future: HandleData().getEquipes(widget.modalidade.id),
+              future: HandleData().getEquipes(modalidade.id),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -91,10 +86,10 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
 
 /* TODO: ARRUMAR DEPOIS PARA O TITULO PEGAR O NUMERO DE PARTICIPANTES INSCRITOS
   Widget titulo() {
-    if (widget.modalidade.nome != 'Rústica') {
+    if (modalidade.nome != 'Rústica') {
       return AppBar(
         centerTitle: true,
-        title: Text(widget.modalidade.nome),
+        title: Text(modalidade.nome),
       );
     } else {
                 var resposta =
@@ -105,13 +100,13 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
         title: Text(
           'aaa'),
           //resposta.data.cont),
-          //widget.modalidade.nome),
+          //modalidade.nome),
       );
     }
   }
 */
   Widget selecionaBotao() {
-    if (widget.modalidade.nome == 'Rústica') {
+    if (modalidade.nome == 'Rústica') {
       return FlatButton(
           splashColor: Colors.transparent,
           focusColor: Colors.transparent,
@@ -119,7 +114,8 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
           padding: EdgeInsets.all(8),
           onPressed: () async {
             await HandleData().criarEquipe(
-                context, widget.modalidade, userJuergs.nome, isActive);
+                context, modalidade, userJuergs.nome, isActive);
+            modalidade.inscrito = userJuergs.temEquipe(modalidade.nome);
             setState(() {});
           },
           child: Center(
@@ -136,9 +132,9 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
           highlightColor: Colors.transparent,
           onPressed: () async {
             String nomeEquipe =
-                await textInputDialog(context, widget.modalidade);
+                await textInputDialog(context, modalidade);
             await HandleData()
-                .criarEquipe(context, widget.modalidade, nomeEquipe, isActive);
+                .criarEquipe(context, modalidade, nomeEquipe, isActive);
             setState(() {});
           },
           child: Center(
@@ -151,7 +147,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
     }
   }
   Widget _equipeCard(Equipe equipe) {
-    if (widget.modalidade.nome != 'Rústica') {
+    if (modalidade.nome != 'Rústica') {
       return EquipeCard(isActive: isActive,);
     } else {
       return RusticaCard();

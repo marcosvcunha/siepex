@@ -13,6 +13,7 @@ class EquipeCard extends StatelessWidget {
   EquipeCard({@required this.isActive});
   
   Widget body(BuildContext context, Equipe equipe){
+    Modalidade modalidade = Provider.of<Modalidade>(context);
     bool temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
@@ -115,7 +116,7 @@ class EquipeCard extends StatelessWidget {
                                     : () async {
                                         await equipe.entrarEquipe(
                                             context, isActive);
-                                        
+                                        modalidade.inscrito = userJuergs.temEquipe(modalidade.nome);
                                       },
                                 child: Center(
                                     child: Text(
@@ -139,7 +140,8 @@ class EquipeCard extends StatelessWidget {
                             decoration: BoxDecoration(
                               //color: Color(0xffFFE569),
                               //color: Color(0xff4071FE),
-                              color: Color(0xff1C61EA),
+                              //color: Color(0xff1C61EA),
+                              color: Colors.blue,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20)),
                               boxShadow: [
@@ -156,7 +158,10 @@ class EquipeCard extends StatelessWidget {
                               highlightColor: Colors.transparent,
                               splashColor: Colors.transparent,
                               onPressed: () => Navigator.push(context, 
-                              MaterialPageRoute(builder: (context) => ChangeNotifierProvider.value(value: equipe,
+                              MaterialPageRoute(builder: (context) => MultiProvider(providers: [
+                                ChangeNotifierProvider.value(value: equipe,),
+                                ChangeNotifierProvider.value(value: modalidade),
+                              ],
                               child: PaginaEquipe()))),
                               child: Text(
                                 'Mais Informações',

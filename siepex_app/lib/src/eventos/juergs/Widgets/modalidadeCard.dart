@@ -122,8 +122,11 @@ class _ModalidadeCardState extends State<ModalidadeCard> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        PaginaEquipes(modalidade: modalidade)));
-            setState(() {});
+                        ChangeNotifierProvider.value(value: modalidade, child: PaginaEquipes(),)
+                        
+                        
+                        ));
+            
           },
         ),
       ),
