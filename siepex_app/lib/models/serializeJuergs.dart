@@ -33,20 +33,21 @@ class Estudante {
       this.tipoParticipante,
       this.celular,
       this.modalidadesJuiz,
-      this.isOn = false});
+      this.isOn = false,
+      });
 
   Estudante.fromJson(Map<String, dynamic> json) {
     this.nome = json['nome'].toString();
     this.cpf = json['cpf'].toString();
     this.email = json['email'].toString();
     this.instituicao = json['instituicao'].toString();
-    this.indUergs = json['indUergs'].toString();
-    this.campoUergs = json['campoUergs'].toString();
-    this.indNecessidade = json['indNecessidade'].toString();
-    this.tipoParticipante = json['tipoParticipante'].toString();
+    this.indUergs = json['ind_uergs'].toString();
+    this.campoUergs = json['campos_uergs'].toString();
+    this.indNecessidade = json['ind_necessidades_especiais'].toString();
+    this.tipoParticipante = json['tipo_participante'].toString();
     this.celular = json['celular'].toString();
+    this.modalidadesJuiz = json['modalidades_juiz'].toString();
     this.isOn = true;
-    //this.modalidadesJuiz = json['modalidadesJuiz'].toString();
   }
 
   Map<String, dynamic> toJson() =>
@@ -116,5 +117,5 @@ class Estudante {
     }
     return false;
   }
-
+  
 }

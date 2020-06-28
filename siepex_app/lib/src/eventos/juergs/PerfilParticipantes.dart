@@ -9,16 +9,17 @@ import 'package:http/http.dart' as http;
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:cpf_cnpj_validator/cpf_validator.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:intl/intl.dart';
 
-class CadastraParticipante extends StatefulWidget {
+class PerfilParticipante extends StatefulWidget {
   final Widget child;
-  CadastraParticipante({Key key, this.child}) : super(key: key);
+  PerfilParticipante({Key key, this.child}) : super(key: key);
 
   @override
   _CadastraParticipanteState createState() => _CadastraParticipanteState();
 }
 
-class _CadastraParticipanteState extends State<CadastraParticipante> {
+class _CadastraParticipanteState extends State<PerfilParticipante> {
   @override
   Widget build(BuildContext context) {
     return corpo(context);
@@ -36,21 +37,24 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
   bool volei = false;
   bool rustica = false;
 
-  TextEditingController txtNome = TextEditingController();
+  TextEditingController txtNome = TextEditingController(text: userJuergs.nome);
 
-  TextEditingController txtCpf = TextEditingController();
+  TextEditingController txtCpf = TextEditingController(text: userJuergs.cpf);
 
-  TextEditingController txtCelular = TextEditingController();
+  TextEditingController txtCelular =
+      TextEditingController(text: userJuergs.celular);
 
-  TextEditingController txtEmail = TextEditingController();
+  TextEditingController txtEmail =
+      TextEditingController(text: userJuergs.email);
 
-  TextEditingController txtInstituicao = TextEditingController();
+  TextEditingController txtInstituicao =
+      TextEditingController(text: userJuergs.instituicao);
 
-  bool checkIndUergs = true;
+  bool checkIndUergs;
 
-  bool checkEhNecessitado = false;
+  bool checkEhNecessitado;
 
-  String comboTipoParticipante = "Atleta";
+  String comboTipoParticipante = userJuergs.tipoParticipante;
 
   var cpfMask = new MaskTextInputFormatter(
       mask: '###.###.###-##', filter: {"#": RegExp(r'[0-9]')});
@@ -58,14 +62,44 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
   var celularMask = new MaskTextInputFormatter(
       mask: '(##)#####-####', filter: {"#": RegExp(r'[0-9]')});
 
-  showAlertDialog1(BuildContext context) {
-    // configura o button
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
+  var _errorText = null;
+  bool _isLoading = false;
+  bool entrou = false;
+
+  bool toBoolean(String str) {
+    if (str == "true") {
+      return true;
+    }
+    return false;
+  }
+
+  void setaModalidadeJuiz(String modalidade) {
+    if (modalidade != null) {
+      if (modalidade.contains('Volei')) {
+        this.volei = true;
+      }
+      if (modalidade.contains('Futebol')) {
+        this.futbol = true;
+      }
+      if (modalidade.contains('Handebol')) {
+        this.handbol = true;
+      }
+      if (modalidade.contains('Rustica')) {
+        this.rustica = true;
+      }
+    }
+  }
+
+  bool cpfVerifier(String cpf) {
+    if (!CPFValidator.isValid(cpf)) {
+      _errorText = "Cpf invalido!";
+      setState(() {});
+      return false;
+    } else {
+      _errorText = null;
+      setState(() {});
+      return true;
+    }
   }
 
   Widget camposIndUergs() {
@@ -76,7 +110,6 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           decoration:
               InputDecoration(labelText: 'Campus', errorText: instError),
           controller: txtInstituicao,
-          textCapitalization: TextCapitalization.words,
           keyboardType: TextInputType.text,
           style:
               TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
@@ -89,7 +122,6 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           decoration:
               InputDecoration(labelText: 'Instituição', errorText: instError),
           controller: txtInstituicao,
-          textCapitalization: TextCapitalization.words,
           keyboardType: TextInputType.text,
           style:
               TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
@@ -243,10 +275,32 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
     }
   }
 
-  Future cadastrar(Estudante estudante, BuildContext context) async {
+  Widget corpo(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: new Text(
+          'Meu Pefil',
+          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: _loading ? loadingScreen() : body(),
+    );
+  }
+
+  Widget loadingScreen() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Future atualizar(Estudante estudante, BuildContext context) async {
     estudante.cpf = (estudante.cpf.replaceAll(".", "")).replaceAll("-", "");
     if (estudante.celular != null) {
-      estudante.celular = estudante.celular.replaceAll("-", "").replaceAll("(", "").replaceAll(")", "");
+      estudante.celular = estudante.celular
+          .replaceAll("-", "")
+          .replaceAll("(", "")
+          .replaceAll(")", "");
     } else {
       //api nao aceita null aparentemente :(
       estudante.celular = '0';
@@ -257,7 +311,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       handbol = false;
       rustica = false;
       volei = false;
-    } else{
+    } else {
       String modalidadesJuiz = '';
       if (futbol == true) {
         modalidadesJuiz += 'Futebol, ';
@@ -289,7 +343,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
         _loading = true;
       });
       var resposta =
-          jsonDecode((await http.put(baseUrl + 'cadastroJuergs/', body: {
+          jsonDecode((await http.put(baseUrl + 'atualizaParticipante/', body: {
         'nome': estudante.nome,
         'cpf': estudante.cpf,
         'email': estudante.email,
@@ -315,8 +369,8 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           Navigator.pushNamed(context, 'inicioJuergs');
         } else if (resposta['status'] == 'erro') {
           Alert(context: context, title: 'Erro no cadastro').show();
-        } else if (resposta['status'] == 'registro_existente') {
-          Alert(context: context, title: 'Participante já cadastrado').show();
+        } else if (resposta['status'] == 'registro_inexistente') {
+          Alert(context: context, title: 'Participante não cadastrado').show();
         }
       }
     } catch (e) {
@@ -325,26 +379,16 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
     }
   }
 
-  Widget corpo(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: new Text(
-          'Cadastra Participante',
-          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: _loading ? loadingScreen() : body(),
-    );
-  }
-
-  Widget loadingScreen() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
   Widget body() {
+    if (this.entrou == false) {
+      this.checkIndUergs = toBoolean(userJuergs.indUergs);
+      this.checkEhNecessitado = toBoolean(userJuergs.indNecessidade);
+      this.txtCpf =
+          TextEditingController(text: CPFValidator.format(userJuergs.cpf));
+      setaModalidadeJuiz(userJuergs.modalidadesJuiz);
+      setState(() {});
+      this.entrou = true;
+    }
     return ListView(
       children: <Widget>[
         Padding(
@@ -353,7 +397,6 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
             decoration:
                 InputDecoration(labelText: 'Nome', errorText: nomeError),
             controller: txtNome,
-            textCapitalization: TextCapitalization.words,
             keyboardType: TextInputType.text,
             style:
                 TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
@@ -366,6 +409,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
             controller: txtCpf,
             inputFormatters: [cpfMask],
             keyboardType: TextInputType.number,
+            enabled: false,
             style:
                 TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
           ),
@@ -482,13 +526,13 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
         ),
         Center(
           child: Container(
-            width: 120,
+            width: 140,
             child: RaisedButton(
-              child: Text('Cadastrar'),
+              child: Text('Atualizar Dados'),
               onPressed: () {
                 Estudante estudante = new Estudante();
                 estudante.nome = txtNome.text;
-                estudante.cpf = cpfMask.getUnmaskedText();
+                estudante.cpf = userJuergs.cpf;
                 if (checkIndUergs) {
                   estudante.campoUergs = txtInstituicao.text;
                   estudante.instituicao = "Uergs";
@@ -503,7 +547,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
                 estudante.indNecessidade = checkEhNecessitado.toString();
                 estudante.indUergs = checkIndUergs.toString();
                 estudante.tipoParticipante = comboTipoParticipante;
-                this.cadastrar(estudante, context);
+                this.atualizar(estudante, context);
               },
             ),
           ),

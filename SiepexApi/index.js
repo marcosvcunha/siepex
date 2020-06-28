@@ -12,6 +12,7 @@ const express = require('express'),
   obtem_modalidades_rotas = require("./src/eventos/obterModalidades.js"),
   cadastra_equipe_rotas = require("./src/eventos/cadastraEquipe.js"),
   obtem_equipes_rotas = require("./src/eventos/obterEquipes.js"),
+  atualiza_participante_rotas = require("./src/eventos/atualizaParticipante.js"),
   bodyParser = require('body-parser');
 
 const app = express();
@@ -46,6 +47,7 @@ app.use("/obtemParticipante", obtem_participante_rotas);
 app.use("/obtemModalidade", obtem_modalidades_rotas);
 app.use("/equipe", cadastra_equipe_rotas);
 app.use('/obtemEquipes', obtem_equipes_rotas);
+app.use('/atualizaParticipante', atualiza_participante_rotas);
 app.get('/', function (req, res) {
   res.json("the server is on")
 })
