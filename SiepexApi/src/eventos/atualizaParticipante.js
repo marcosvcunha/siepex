@@ -8,15 +8,14 @@ router.put('/', async (req, res) => {
   console.log("Criando Cadastro"),
     console.log(req.body['cpf']),
     retorno = await obter(req.body['cpf']);
-  if (retorno) {
+  if (!retorno) {
     res.json({
-      status: 'registro_existente',
+      status: 'registro_inexistente',
     })
   }
   else {
-    cadastro_juergs.create(
+    cadastro_juergs.update(
       {
-        cpf: req.body['cpf'],
         nome: req.body['nome'],
         email: req.body['email'],
         instituicao: req.body['instituicao'],
@@ -26,8 +25,12 @@ router.put('/', async (req, res) => {
         tipo_participante: req.body['tipoParticipante'],
         ind_necessidades_especiais: req.body['indNecessidade'],
         modalidades_juiz: req.body['modalidadesJuiz'],
+      },{
+          where:{
+              cpf: req.body['cpf']
+          }
       }).then((result) => {
-        console.log("Cadastro realizado com sucesso.")
+        console.log("Update realizado com sucesso.")
         res.json({
           status: 'sucesso'
         })
