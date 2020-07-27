@@ -56,7 +56,7 @@ class _ModalidadeCardState extends State<ModalidadeCard> {
                   height: 100,
                   width: 100,
                   //color:Colors.white,
-                  child: modalidade.icon,
+                  child: Icon(modalidade.icon, size: 50, color: Colors.black87,),
                 ),
               ),
               SizedBox(width: 15),

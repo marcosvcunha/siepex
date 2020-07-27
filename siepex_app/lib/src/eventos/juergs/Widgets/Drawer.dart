@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:siepex/icons/sport_icons.dart';
 import 'package:siepex/models/serializeJuergs.dart';
+import '../admin/ManageCompPage.dart';
 
 class JuergsDrawer extends StatelessWidget {
   Widget juergsDrawer(BuildContext context) {
@@ -50,18 +52,52 @@ class JuergsDrawer extends StatelessWidget {
             ),
           ),
           listItem(context, 'Meu Perfil', Icons.person, null),
-          listItem(context, 'Regulamento', Icons.short_text, () => Navigator.popAndPushNamed(context, "regulamentoPage")),
+          listItem(context, 'Regulamento', Icons.short_text,
+              () => Navigator.popAndPushNamed(context, "regulamentoPage")),
           listItem(context, 'Configurações', Icons.settings, null),
-          listItem(context, 'Sair', Icons.exit_to_app, (){
+          listItem(context, 'Sair', Icons.exit_to_app, () {
             userJuergs.logout();
             Navigator.popUntil(context, ModalRoute.withName('inicio'));
-            })
+          }),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0, right: 40),
+            child: Container(
+                height: 40,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                  color: Color(0x59b91215),
+                ),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      'Administração',
+                      style: TextStyle(
+                          color: Color(0xffff0000),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                )),
+          ),
+          listItem(
+              context,
+              'Gerenciar Competições',
+              Sport.volleyball_silhouette,
+              () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ManageCompPage())))
         ],
       ),
     );
   }
 
-  Widget listItem(BuildContext context, String text, IconData icone, Function func) {
+  Widget listItem(
+      BuildContext context, String text, IconData icone, Function func) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -77,13 +113,14 @@ class JuergsDrawer extends StatelessWidget {
               color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w600),
         ),
         onTap: () {
-          if (func != null){
+          if (func != null) {
             func();
           }
         },
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return juergsDrawer(context);

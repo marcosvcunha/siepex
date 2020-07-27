@@ -4,6 +4,7 @@ import 'package:siepex/models/modalidade.dart';
 // import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipe.dart';
+import 'package:siepex/src/eventos/juergs/equipe/testePage.dart';
 // import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 // import 'package:siepex/src/eventos/juergs/models/handledata.dart';
@@ -12,8 +13,7 @@ class EquipeCard extends StatelessWidget {
   final bool isActive;
   EquipeCard({@required this.isActive});
   
-  Widget body(BuildContext context, Equipe equipe){
-    Modalidade modalidade = Provider.of<Modalidade>(context);
+  Widget body(BuildContext context, Equipe equipe, Modalidade modalidade){
     bool temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
@@ -159,10 +159,13 @@ class EquipeCard extends StatelessWidget {
                               splashColor: Colors.transparent,
                               onPressed: () => Navigator.push(context, 
                               MaterialPageRoute(builder: (context) => MultiProvider(providers: [
-                                ChangeNotifierProvider.value(value: equipe,),
-                                ChangeNotifierProvider.value(value: modalidade),
+                                ChangeNotifierProvider<Equipe>.value(value: equipe,),
+                                ChangeNotifierProvider<Modalidade>.value(value: modalidade),
                               ],
-                              child: PaginaEquipe()))),
+                              child: PaginaEquipe()
+                              // child: TestePage(),
+                              )
+                              )),
                               child: Text(
                                 'Mais Informações',
                                 style: TextStyle(
@@ -186,7 +189,9 @@ class EquipeCard extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
+      print('EquipeCard Build');
       Equipe equipe = Provider.of<Equipe>(context);
-      return equipe.isLoading ? Center(child: CircularProgressIndicator(),) : body(context, equipe);
+      Modalidade modalidade = Provider.of<Modalidade>(context);
+      return equipe.isLoading ? Center(child: CircularProgressIndicator(),) : body(context, equipe, modalidade);
   }
 }

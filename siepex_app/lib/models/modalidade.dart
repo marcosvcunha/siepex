@@ -4,15 +4,23 @@ import 'package:siepex/icons/sport_icons.dart';
 import 'package:siepex/models/serializeJuergs.dart';
 
 
-Map<String, Icon> icons = {
-  'Futsal Masculino': Icon(MyFlutterApp.soccerBall, size: 50, color: Colors.black87,),
-  'Futsal Feminino': Icon(MyFlutterApp.soccerBall, size: 50, color: Colors.black87,),
-  'Rústica': Icon(Sport.runner, size: 50, color: Colors.black87,),
-  'Vôlei Misto': Icon(Sport.volleyball_ball,size: 50, color: Colors.black87,),
-  'Handebol Masculino': Icon(Sport.shot_putter, size: 50, color: Colors.black87,),
-  'Handebol Feminino': Icon(Sport.shot_putter, size: 50, color: Colors.black87,),
+Map<String, IconData> icons = {
+  'Futsal Masculino': MyFlutterApp.soccerBall,
+  'Futsal Feminino': MyFlutterApp.soccerBall,
+  'Rústica': Sport.runner,
+  'Vôlei Misto': Sport.volleyball_ball,
+  'Handebol Masculino': Sport.shot_putter,
+  'Handebol Feminino': Sport.shot_putter,
   };
-  
+
+List<String> fases = [
+  'Inscrição',
+  'Fase de Grupos',
+  'Quartas de Final',
+  'Semi-Final',
+  'Final',
+];
+
 
 class Modalidade extends ChangeNotifier{
   int id;
@@ -21,7 +29,9 @@ class Modalidade extends ChangeNotifier{
   DateTime dataLimite;
   int maxParticipantes; // # maximo por equipes
   bool _inscrito; // O usuario é inscrito nesta modalidade?
-  Icon icon;
+  IconData icon;
+  int fase;
+  String faseStr;
 
   get inscrito => _inscrito;
 
@@ -39,5 +49,8 @@ class Modalidade extends ChangeNotifier{
     icon = icons[nome];
     dataLimite = modDataLimite;
     dataLimiteString = '${dataLimite.day.toString()}/${dataLimite.month.toString()} ${dataLimite.hour.toString()}:${dataLimite.minute.toString()}';
+    // TODO: Arrumar abaixo para pegar valores do DB.
+    fase = 0;
+    faseStr = fases[fase];
   }
 }

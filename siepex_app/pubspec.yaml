@@ -1,6 +1,8 @@
 name: siepex
 description: A new Flutter project.
 
+## Flutter Version : 1.12.13+hotfix.8
+
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.

@@ -9,6 +9,7 @@ class ModalidadesPage extends StatelessWidget {
   final HandleData _handleData = HandleData();
   @override
   Widget build(BuildContext context) {
+    print('ModalidadePage Build');
     return FutureBuilder(
           future: _handleData.getModalidades(),
           builder: (context, snapshot) {
@@ -24,8 +25,8 @@ class ModalidadesPage extends StatelessWidget {
               return ListView.builder(
                   itemCount: modalidades.length,
                   itemBuilder: (context, index) {
-                    return ChangeNotifierProvider(
-                      create: (_) => modalidades[index],
+                    return ChangeNotifierProvider.value(
+                      value: modalidades[index],
                       child: ModalidadeCard());
                   });
             } else {

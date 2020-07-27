@@ -24,6 +24,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
 
   @override
   Widget build(BuildContext context) {
+    print('PaginaEquipes Build');
     modalidade = Provider.of<Modalidade>(context);
     isActive = modalidade.nome == 'Rústica'
         ? true
@@ -56,8 +57,8 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                     return ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
-                          return ChangeNotifierProvider(
-                            create: (_) => equipesList[index],
+                          return ChangeNotifierProvider.value(
+                            value: equipesList[index],
                             child: _equipeCard(equipesList[index]),
                           );
                         });
