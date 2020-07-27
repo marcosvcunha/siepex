@@ -38,7 +38,6 @@ class Modalidade extends ChangeNotifier{
   set inscrito(bool newVal){
       _inscrito = newVal;
       print("Notificando modalidade");
-      notifyListeners();
   }
   
   Modalidade(int modId, String modNome, int modMaxParticipantes, bool modInscrito, DateTime modDataLimite){

@@ -51,11 +51,12 @@ class JuergsDrawer extends StatelessWidget {
               ],
             ),
           ),
-          listItem(context, 'Meu Perfil', Icons.person, null),
-          listItem(context, 'Regulamento', Icons.short_text,
-              () => Navigator.popAndPushNamed(context, "regulamentoPage")),
-          listItem(context, 'Configurações', Icons.settings, null),
-          listItem(context, 'Sair', Icons.exit_to_app, () {
+          listItem(context, 'Meu Perfil', Icons.person, () => Navigator.popAndPushNamed(context, "perfilParticipante")),
+          listItem(context, 'Regulamento', Icons.short_text, () => Navigator.popAndPushNamed(context, "regulamentoPage")),
+          listItem(context, 'Hoteis', Icons.local_hotel, () => Navigator.popAndPushNamed(context, "hoteisJuergs")),
+          listItem(context, 'Restaurantes', Icons.local_dining, () => Navigator.popAndPushNamed(context, "restaurantesJuergs")),
+          listItem(context, 'Sobre o JUERGS', Icons.announcement, () => Navigator.popAndPushNamed(context, "juergsSobre")),
+          listItem(context, 'Sair', Icons.exit_to_app, (){
             userJuergs.logout();
             Navigator.popUntil(context, ModalRoute.withName('inicio'));
           }),

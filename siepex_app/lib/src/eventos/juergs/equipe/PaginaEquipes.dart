@@ -53,13 +53,21 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                   );
                 } else {
                   List<Equipe> equipesList = snapshot.data;
+                  equipesList = equipesList.reversed.toList();
                   if (snapshot.hasData) {
                     return ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
+<<<<<<< HEAD
                           return ChangeNotifierProvider.value(
                             value: equipesList[index],
                             child: _equipeCard(equipesList[index]),
+=======
+                          equipesList[index].index = index;
+                          return ChangeNotifierProvider(
+                            create: (_) => equipesList[index],             
+                            child: _equipeCard(),
+>>>>>>> 915e80b286973b39d028ce65ddf778e34ff249c5
                           );
                         });
                   } else {
@@ -147,9 +155,9 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
           ));
     }
   }
-  Widget _equipeCard(Equipe equipe) {
+  Widget _equipeCard() {
     if (modalidade.nome != 'Rústica') {
-      return EquipeCard(isActive: isActive,);
+      return EquipeCard(isActive: isActive);
     } else {
       return RusticaCard();
     }

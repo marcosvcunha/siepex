@@ -149,7 +149,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
   @override
   Widget build(BuildContext context) {
     equipe = Provider.of<Equipe>(context);
-    modalidade = Provider.of<Modalidade>(context);
+    //modalidade = Provider.of<Modalidade>(context);
     isCap = equipe.cpfCapitao == userJuergs.cpf;
     isInTeam = userJuergs.isInTeam(equipe.id);
     temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);

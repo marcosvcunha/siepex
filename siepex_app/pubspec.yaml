@@ -47,6 +47,7 @@ dev_dependencies:
   url_launcher: ^5.0.3
   faker: ^1.2.1
   fading_edge_scrollview: ^1.1.1
+  
   shared_preferences:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
