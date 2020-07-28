@@ -7,7 +7,7 @@ import 'package:siepex/models/serializeJuergs.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:http/http.dart' as http;
 import 'package:siepex/src/config.dart';
-import 'package:siepex/src/eventos/juergs/models/equipe.dart';
+// import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 
 class LoginJuergs extends StatefulWidget {

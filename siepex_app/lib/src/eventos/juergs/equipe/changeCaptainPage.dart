@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
+// import 'package:animations/animations.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/ColumnBuilder.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/roundButton.dart';
@@ -17,16 +17,6 @@ class _ChangeCaptainState extends State<ChangeCaptain> {
   List<String> part;
   List<String> partCpf;
   Equipe equipe;
-
-  // @override
-  // void initState(){
-  //   super.initState();
-  //   print('Usando Provider em captain');
-  //   part = List<String>.from(equipe.participantesNomes);
-  //   partCpf = List<String>.from(equipe.participantesCpf);
-  //   part.remove(equipe.nomeCapitao);
-  //   partCpf.remove(equipe.cpfCapitao);
-  // }
 
   Widget body(){
     return ListView(

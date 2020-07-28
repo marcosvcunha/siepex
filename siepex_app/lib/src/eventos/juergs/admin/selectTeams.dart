@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
 import 'package:siepex/src/eventos/juergs/admin/listaEquipes.dart';
 import '../Widgets/roundButton.dart';
+import '../Widgets/loadingSnackbar.dart';
 
 /*
   Nesta página o ADM seleciona os times que vão para a próxima fase.
@@ -17,8 +18,8 @@ class SelectTeamsPage extends StatefulWidget {
 }
 
 class _SelectTeamsPageState extends State<SelectTeamsPage> {
+  bool _isLoading = false;
   List<int> equipesGrupoId = List.generate(24, (index){return -2;});
-
   List<String> equipesGrupoNome = List.generate(24, (index){return 'Selecione';});
 
   Modalidade modalidade;
@@ -48,12 +49,15 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
         //  BOTÃO PARA CONFIMAR O ENVIO DOS TIMES
           return Padding(
             padding: const EdgeInsets.only(bottom: 12.0),
-            child: roundButton('Confimar', Colors.blue, Icons.thumb_up, (){
-              if(allFilled()){
+            child: roundButton('Confimar', Colors.blue, Icons.thumb_up, () async {
+              if(true){
                 confirmDialog(context, 'Finalizar', 'Confimar envio das equipes?', 
-                (){
-                  // TODO:: Enviar dados para a API
+                () async {
                   Navigator.pop(context);
+                  Scaffold.of(context).showSnackBar(loadingSnackbar());
+                  // TODO: receber resposta e verificar se deu certo.
+                  await modalidade.nextFase(equipesGrupoId);
+                  Scaffold.of(context).hideCurrentSnackBar();
                   Navigator.pop(context);
                 }, 
                 () => Navigator.pop(context)
@@ -105,7 +109,6 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                         builder: (context) => ChangeNotifierProvider.value(
                           value: modalidade, 
                           child: ListaEquipesPage(equipeId: time, equipesSelecionadas: equipesGrupoId),) ));
-                      // TODO: colocar time na lista
                       if(resul != null){
                         equipesGrupoId[index] = resul[0];
                         equipesGrupoNome[index] = resul[1];
@@ -147,7 +150,6 @@ Future<bool> _onWillPop() async {
       ),
     )) ?? false;
   }
-
 
   @override
   Widget build(BuildContext context) {

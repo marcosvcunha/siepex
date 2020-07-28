@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/models/geral.dart';
+// import 'package:siepex/models/geral.dart';
 import 'package:siepex/models/trabalho.dart';
 import 'package:siepex/src/eventos/trabalhos/trabalhosDetalhes.dart';
 

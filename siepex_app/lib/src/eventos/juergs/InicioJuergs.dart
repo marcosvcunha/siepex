@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/icons/my_flutter_app_icons.dart';
-import 'package:siepex/models/modalidade.dart';
-import 'package:siepex/src/areaParticipante/homeParticipante.dart';
+// import 'package:siepex/icons/my_flutter_app_icons.dart';
+// import 'package:siepex/models/modalidade.dart';
+// import 'package:siepex/src/areaParticipante/homeParticipante.dart';
 import 'package:siepex/src/eventos/juergs/PaginaTabelas.dart';
-import 'package:siepex/src/inicio/itemButton.dart';
-import 'package:siepex/mdi.dart';
+// import 'package:siepex/src/inicio/itemButton.dart';
+// import 'package:siepex/mdi.dart';
 import '../../../icons/sport_icons.dart';
 import './ModalidadesPage.dart';
 import './Widgets/Drawer.dart';

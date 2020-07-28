@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/icons/my_flutter_app_icons.dart';
 import 'package:siepex/icons/sport_icons.dart';
-import 'package:siepex/models/serializeJuergs.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:siepex/src/config.dart';
+import 'dart:convert';
+// import 'package:siepex/models/serializeJuergs.dart';
 
 Map<String, IconData> icons = {
   'Futsal Masculino': MyFlutterApp.soccerBall,
@@ -11,7 +13,7 @@ Map<String, IconData> icons = {
   'Vôlei Misto': Sport.volleyball_ball,
   'Handebol Masculino': Sport.shot_putter,
   'Handebol Feminino': Sport.shot_putter,
-  };
+};
 
 List<String> fases = [
   'Inscrição',
@@ -21,8 +23,7 @@ List<String> fases = [
   'Final',
 ];
 
-
-class Modalidade extends ChangeNotifier{
+class Modalidade extends ChangeNotifier {
   int id;
   String nome;
   String dataLimiteString;
@@ -35,21 +36,36 @@ class Modalidade extends ChangeNotifier{
 
   get inscrito => _inscrito;
 
-  set inscrito(bool newVal){
-      _inscrito = newVal;
-      print("Notificando modalidade");
+  set inscrito(bool newVal) {
+    _inscrito = newVal;
   }
-  
-  Modalidade(int modId, String modNome, int modMaxParticipantes, bool modInscrito, DateTime modDataLimite){
+
+  Modalidade(int modId, String modNome, int modMaxParticipantes,
+      bool modInscrito, DateTime modDataLimite, int fase) {
     id = modId;
     nome = modNome;
     maxParticipantes = modMaxParticipantes;
     _inscrito = modInscrito;
     icon = icons[nome];
     dataLimite = modDataLimite;
-    dataLimiteString = '${dataLimite.day.toString()}/${dataLimite.month.toString()} ${dataLimite.hour.toString()}:${dataLimite.minute.toString()}';
-    // TODO: Arrumar abaixo para pegar valores do DB.
-    fase = 0;
+    dataLimiteString =
+        '${dataLimite.day.toString()}/${dataLimite.month.toString()} ${dataLimite.hour.toString()}:${dataLimite.minute.toString()}';
+    this.fase = fase;
     faseStr = fases[fase];
+  }
+
+  Future<void> nextFase(List<int> idEquipes) async {
+    var resposta =
+            jsonDecode((await http.put(baseUrl + 'modalidades/nextFase', body: {
+          'id_modalidade': id.toString(),
+          'fase_atual': fase.toString(),
+          'equipes': idEquipes.toString(),
+        })).body);
+    if(resposta['status'] == 'sucesso'){
+      // TODO: Alterar a fase nesta modalidade e dar NotifyListeners.
+      print('Sucesso');
+    }else if(resposta['status'] == 'erro'){
+      // TODO:: Conferir os possiveis erros
+    }
   }
 }

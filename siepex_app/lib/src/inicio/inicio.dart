@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/src/areaParticipante/homeParticipante.dart';
+// import 'package:siepex/src/areaParticipante/homeParticipante.dart';
 import 'package:siepex/src/inicio/itemButton.dart';
 
 class InicioPage extends StatelessWidget {

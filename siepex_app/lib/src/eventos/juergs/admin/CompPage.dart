@@ -1,4 +1,4 @@
-import 'dart:math';
+// import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
@@ -14,9 +14,8 @@ import 'package:siepex/src/eventos/juergs/admin/selectTeams.dart';
  */
 class CompetitionPage extends StatelessWidget {
   Widget nextFaseButton(BuildContext context, Modalidade modalidade) {
-    int fase = modalidade.fase;
 
-    if (fase < 4) {
+    if (modalidade.fase < 4) {
       return Align(
         alignment: Alignment.center,
         child: FlatButton(

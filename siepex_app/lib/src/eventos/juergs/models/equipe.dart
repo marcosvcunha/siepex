@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:siepex/models/modalidade.dart';
+// import 'package:siepex/models/modalidade.dart';
 import 'dart:convert';
 import 'package:siepex/src/config.dart';
 import 'package:siepex/models/serializeJuergs.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 
 class Equipe extends ChangeNotifier {

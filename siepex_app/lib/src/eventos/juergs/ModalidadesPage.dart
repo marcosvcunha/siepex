@@ -9,7 +9,6 @@ class ModalidadesPage extends StatelessWidget {
   final HandleData _handleData = HandleData();
   @override
   Widget build(BuildContext context) {
-    print('ModalidadePage Build');
     return FutureBuilder(
           future: _handleData.getModalidades(),
           builder: (context, snapshot) {

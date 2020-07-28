@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/models/serializeJuergs.dart';
-import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipe.dart';
-import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
+// import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipe.dart';
+// import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/textinputdialog.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import '../models/equipe.dart';
@@ -58,16 +58,10 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                     return ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
-<<<<<<< HEAD
-                          return ChangeNotifierProvider.value(
-                            value: equipesList[index],
-                            child: _equipeCard(equipesList[index]),
-=======
                           equipesList[index].index = index;
-                          return ChangeNotifierProvider(
-                            create: (_) => equipesList[index],             
+                          return ChangeNotifierProvider.value(
+                            value: equipesList[index],             
                             child: _equipeCard(),
->>>>>>> 915e80b286973b39d028ce65ddf778e34ff249c5
                           );
                         });
                   } else {

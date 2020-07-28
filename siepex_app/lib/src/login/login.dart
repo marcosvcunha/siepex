@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
+// import 'package:flutter/material.dart' as prefix0;
 import 'package:siepex/models/participante.dart';
 import 'package:siepex/src/config.dart';
 import 'package:siepex/src/inicio/inicio.dart';
@@ -97,7 +97,7 @@ class LoginPage extends StatelessWidget {
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                         color: Color(0xff2595A6),
-                        onPressed: () => {logar(cpf.text, senha.text, context)},
+                        onPressed: () => logar(cpf.text, senha.text, context),
                       ),
                     )
                   ],

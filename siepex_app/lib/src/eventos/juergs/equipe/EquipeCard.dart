@@ -3,24 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipe.dart';
-<<<<<<< HEAD
-import 'package:siepex/src/eventos/juergs/equipe/testePage.dart';
-// import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
-=======
->>>>>>> 915e80b286973b39d028ce65ddf778e34ff249c5
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 
 class EquipeCard extends StatelessWidget {
   final bool isActive;
   EquipeCard({@required this.isActive});
-<<<<<<< HEAD
-  
-  Widget body(BuildContext context, Equipe equipe, Modalidade modalidade){
-=======
 
   Widget body(BuildContext context, Equipe equipe, int index) {
     Modalidade modalidade = Provider.of<Modalidade>(context);
->>>>>>> 915e80b286973b39d028ce65ddf778e34ff249c5
     bool temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
@@ -105,47 +95,6 @@ class EquipeCard extends StatelessWidget {
                                 offset: Offset(0, 1))
                           ],
                         ),
-<<<<<<< HEAD
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              //color: Color(0xffFFE569),
-                              //color: Color(0xff4071FE),
-                              //color: Color(0xff1C61EA),
-                              color: Colors.blue,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 1,
-                                    spreadRadius: 1,
-                                    color: Colors.black54,
-                                    offset: Offset(0, 1))
-                              ],
-                            ),
-                            child: SizedBox.expand(
-                                child: FlatButton(
-                              focusColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              splashColor: Colors.transparent,
-                              onPressed: () => Navigator.push(context, 
-                              MaterialPageRoute(builder: (context) => MultiProvider(providers: [
-                                ChangeNotifierProvider<Equipe>.value(value: equipe,),
-                                ChangeNotifierProvider<Modalidade>.value(value: modalidade),
-                              ],
-                              child: PaginaEquipe()
-                              // child: TestePage(),
-                              )
-                              )),
-                              child: Text(
-                                'Mais Informações',
-                                style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w600),
-                                textAlign: TextAlign.center,
-                              ),
-=======
                         child: SizedBox.expand(
                           child: FlatButton(
                             focusColor: Colors.transparent,
@@ -169,7 +118,6 @@ class EquipeCard extends StatelessWidget {
                                   color: temEquipe
                                       ? Colors.blueGrey[800]
                                       : Colors.black87),
->>>>>>> 915e80b286973b39d028ce65ddf778e34ff249c5
                             )),
                           ),
                         ),
@@ -292,12 +240,6 @@ class EquipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-      print('EquipeCard Build');
-      Equipe equipe = Provider.of<Equipe>(context);
-      Modalidade modalidade = Provider.of<Modalidade>(context);
-      return equipe.isLoading ? Center(child: CircularProgressIndicator(),) : body(context, equipe, modalidade);
-=======
     Equipe equipe = Provider.of<Equipe>(context);
     int index = equipe.index;
     return equipe.isLoading
@@ -305,6 +247,5 @@ class EquipeCard extends StatelessWidget {
             child: CircularProgressIndicator(),
           )
         : body(context, equipe, index);
->>>>>>> 915e80b286973b39d028ce65ddf778e34ff249c5
   }
 }

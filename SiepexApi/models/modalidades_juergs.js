@@ -20,6 +20,10 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.DATE(11),
         allowNull: true,
       },
+      fase: {
+        type: DataTypes.INTEGER(2),
+        allowNull: false,
+      },
       ult_atualizacao: {
         type: DataTypes.DATE(11),
         allowNull: true

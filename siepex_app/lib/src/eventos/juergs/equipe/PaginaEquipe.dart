@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:faker/faker.dart';
+// import 'package:faker/faker.dart';
 import 'package:siepex/icons/sport_icons.dart' as sportIcon;
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
@@ -11,7 +11,7 @@ import '../tabelas/widgets.dart';
 import '../models/equipe.dart';
 import 'package:siepex/models/serializeJuergs.dart';
 import 'package:provider/provider.dart';
-import 'package:animations/animations.dart';
+// import 'package:animations/animations.dart';
 
 class PaginaEquipe extends StatefulWidget {
   // final Equipe equipe;
@@ -149,7 +149,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
   @override
   Widget build(BuildContext context) {
     equipe = Provider.of<Equipe>(context);
-    //modalidade = Provider.of<Modalidade>(context);
+    modalidade = Provider.of<Modalidade>(context);
     isCap = equipe.cpfCapitao == userJuergs.cpf;
     isInTeam = userJuergs.isInTeam(equipe.id);
     temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);
@@ -316,6 +316,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
             ),
           ),
           ColumnBuilder(
+            // TODO: Implementar para pegar os jogos reais!
             itemCount: 6,
             itemBuilder: (context, index) => jogoCard(),
           ),

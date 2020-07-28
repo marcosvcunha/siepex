@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/icons/sport_icons.dart';
+import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/ColumnBuilder.dart';
+import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 
 class PaginaTabelas extends StatelessWidget {
   Widget competicaoButton(BuildContext context, IconData icone, String comp, String fase){
@@ -17,6 +20,8 @@ class PaginaTabelas extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    HandleData _handleData = HandleData();
+    // TODO:: Implementar função para pegas as modalidades do DB
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Material(
@@ -29,20 +34,43 @@ class PaginaTabelas extends StatelessWidget {
             borderRadius: BorderRadius.circular(5),
             color: Colors.grey[100],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
+          child: FutureBuilder(
+            future: _handleData.getModalidades(),
+            builder: (context, snapshot){
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return Center(child: CircularProgressIndicator(),);
+              }else{
+                List<Modalidade> modalidades = snapshot.data;
+                return ColumnBuilder(
+                  itemCount: modalidades.length + 1,
+                  itemBuilder: (context, index){
+                    if(index == 0){
+                      return Padding(
                 padding: const EdgeInsets.only(left: 16.0, top: 16, bottom: 12),
                 child: Text('Competições', style: TextStyle(color: Colors.black, fontSize: 26, fontWeight: FontWeight.w600),),
-              ),
-              competicaoButton(context, Sport.soccer_ball, 'Futsal Masculino', '1ª Fase - Ginásio Local'),
-              competicaoButton(context, Sport.soccer_ball,'Futsal Feminino', '2ª Fase - Ginásio Local'),
-              competicaoButton(context, Sport.volleyball_ball, 'Voleybol', 'Final - Ginásio Local'),
-              competicaoButton(context, Sport.shot_putter, 'Handbol Masculino', 'Semi-final - Ginásio Local'),
-              competicaoButton(context, Sport.shot_putter, 'Handbol Feminino', 'Quartas de final - Ginásio Local'),
-            ],
-          ),
+              );
+                    }else{
+                      return competicaoButton(context, modalidades[index - 1].icon, modalidades[index - 1].nome, 
+                        modalidades[index - 1].faseStr + ' - Ginásio Local');
+                    }
+                  },);
+              }
+            }),
+
+          // child: Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: <Widget>[
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 16.0, top: 16, bottom: 12),
+              //   child: Text('Competições', style: TextStyle(color: Colors.black, fontSize: 26, fontWeight: FontWeight.w600),),
+              // ),
+          //     competicaoButton(context, Sport.soccer_ball, 'Futsal Masculino', '1ª Fase - Ginásio Local'),
+          //     competicaoButton(context, Sport.soccer_ball,'Futsal Feminino', '2ª Fase - Ginásio Local'),
+          //     competicaoButton(context, Sport.volleyball_ball, 'Voleybol', 'Final - Ginásio Local'),
+          //     competicaoButton(context, Sport.shot_putter, 'Handbol Masculino', 'Semi-final - Ginásio Local'),
+          //     competicaoButton(context, Sport.shot_putter, 'Handbol Feminino', 'Quartas de final - Ginásio Local'),
+          //   ],
+          // ),
         ),
       ),
     );

@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:cpf_cnpj_validator/cpf_validator.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 class PerfilParticipante extends StatefulWidget {
   final Widget child;

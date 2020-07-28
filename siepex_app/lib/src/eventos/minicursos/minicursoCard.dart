@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/models/minicurso.dart';
-import 'package:siepex/src/agenda/evento_detalhes.dart';
+// import 'package:siepex/src/agenda/evento_detalhes.dart';
 import 'package:siepex/src/eventos/minicursos/minicursoDetalhes.dart';
 
 class MinicursoCard extends StatelessWidget {

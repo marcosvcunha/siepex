@@ -44,7 +44,7 @@ app.use('/comissao', comissao_rotas);
 app.use("/trabalhos", trabalhos_rotas);
 app.use("/cadastroJuergs", cadastro_juergs_rotas);
 app.use("/obtemParticipante", obtem_participante_rotas);
-app.use("/obtemModalidade", obtem_modalidades_rotas);
+app.use("/modalidades", obtem_modalidades_rotas);
 app.use("/equipe", cadastra_equipe_rotas);
 app.use('/obtemEquipes', obtem_equipes_rotas);
 app.use('/atualizaParticipante', atualiza_participante_rotas);

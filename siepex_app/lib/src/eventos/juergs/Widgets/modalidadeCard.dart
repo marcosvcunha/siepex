@@ -118,7 +118,7 @@ class _ModalidadeCardState extends State<ModalidadeCard> {
             ],
           ),
           onPressed: () async {
-            var f = await Navigator.push(
+            await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>

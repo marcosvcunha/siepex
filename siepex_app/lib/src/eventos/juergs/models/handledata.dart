@@ -14,7 +14,7 @@ class HandleData {
   Future<List<Modalidade>> getModalidades() async {
     try {
       var resposta = jsonDecode((await http.put(
-        baseUrl + 'obtemModalidade/',
+        baseUrl + 'modalidades/getAll',
       ))
           .body);
       List<Modalidade> listaModalidade = new List<Modalidade>();
@@ -27,7 +27,7 @@ class HandleData {
                 resposta['data'][i]['nome_modalidade'],
                 int.tryParse(
                     resposta['data'][i]['maximo_participantes'].toString()),
-                false, date);
+                false, date, resposta['data'][i]['fase']);
             listaModalidade.add(modalidade);
           }
         } else if (resposta['status'] == 'nao_achou') {

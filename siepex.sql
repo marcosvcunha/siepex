@@ -24,21 +24,23 @@ id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 nome_modalidade VARCHAR(30) NOT NULL,
 maximo_participantes int(2) NOT NULL,
 limit_date TIMESTAMP,
+fase int(2) NOT NULL, # Fase atual da competição: 0 - Fase de inscrição, 1 - Fase de Grupos, 2 - Quartas de final
+					  # 3 - Semi Final, 4 - Final e 5 - Encerrado.
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
 
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao) 
-	VALUES ('Futsal Masculino', '10', '2020-10-10 23:59:59', current_timestamp());
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao) 
-	VALUES ('Futsal Feminino', '10', '2020-06-25 17:45:59', current_timestamp());
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao) 
-	VALUES ('Vôlei Misto', '10', '2020-06-22 17:40:00', current_timestamp());
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao) 
-	VALUES ('Handebol Masculino', '10', '2020-06-12 17:35:59', current_timestamp());
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao) 
-	VALUES ('Handebol Feminino', '10', '2020-05-25 14:50:00', current_timestamp());
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao) 
-	VALUES ('Rústica', '99', '2020-05-25 00:05:09', current_timestamp());
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
+	VALUES ('Futsal Masculino', '10', '2020-10-10 23:59:59', current_timestamp(), 0);
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
+	VALUES ('Futsal Feminino', '10', '2020-10-25 17:45:59', current_timestamp(), 1);
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
+	VALUES ('Vôlei Misto', '10', '2020-10-22 17:40:00', current_timestamp(), 2);
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
+	VALUES ('Handebol Masculino', '10', '2020-10-12 17:35:59', current_timestamp(), 3);
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
+	VALUES ('Handebol Feminino', '10', '2020-10-25 14:50:00', current_timestamp(), 4);
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
+	VALUES ('Rústica', '99', '2020-10-25 00:05:09', current_timestamp(), 0);
 
 DROP TABLE IF EXISTS equipes_juergs;
 
@@ -51,10 +53,93 @@ maximo_participantes int(2) NOT NULL,
 numero_participantes int(2) not null,
 cpf_capitao VARCHAR(11) NOT NULL,
 celular_capitao VARCHAR(10) NOT NULL,
+grupo VARCHAR(10),
 participantes_cadastrados varchar(500) not null,
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
 
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 1', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 2', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 3', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 4', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 5', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 6', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 7', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 8', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 9', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 10', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 11', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 12', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 13', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 14', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 15', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 16', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 17', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 18', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 19', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 20', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 21', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 22', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 23', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 24', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 25', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 26', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao, celular_capitao, participantes_cadastrados) VALUES(1, 'Equipe Teste 27', 'Futsal Masculino', 10, 1, '01234567890', 
+		'993875092', '01234567890;');
+        
 DROP TABLE IF EXISTS cadastro_juergs;
 CREATE TABLE cadastro_juergs (
 	CPF VARCHAR(11) PRIMARY KEY,
@@ -70,6 +155,11 @@ CREATE TABLE cadastro_juergs (
     	MINHAS_EQUIPES varchar(200),
 	ULT_ATUALIZACAO TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ, MINHAS_EQUIPES) VALUES ('01234567890', 'Marcos Cunha', 
+		'marcoscunha@uergs.deu.br', '993875092', 'Uergs', 1, 'guaiba', 'Atleta', 0, '', '1;'
+		 );
 --
 -- Table structure for table `SequelizeMeta`
 --
