@@ -1,9 +1,45 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:siepex/src/config.dart';
+import 'package:siepex/src/eventos/juergs/models/handledata.dart';
+import 'package:siepex/src/eventos/juergs/tabelas/PaginaTabela.dart';
 
 class TabelaGrupos extends StatefulWidget {
+  TabelaGrupos(int modalidade) {
+    globalModalidade = modalidade;
+  }
+
   @override
   _TabelaGruposState createState() => _TabelaGruposState();
 }
+
+class JogosJuers {
+  String timeA;
+  String timeB;
+  int idTimeA;
+  int idTimeB;
+  int resultadoA;
+  int resultadoB;
+  bool encerrado;
+  int classModalidade;
+  String etapaJogo;
+
+  JogosJuers.retornaLinhaJuergs(Map<String, dynamic> json) {
+    this.timeA = json['time_a'];
+    this.timeB = json['time_b'];
+    this.idTimeA = json['id_time_a'];
+    this.idTimeB = json['id_time_b'];
+    this.resultadoA = json['resultado_a'];
+    this.resultadoB = json['resultado_b'];
+    this.encerrado = json['encerrado'];
+    this.classModalidade = json['modalidade'];
+    this.etapaJogo = json['etapa_jogo'];
+  }
+}
+
+int globalModalidade;
 
 class _TabelaGruposState extends State<TabelaGrupos> {
   List<bool> showTable = List.generate(8, (index) {
@@ -12,7 +48,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
   // Apenas para demonstração
   List<String> _groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
-  TableRow tableRow(String time) {
+  TableRow tableRow(String time, int partidas, int vitorias, int derrotas, int pontos) {
     return TableRow(children: [
       Padding(
         padding: const EdgeInsets.only(top: 4.0, bottom: 4, left: 6),
@@ -27,7 +63,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
           bottom: 4,
         ),
         child: Text(
-          '3',
+          partidas.toString(),
           style: TextStyle(color: Colors.black, fontSize: 18),
           textAlign: TextAlign.center,
         ),
@@ -38,7 +74,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
           bottom: 4,
         ),
         child: Text(
-          '0',
+          vitorias.toString(),
           style: TextStyle(color: Colors.black, fontSize: 18),
           textAlign: TextAlign.center,
         ),
@@ -49,7 +85,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
           bottom: 4,
         ),
         child: Text(
-          '0',
+          derrotas.toString(),
           style: TextStyle(color: Colors.black, fontSize: 18),
           textAlign: TextAlign.center,
         ),
@@ -60,7 +96,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
           bottom: 4,
         ),
         child: Text(
-          '4',
+          pontos.toString(),
           style: TextStyle(color: Colors.black, fontSize: 18),
           textAlign: TextAlign.center,
         ),
@@ -68,8 +104,73 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     ]);
   }
 
-  Widget tabela(int index) {
-    String group = _groups[index].toString();
+  Widget tabela(int index, List<JogosJuers> retJogos) {
+    int partidasTime1 = 0;
+    int ptsTime1 = 0;
+    int vitoriasTime1 = 0;
+    int derrotasTime1 = 0;
+    int partidasTime2 = 0;
+    int ptsTime2 = 0;
+    int vitoriasTime2 = 0;
+    int derrotasTime2 = 0;
+    int partidasTime3 = 0;
+    int ptsTime3 = 0;
+    int vitoriasTime3 = 0;
+    int derrotasTime3 = 0;
+    if(retJogos[0].encerrado){
+      partidasTime1++;
+      partidasTime2++;
+    }
+    if(retJogos[1].encerrado){
+      partidasTime1++;
+      partidasTime3++;
+    }
+    if(retJogos[2].encerrado){
+      partidasTime2++;
+      partidasTime3++;
+    }
+    if(retJogos[0].resultadoA > retJogos[0].resultadoB){
+      ptsTime1 += 3;
+      vitoriasTime1++;
+      derrotasTime2++;
+    }
+    else if(retJogos[0].resultadoA < retJogos[0].resultadoB){
+      ptsTime2 += 3;
+      vitoriasTime2++;
+      derrotasTime1++;
+    }
+    else{
+      ptsTime1++;
+      ptsTime2++;
+    }
+    if(retJogos[1].resultadoA > retJogos[1].resultadoB){
+      ptsTime1 += 3;
+      vitoriasTime1++;
+      derrotasTime3++;
+    }
+    else if(retJogos[1].resultadoA < retJogos[1].resultadoB){
+      ptsTime3 += 3;
+      vitoriasTime3++;
+      derrotasTime1++;
+    }
+    else{
+      ptsTime1++;
+      ptsTime3++;
+    }
+    if(retJogos[2].resultadoA > retJogos[2].resultadoB){
+      ptsTime2 += 3;
+      vitoriasTime2++;
+      derrotasTime3++;
+    }
+    else if(retJogos[2].resultadoA < retJogos[2].resultadoB){
+      ptsTime3 += 3;
+      vitoriasTime3++;
+      derrotasTime2++;
+    }
+    else{
+      ptsTime2++;
+      ptsTime3++;
+    }
     return Padding(
       key: ValueKey(1),
       padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
@@ -184,10 +285,10 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                ]),
-                tableRow('Time ${group}1'),
-                tableRow('Time ${group}2'),
-                tableRow('Time ${group}3'),
+                ]),                
+                tableRow(retJogos[0].timeA, partidasTime1, vitoriasTime1, derrotasTime1, ptsTime1),
+                tableRow(retJogos[0].timeB, partidasTime2, vitoriasTime2, derrotasTime2, ptsTime2),
+                tableRow(retJogos[1].timeB, partidasTime3, vitoriasTime3, derrotasTime3, ptsTime3),
               ],
             ),
             Align(
@@ -229,7 +330,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     );
   }
 
-  Widget _jogoTile(String timeA, String timeB) {
+  Widget _jogoTile(String timeA, int resultadoA,String timeB, int resultadoB) {
     return Container(
       decoration: BoxDecoration(
         //color: Colors.blue,
@@ -255,7 +356,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                           fontSize: 18,
                           color: Colors.black,
                           fontWeight: FontWeight.w400),
-                          overflow: TextOverflow.ellipsis,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   )),
               Expanded(
@@ -263,14 +364,17 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                 child: Center(
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      //color: Colors.grey[400],
-                      //6744C7
-                      color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)
-                    ),
+                        borderRadius: BorderRadius.circular(5),
+                        //color: Colors.grey[400],
+                        //6744C7
+                        color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
                     height: 35,
                     width: 35,
-                    child: Center(child: Text('0', style: TextStyle(fontSize: 18, color: Colors.black),)),
+                    child: Center(
+                        child: Text(
+                      resultadoA.toString(),
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    )),
                   ),
                 ),
               ),
@@ -280,12 +384,15 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                 child: Center(
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)
-                    ),
+                        borderRadius: BorderRadius.circular(5),
+                        color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
                     height: 35,
                     width: 35,
-                    child: Center(child: Text('0', style: TextStyle(fontSize: 18, color: Colors.black),)),
+                    child: Center(
+                        child: Text(
+                      resultadoB.toString(),
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    )),
                   ),
                 ),
               ),
@@ -305,14 +412,16 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                   )),
             ],
           ),
-          Text('Ginasio Local, 23/09 17:30', style: TextStyle(fontSize: 14, color: Colors.grey[800]),),
+          Text(
+            'Ginasio Local, 23/09 17:30',
+            style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+          ),
         ],
       ),
     );
   }
 
-  Widget jogosCard(int index) {
-    String group = _groups[index].toString();
+  Widget jogosCard(int index, List<JogosJuers> jogosJuers) {
     return Padding(
       key: ValueKey(2),
       padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
@@ -341,9 +450,9 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                       fontSize: 22,
                       fontWeight: FontWeight.w500)),
             ),
-            _jogoTile('Time ${group}1', 'Time ${group}2 '),
-            _jogoTile('Time ${group}1', 'Time ${group}3 '),
-            _jogoTile('Time ${group}2', 'Time ${group}3 '),
+            _jogoTile(jogosJuers[0].timeA, jogosJuers[0].resultadoA, jogosJuers[0].timeB, jogosJuers[0].resultadoB),
+            _jogoTile(jogosJuers[1].timeA, jogosJuers[1].resultadoA, jogosJuers[1].timeB, jogosJuers[1].resultadoB),
+            _jogoTile(jogosJuers[2].timeA, jogosJuers[2].resultadoA, jogosJuers[2].timeB, jogosJuers[2].resultadoB),
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
@@ -383,23 +492,52 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     );
   }
 
-  
+  Future<List<JogosJuers>> listarJogos() async {
+    var resposta = jsonDecode((await http.put(
+            baseUrl + 'modalidades/listaTabela',
+            body: {'idModalidade': globalModalidade.toString()}))
+        .body);
+    List<JogosJuers> listaJogos = new List<JogosJuers>();
+
+    if (resposta['status'] != null) {
+      if (resposta['status'] == 'ok') {
+        for (int i = 0; i != resposta['count']; i++) {
+          JogosJuers jogosJuergs =
+              new JogosJuers.retornaLinhaJuergs(resposta['data'][i]);
+          listaJogos.add(jogosJuergs);
+        }
+        return listaJogos;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return  ListView.builder(
-            itemCount: 9,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return SizedBox(height: 70);
-              }
-              return AnimatedSwitcher(
-                duration: Duration(milliseconds: 200),
-                child: showTable[index - 1]
-                    ? tabela(index - 1)
-                    : jogosCard(index - 1),
-              );
-              // return showTable[index - 1] ? tabela(index - 1) : jogosCard(index - 1);
-            },
-          );
+    return FutureBuilder(
+        future: listarJogos(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            List<JogosJuers> retJogos = snapshot.data;
+            return ListView.builder(
+              itemCount: 8,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return SizedBox(height: 70);
+                }
+                return AnimatedSwitcher(
+                  duration: Duration(milliseconds: 200),
+                  child: showTable[index - 1]
+                      ? tabela(index - 1, retJogos.sublist((index-1)*3, ((index-1)*3)+3))
+                      : jogosCard(index - 1, retJogos.sublist((index-1)*3, ((index-1)*3)+3)),
+                );
+                // return showTable[index - 1] ? tabela(index - 1) : jogosCard(index - 1);
+              },
+            );
+          }
+        });
   }
 }

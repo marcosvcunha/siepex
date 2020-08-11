@@ -30,7 +30,7 @@ async function pegarTodasEquipesPorModalidade(idModalidade) {
                 id_modalidade: idModalidade,
             },
             order: [
-                ['ult_atualizacao', 'DESC']
+                ['data_cadastro', 'asc']
             ],
         }).then(async (result) => {
             for (var i = 0; i < result.rows.length; i++) { // Repete para cada equipe encontrada.
@@ -63,7 +63,7 @@ async function pegarTodasEquipesPorUsuario(userCpf) {
                     id: equipesIds, // Passo todas as IDs
                 },
                 order: [
-                    ['ult_atualizacao', 'DESC']
+                    ['data_cadastro', 'asc']
                 ],
             }).then(async (result) => {
                 for (var i = 0; i < result.rows.length; i++) { // Repete para cada equipe encontrada.

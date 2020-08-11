@@ -56,7 +56,7 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                   Navigator.pop(context);
                   Scaffold.of(context).showSnackBar(loadingSnackbar());
                   // TODO: receber resposta e verificar se deu certo.
-                  await modalidade.nextFase(equipesGrupoId);
+                  await modalidade.nextFase(equipesGrupoId,equipesGrupoNome);
                   Scaffold.of(context).hideCurrentSnackBar();
                   Navigator.pop(context);
                 }, 

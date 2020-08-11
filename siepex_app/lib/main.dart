@@ -89,6 +89,7 @@ class MyApp extends StatelessWidget {
           "perfilParticipante":(BuildContext context) => PerfilParticipante(),
         },
         title: 'Siepex App',
+        
         theme: ThemeData(
           textSelectionColor: Colors.white,
           primaryColor: Color(0xff2595A6),

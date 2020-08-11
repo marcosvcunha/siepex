@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:provider/provider.dart';
 import 'package:siepex/src/eventos/juergs/admin/selectTeams.dart';
+import 'package:siepex/src/eventos/juergs/admin/resultadosPage.dart';
 
 /*
   Nessa página o ADM pode:
@@ -14,16 +15,18 @@ import 'package:siepex/src/eventos/juergs/admin/selectTeams.dart';
  */
 class CompetitionPage extends StatelessWidget {
   Widget nextFaseButton(BuildContext context, Modalidade modalidade) {
-
     if (modalidade.fase < 4) {
       return Align(
         alignment: Alignment.center,
         child: FlatButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider.value(
-              value: modalidade,
-              child: SelectTeamsPage(),
-              )));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChangeNotifierProvider.value(
+                          value: modalidade,
+                          child: SelectTeamsPage(),
+                        )));
           },
           highlightColor: Colors.transparent,
           focusColor: Colors.transparent,
@@ -46,7 +49,57 @@ class CompetitionPage extends StatelessWidget {
             child: Center(
               child: Text(
                 'Avançar de Fase',
-                style: TextStyle(fontSize: 18,),
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget lancarResultados(BuildContext context, Modalidade modalidade) {
+    if (modalidade.fase < 4) {
+      return Align(
+        alignment: Alignment.center,
+        child: FlatButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChangeNotifierProvider.value(
+                          value: modalidade,
+                          child: ResultadosPage(),
+                        )));
+          },
+          highlightColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          child: Container(
+            height: 45,
+            width: 160,
+            decoration: BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.all(Radius.circular(22)),
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 2,
+                    color: Colors.black87,
+                    spreadRadius: 1,
+                    offset: Offset(0, 2))
+              ],
+            ),
+            child: Center(
+              child: Text(
+                'Lançar Resultados',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
               ),
             ),
           ),
@@ -125,6 +178,10 @@ class CompetitionPage extends StatelessWidget {
           height: 40,
         ),
         nextFaseButton(context, modalidade),
+        SizedBox(
+          height: 40,
+        ),
+        lancarResultados(context, modalidade)
       ]),
     );
   }

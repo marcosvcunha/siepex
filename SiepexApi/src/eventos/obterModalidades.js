@@ -2,7 +2,12 @@ const express = require('express'),
     router = express.Router();
 const {
     modalidades_juergs,
+    jogos_juergs,
+    equipes_juergs,
 } = require('../../models');
+
+var grupos = ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3', 'D1', 'D2', 'D3', 'E1',
+    'E2', 'E3', 'F1', 'F2', 'F3', 'G1', 'G2', 'G3', 'H1', 'H2', 'H3',];
 
 router.put('/getAll', async (req, res) => {
     retorno = await listar();
@@ -20,20 +25,39 @@ router.put('/getAll', async (req, res) => {
     }
 });
 
+router.put('/listaTabela', async (req, res) => {
+    retorno = await listarTabela(req.body['idModalidade']);
+    if (retorno) {
+        res.json({
+            status: 'ok',
+            data: retorno.rows,
+            count: retorno.count,
+        })
+    }
+    else {
+        res.json({
+            status: 'nao_achou',
+        })
+    }
+});
+
 router.put('/nextFase', async (req, res) => {
-    try{
-        idEquipes = JSON.parse(req.body['equipes']) // Lista com id das equipes
-        id = parseInt(req.body['id_modalidade']) // Id da modalidade
-        fase_atual = parseInt(req.body['fase_atual']) // fase atual da modalidade
+    try {
+        idEquipes = JSON.parse(req.body['idEquipes']); // Lista com id das equipes
+        equipesGrupoNome = req.body['equipesGrupoNome'].split(',');
+        id = parseInt(req.body['id_modalidade']); // Id da modalidade
+        faseAtual = parseInt(req.body['fase_atual']); // fase atual da modalidade
 
         modalidade = (await modalidades_juergs.findByPk(id))['dataValues'];
 
         // Este if confere se a fase atual no app do usuario é a mesma no DB
         // Pode ser que outro ADM já tenha avançado a competição de fase.
-        if(modalidade['fase'] == fase_atual){
+        if (modalidade['fase'] == faseAtual) {
             // TODO:: Avançar a competição de fase e criar os respectivos jogos.
-            switch(fase_atual){
+            switch (faseAtual) {
                 case 0:
+                    monta_tabela(idEquipes, equipesGrupoNome, id, faseAtual);
+                    proxima_fase(id, faseAtual);
                     // TODO: Vai da fase de inscrição para fase de grupos.
                     /*
                         Formato de variavel idEquipes:
@@ -85,18 +109,18 @@ router.put('/nextFase', async (req, res) => {
             }
 
             res.json({
-            status: 'sucesso',
+                status: 'sucesso',
             });
             return;
 
-        }else{
+        } else {
             res.json({
                 status: 'erro',
                 erro: 'Modalidade nao esta mais nesta fase.'
             });
-        } 
+        }
     }
-    catch(e){
+    catch (e) {
         res.json({
             status: 'erro',
         });
@@ -104,9 +128,164 @@ router.put('/nextFase', async (req, res) => {
     }
 });
 
+function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
+
+    switch (idModalidade) {
+        case 1:
+        case 3:
+            for (var i = 0; i < 7; i ++) {
+                var nome_time_a = equipesGrupoNome[(i*3)].replace('[', '').replace(']', '').trim();
+                var nome_time_b = equipesGrupoNome[(i*3) + 1].replace('[', '').replace(']', '').trim();
+                var id_time_a = idEquipes[(i*3)];
+                var id_time_b = idEquipes[(i*3) + 1];
+                var resultado_a = 0;
+                var resultado_b = 0;
+                var encerrado = 0;
+                var modalidade = idModalidade;
+                var etapa_jogo = faseAtual;
+                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                    encerrado, modalidade, etapa_jogo);
+
+                nome_time_a = equipesGrupoNome[(i*3)].replace('[', '').replace(']', '').trim();
+                nome_time_b = equipesGrupoNome[(i*3) + 2].replace('[', '').replace(']', '').trim();
+                id_time_a = idEquipes[(i*3)];
+                id_time_b = idEquipes[(i*3) + 2];
+                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                    encerrado, modalidade, etapa_jogo);
+
+                nome_time_a = equipesGrupoNome[(i*3)+1].replace('[', '').replace(']', '').trim();
+                nome_time_b = equipesGrupoNome[(i*3) + 2].replace('[', '').replace(']', '').trim();
+                id_time_a = idEquipes[(i*3)+1];
+                id_time_b = idEquipes[(i*3) + 2];
+                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                    encerrado, modalidade, etapa_jogo);
+            }
+            for (var i = 0; i != 16; i++) {
+                atualiza_equipes_juergs(idEquipes, i);
+            }
+            break;
+
+        case 2:
+            for (var i = 0; i < 12; i += 2) {
+                var nome_time_a = equipesGrupoNome[i].replace('[', '').trim();
+                var nome_time_b = equipesGrupoNome[i + 1].replace('[', '').trim();
+                var id_time_a = idEquipes[i];
+                var id_time_b = idEquipes[i + 1];
+                var resultado_a = 0;
+                var resultado_b = 0;
+                var encerrado = 0;
+                var modalidade = idModalidade;
+                var etapa_jogo = faseAtual;
+                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                    encerrado, modalidade, etapa_jogo);
+            }
+            for (var i = 0; i != 16; i++) {
+                atualiza_equipes_juergs(idEquipes, i);
+            }
+            break;
+
+        case 4:
+        case 5:
+            for (var i = 0; i < 8; i += 2) {
+                var nome_time_a = equipesGrupoNome[i].replace('[', '').trim();
+                var nome_time_b = equipesGrupoNome[i + 1].replace('[', '').trim();
+                var id_time_a = idEquipes[i];
+                var id_time_b = idEquipes[i + 1];
+                var resultado_a = 0;
+                var resultado_b = 0;
+                var encerrado = 0;
+                var modalidade = idModalidade;
+                var etapa_jogo = faseAtual;
+                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                    encerrado, modalidade, etapa_jogo);
+            }
+            for (var i = 0; i != 16; i++) {
+                atualiza_equipes_juergs(idEquipes, i);
+            }
+            break;
+    }
+
+}
+
+function insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+    encerrado, modalidade, etapa_jogo) {
+    jogos_juergs.create(
+        {
+            time_a: nome_time_a,
+            time_b: nome_time_b,
+            id_time_a: (id_time_a == -2) ? 0 : id_time_a,
+            id_time_b: (id_time_b == -2) ? 0 : id_time_b,
+            resultado_a: resultado_a,
+            resultado_b: resultado_b,
+            encerrado: encerrado,
+            modalidade: modalidade,
+            etapa_jogo: etapa_jogo + 1,
+        }
+    ).then((result) => {
+        resolve(result);
+    }).catch((Exception) => {
+        console.log(Exception)
+        res.json({
+            status: 'erro',
+            erro: String(Exception)
+        })
+    })
+}
+
+function atualiza_equipes_juergs(id_time, i) {
+    if (id_time[i] == -2) {
+        return;
+    }
+    equipes_juergs.findByPk(id_time[i]).then((equipe) => {
+        equipes_juergs.update({
+            grupo: grupos[i],
+        }, {
+            where: {
+                id: id_time[i],
+            }
+        })
+    }).catch((err) => {
+        console.log(err);
+        res.json({
+            status: 'erro',
+        })
+    }
+    );
+}
+
+function proxima_fase(id_modalidade, faseAtual) {
+    modalidades_juergs.findByPk(id_modalidade).then((modalidade_atual) => {
+        modalidades_juergs.update({
+            fase: modalidade_atual.fase + 1,
+        }, {
+            where: {
+                fase: faseAtual,
+            }
+        })
+    }).catch((err) => {
+        console.log(err);
+        res.json({
+            status: 'erro',
+        })
+    }
+    );
+}
+
 async function listar(estudanteCpf) {
     return new Promise(function (resolve, reject) {
         modalidades_juergs.findAndCountAll().then((result) => {
+            resolve(result);
+        })
+    })
+}
+
+async function listarTabela(idModalidade) {
+    return new Promise(function (resolve, reject) {
+        jogos_juergs.findAndCountAll({
+            where: {
+                modalidade: idModalidade,
+            }
+        }).then((result) => {
             resolve(result);
         })
     })
