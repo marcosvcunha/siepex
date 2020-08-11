@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/src/eventos/juergs/tabelas/TabelaFinal.dart';
-import 'package:siepex/src/eventos/juergs/tabelas/TabelaGrupos.dart';
-import 'package:siepex/src/eventos/juergs/tabelas/TabelaQuartas.dart';
-import 'package:siepex/src/eventos/juergs/tabelas/TabelaSemi.dart';
+import 'package:siepex/models/modalidade.dart';
+import 'package:provider/provider.dart';
+import 'package:siepex/src/eventos/juergs/admin/TabelasGruposAdmin.dart';
 
-class PaginaTabela extends StatefulWidget {
+/*
+Seleciona o resultado das partidas para alterar
+*/
+
+class ResultadosPage extends StatefulWidget {
   @override
-  _PaginaTabelaState createState() => _PaginaTabelaState();
-  
+  _ResultadosPageState createState() => _ResultadosPageState();
 }
 
-class _PaginaTabelaState extends State<PaginaTabela> {
+class _ResultadosPageState extends State<ResultadosPage> {
+  bool _isLoading = false;
+
+  Modalidade modalidade;
 
   int _currentFase = 0;
   List<String> fases = ['1ª Fase', 'Quartas de Final', 'Semi-final', 'Final'];
@@ -42,13 +47,16 @@ class _PaginaTabelaState extends State<PaginaTabela> {
                   icon: Icon(
                     Icons.chevron_left,
                     size: 32,
-                    color: _currentFase > 0 ? Colors.green[600] : Colors.grey[500],
+                    color:
+                        _currentFase > 0 ? Colors.green[600] : Colors.grey[500],
                   ),
-                  onPressed: _currentFase > 0 ? (){
-                    setState(() {
-                      _currentFase --;
-                    });
-                  }:  null,
+                  onPressed: _currentFase > 0
+                      ? () {
+                          setState(() {
+                            _currentFase--;
+                          });
+                        }
+                      : null,
                 ),
               ),
               Text(
@@ -61,17 +69,18 @@ class _PaginaTabelaState extends State<PaginaTabela> {
               Padding(
                 padding: const EdgeInsets.only(right: 12.0),
                 child: IconButton(
-                  icon: Icon(
-                    Icons.chevron_right,
-                    size: 32,
-                    color: _currentFase < 3 ? Colors.green[600] : Colors.grey[500]
-                  ),
-
-                  onPressed: _currentFase < 3 ? (){
-                    setState(() {
-                      _currentFase ++;
-                    });
-                  }:  null,
+                  icon: Icon(Icons.chevron_right,
+                      size: 32,
+                      color: _currentFase < 3
+                          ? Colors.green[600]
+                          : Colors.grey[500]),
+                  onPressed: _currentFase < 3
+                      ? () {
+                          setState(() {
+                            _currentFase++;
+                          });
+                        }
+                      : null,
                 ),
               ),
             ],
@@ -81,32 +90,25 @@ class _PaginaTabelaState extends State<PaginaTabela> {
     );
   }
 
-  Widget currentPage(int modalidade){
-    if(_currentFase == 0)
-      return TabelaGrupos(modalidade);
-    else if(_currentFase == 1)
-      return TabelaQuartas();
-    else if(_currentFase == 2)
-      return TabelaSemi();
-    else
-      return TabelaFinal();
+  Widget currentPage(int modalidade) {
+    if (_currentFase == 0)
+      return TabelaGruposAdmin(modalidade);
   }
 
   @override
   Widget build(BuildContext context) {
-    int modalidade = ModalRoute.of(context).settings.arguments;
+    modalidade = Provider.of<Modalidade>(context);
     return Scaffold(
       backgroundColor: Colors.grey[400],
       appBar: AppBar(title: Text('Tabela Futsal Masculino')),
       body: Stack(
         children: <Widget>[
-          AnimatedSwitcher(duration: Duration(milliseconds: 200),
-          child: currentPage(modalidade),
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 200),
+            child: currentPage(modalidade.fase),
           ),
-          selectionBar(),
         ],
       ),
-      
     );
   }
 }

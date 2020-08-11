@@ -54,12 +54,13 @@ class Modalidade extends ChangeNotifier {
     faseStr = fases[fase];
   }
 
-  Future<void> nextFase(List<int> idEquipes) async {
+  Future<void> nextFase(List<int> idEquipes, List<String> equipesGrupoNome) async {
     var resposta =
             jsonDecode((await http.put(baseUrl + 'modalidades/nextFase', body: {
           'id_modalidade': id.toString(),
           'fase_atual': fase.toString(),
-          'equipes': idEquipes.toString(),
+          'idEquipes': idEquipes.toString(),
+          'equipesGrupoNome': equipesGrupoNome.toString(),
         })).body);
     if(resposta['status'] == 'sucesso'){
       // TODO: Alterar a fase nesta modalidade e dar NotifyListeners.

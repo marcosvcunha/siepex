@@ -73,6 +73,8 @@ class ListaEquipesPage extends StatelessWidget {
                           fontSize: 16,
                           fontWeight: FontWeight.w400),
                     ),
+                    SizedBox(height: 2),
+                    ajustaEquipe(equipe.index, equipe.idModalidade),
                   ],
                 ),
               ),
@@ -128,9 +130,8 @@ class ListaEquipesPage extends StatelessWidget {
     );
   }
 
-
   /// Card para deixar equipe em branco
-  Widget _blankCard(BuildContext context){
+  Widget _blankCard(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 22, left: 32, right: 32),
       child: Container(
@@ -215,6 +216,64 @@ class ListaEquipesPage extends StatelessWidget {
     );
   }
 
+  Text ajustaEquipe(int index, int idModalidade) {
+    if (idModalidade == 1 || idModalidade == 3) {
+      if (index > 16) {
+        return Text(
+          'Equipe: ' + (index).toString() + '/16',
+          style: TextStyle(
+              color: Colors.red[900],
+              fontSize: 16,
+              fontWeight: FontWeight.w400),
+        );
+      } else {
+        return Text(
+          'Equipe: ' + (index).toString() + '/16',
+          style: TextStyle(
+              color: Colors.blueGrey[900],
+              fontSize: 16,
+              fontWeight: FontWeight.w400),
+        );
+      }
+    } else if (idModalidade == 2) {
+      if (index > 12) {
+        return Text(
+          'Equipe: ' + (index).toString() + '/12',
+          style: TextStyle(
+              color: Colors.red[900],
+              fontSize: 16,
+              fontWeight: FontWeight.w400),
+        );
+      } else {
+        return Text(
+          'Equipe: ' + (index).toString() + '/12',
+          style: TextStyle(
+              color: Colors.blueGrey[900],
+              fontSize: 16,
+              fontWeight: FontWeight.w400),
+        );
+      }
+    } else if (idModalidade == 4 || idModalidade == 5) {
+      if (index > 8) {
+        return Text(
+          'Equipe: ' + (index).toString() + '/8',
+          style: TextStyle(
+              color: Colors.red[900],
+              fontSize: 16,
+              fontWeight: FontWeight.w400),
+        );
+      } else {
+        return Text(
+          'Equipe: ' + (index).toString() + '/8',
+          style: TextStyle(
+              color: Colors.blueGrey[900],
+              fontSize: 16,
+              fontWeight: FontWeight.w400),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Modalidade _modalidade = Provider.of<Modalidade>(context);
@@ -231,20 +290,21 @@ class ListaEquipesPage extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else {
-            if(snapshot.hasData){
+            if (snapshot.hasData) {
               List<Equipe> equipes = snapshot.data;
               // print(equipesSelecionadas);
               print(equipes.length);
-              equipes.retainWhere((equipe) => !equipesSelecionadas.contains(equipe.id));
+              equipes.retainWhere(
+                  (equipe) => !equipesSelecionadas.contains(equipe.id));
               return ListView.builder(
-                itemCount: equipes.length + 1,
-                itemBuilder: (context, index) {
-                  if(index < equipes.length)
-                    return _equipeCard(context, equipes[index]);
-                  else
-                    return _blankCard(context);
-                });
-            }else{
+                  itemCount: equipes.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index < equipes.length)
+                      return _equipeCard(context, equipes[index]);
+                    else
+                      return _blankCard(context);
+                  });
+            } else {
               return Center(
                 child: Text('Nenhuma equipe a Exibir'),
               );

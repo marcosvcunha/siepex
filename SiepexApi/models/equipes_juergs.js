@@ -43,6 +43,10 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.STRING(10),
             allowNull: true,
         },
+        data_cadastro:{
+            type: DataTypes.DATE(11),
+            allowNull: true,
+        },
         ult_atualizacao:{
             type: DataTypes.DATE(11),
             allowNull: true,

@@ -53,7 +53,6 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                   );
                 } else {
                   List<Equipe> equipesList = snapshot.data;
-                  equipesList = equipesList.reversed.toList();
                   if (snapshot.hasData) {
                     return ListView.builder(
                         itemCount: snapshot.data.length,
@@ -87,27 +86,6 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
       );
   }
 
-/* TODO: ARRUMAR DEPOIS PARA O TITULO PEGAR O NUMERO DE PARTICIPANTES INSCRITOS
-  Widget titulo() {
-    if (modalidade.nome != 'Rústica') {
-      return AppBar(
-        centerTitle: true,
-        title: Text(modalidade.nome),
-      );
-    } else {
-                var resposta =
-          jsonDecode((await http.put(baseUrl + 'equipe/contaRustica',))
-              .body);
-            return AppBar(
-        centerTitle: true,
-        title: Text(
-          'aaa'),
-          //resposta.data.cont),
-          //modalidade.nome),
-      );
-    }
-  }
-*/
   Widget selecionaBotao() {
     if (modalidade.nome == 'Rústica') {
       return FlatButton(
