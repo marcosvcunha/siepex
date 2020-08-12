@@ -49,7 +49,7 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
     return true;
   });
 
-  bool _isEditingText = false;
+  bool jaCarregou = false;
   List<TextEditingController> controllers;
   String initialText = "1";
   int crtlIndex = 0;
@@ -58,7 +58,7 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
   @override
   void initState() {
     super.initState();
-    controllers = List.generate(42, (i) => TextEditingController());
+    controllers = List.generate(48, (i) => TextEditingController());
   }
 
   @override
@@ -127,8 +127,11 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
     ]);
   }
 
-  Widget _jogoTile(String timeA, int resultadoA, String timeB, int resultadoB,
-      List<JogosJuers> jogosJuergs) {
+  Widget _jogoTile(JogosJuers jogo, int index) {
+    // _jogoTile(jogosJuers[1].timeA, jogosJuers[1].resultadoA,
+    //         jogosJuers[1].timeB, jogosJuers[1].resultadoB, jogosJuers),
+    String timeA = jogo.timeA;
+    String timeB = jogo.timeB;
     return Container(
       decoration: BoxDecoration(
         //color: Colors.blue,
@@ -166,7 +169,9 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
                           color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
                       height: 35,
                       width: 35,
-                      child: _editTitleTextField(jogosJuergs)),
+                      child: Center(
+                          child:
+                              _editTitleTextField(jogo, 'A', index * 2 + 0))),
                 ),
               ),
               // SizedBox(width: 30),
@@ -179,7 +184,9 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
                           color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
                       height: 35,
                       width: 35,
-                      child: _editTitleTextField(jogosJuergs)),
+                      child: Center(
+                          child:
+                              _editTitleTextField(jogo, 'B', index * 2 + 1))),
                 ),
               ),
               Expanded(
@@ -236,12 +243,10 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
                       fontSize: 22,
                       fontWeight: FontWeight.w500)),
             ),
-            _jogoTile(jogosJuers[0].timeA, jogosJuers[0].resultadoA,
-                jogosJuers[0].timeB, jogosJuers[0].resultadoB, jogosJuers),
-            _jogoTile(jogosJuers[1].timeA, jogosJuers[1].resultadoA,
-                jogosJuers[1].timeB, jogosJuers[1].resultadoB, jogosJuers),
-            _jogoTile(jogosJuers[2].timeA, jogosJuers[2].resultadoA,
-                jogosJuers[2].timeB, jogosJuers[2].resultadoB, jogosJuers),
+            // index = 1; grupo = B;
+            _jogoTile(jogosJuers[index * 3 + 0], index * 3 + 0),
+            _jogoTile(jogosJuers[index * 3 + 1], index * 3 + 1),
+            _jogoTile(jogosJuers[index * 3 + 2], index * 3 + 2),
           ],
         ),
       ),
@@ -267,39 +272,23 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
     }
   }
 
-  Widget _editTitleTextField(List<JogosJuers> jogosJuergs) {
-    if (globalIndex % 2 != 0) {
-      initialText = jogosJuergs[crtlIndex].resultadoB.toString();
-      crtlIndex++;
-    } else {
-      initialText = jogosJuergs[crtlIndex].resultadoA.toString();
-    }
-    if (crtlIndex == 3) {
-      crtlIndex = 0;
-    }
+  Widget _editTitleTextField(
+      JogosJuers jogoJuergs, String id, int controllerIndex) {
+    return Center(
+      child: TextField(
+        controller: controllers[controllerIndex],
+        keyboardType: TextInputType.number,
+        onSubmitted: (value) {
+          // TODO:: Conferir se Value é númerico
 
-    if (_isEditingText)
-      return Center(
-        child: TextField(
-          controller: controllers[globalIndex],
-          onChanged: (value) {
-            final controller = controllers[globalIndex];
-          },
-        ),
-      );
-    globalIndex++;
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _isEditingText = true;
-        });
-      },
-      child: Text(
-        initialText,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 18.0,
-        ),
+          // se nao numerico
+          // if (id == 'A')
+          //   controllers[controllerIndex].text =
+          //       jogoJuergs.resultadoA.toString();
+          // else
+          //   controllers[controllerIndex].text =
+          //       jogoJuergs.resultadoB.toString();
+        },
       ),
     );
   }
@@ -315,6 +304,13 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
             );
           } else {
             List<JogosJuers> retJogos = snapshot.data;
+            if (!jaCarregou) {
+              for (int i = 0; i < retJogos.length; i++) {
+                controllers[i * 2 + 0].text = retJogos[i].resultadoA.toString();
+                controllers[i * 2 + 1].text = retJogos[i].resultadoB.toString();
+              }
+              jaCarregou = true;
+            }
             return ListView.builder(
               itemCount: 8,
               itemBuilder: (context, index) {
@@ -323,8 +319,7 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
                 }
                 return AnimatedSwitcher(
                   duration: Duration(milliseconds: 200),
-                  child: jogosCard(index - 1,
-                      retJogos.sublist((index - 1) * 3, ((index - 1) * 3) + 3)),
+                  child: jogosCard(index - 1, retJogos),
                 );
               },
             );
