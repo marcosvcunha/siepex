@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/config.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/PaginaTabela.dart';
 
 class TabelaGrupos extends StatefulWidget {
-  TabelaGrupos(int modalidade) {
+  TabelaGrupos(Modalidade modalidade) {
     globalModalidade = modalidade;
   }
 
@@ -39,7 +40,7 @@ class JogosJuers {
   }
 }
 
-int globalModalidade;
+Modalidade globalModalidade;
 
 class _TabelaGruposState extends State<TabelaGrupos> {
   List<bool> showTable = List.generate(8, (index) {
@@ -495,7 +496,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
   Future<List<JogosJuers>> listarJogos() async {
     var resposta = jsonDecode((await http.put(
             baseUrl + 'modalidades/listaTabela',
-            body: {'idModalidade': globalModalidade.toString()}))
+            body: {'idModalidade': globalModalidade.id.toString(), 'etapa': globalModalidade.fase.toString()}))
         .body);
     List<JogosJuers> listaJogos = new List<JogosJuers>();
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/TabelaFinal.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/TabelaGrupos.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/TabelaQuartas.dart';
@@ -81,7 +82,7 @@ class _PaginaTabelaState extends State<PaginaTabela> {
     );
   }
 
-  Widget currentPage(int modalidade){
+  Widget currentPage(Modalidade modalidade){
     if(_currentFase == 0)
       return TabelaGrupos(modalidade);
     else if(_currentFase == 1)
@@ -94,7 +95,7 @@ class _PaginaTabelaState extends State<PaginaTabela> {
 
   @override
   Widget build(BuildContext context) {
-    int modalidade = ModalRoute.of(context).settings.arguments;
+    Modalidade modalidade = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: Colors.grey[400],
       appBar: AppBar(title: Text('Tabela Futsal Masculino')),

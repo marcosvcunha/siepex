@@ -1,6 +1,12 @@
 
 module.exports = function(sequelize, DataTypes){
     return sequelize.define('jogos_juergs', {
+        id :{
+            type: DataTypes.INTEGER(2),
+            allowNull: false,
+            primaryKey: true,
+            autoIncrement: true,
+        },
         time_a :{
             type: DataTypes.STRING(30),
             allowNull: false,
