@@ -49,7 +49,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
   // Apenas para demonstração
   List<String> _groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
-  TableRow tableRow(String time, int partidas, int vitorias, int derrotas, int pontos) {
+  TableRow tableRow(String time, int partidas, int vitorias, int derrotas, int empates, int pontos) {
     return TableRow(children: [
       Padding(
         padding: const EdgeInsets.only(top: 4.0, bottom: 4, left: 6),
@@ -97,6 +97,17 @@ class _TabelaGruposState extends State<TabelaGrupos> {
           bottom: 4,
         ),
         child: Text(
+          empates.toString(),
+          style: TextStyle(color: Colors.black, fontSize: 18),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(
+          top: 4.0,
+          bottom: 4,
+        ),
+        child: Text(
           pontos.toString(),
           style: TextStyle(color: Colors.black, fontSize: 18),
           textAlign: TextAlign.center,
@@ -110,14 +121,17 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     int ptsTime1 = 0;
     int vitoriasTime1 = 0;
     int derrotasTime1 = 0;
+    int empatesTime1 = 0;
     int partidasTime2 = 0;
     int ptsTime2 = 0;
     int vitoriasTime2 = 0;
     int derrotasTime2 = 0;
+    int empatesTime2 = 0;
     int partidasTime3 = 0;
     int ptsTime3 = 0;
     int vitoriasTime3 = 0;
     int derrotasTime3 = 0;
+    int empatesTime3 = 0;
     if(retJogos[0].encerrado){
       partidasTime1++;
       partidasTime2++;
@@ -141,6 +155,8 @@ class _TabelaGruposState extends State<TabelaGrupos> {
       derrotasTime1++;
     }
     else{
+      empatesTime1++;
+      empatesTime2++;
       ptsTime1++;
       ptsTime2++;
     }
@@ -155,6 +171,8 @@ class _TabelaGruposState extends State<TabelaGrupos> {
       derrotasTime1++;
     }
     else{
+      empatesTime1++;
+      empatesTime3++;
       ptsTime1++;
       ptsTime3++;
     }
@@ -169,6 +187,8 @@ class _TabelaGruposState extends State<TabelaGrupos> {
       derrotasTime2++;
     }
     else{
+      empatesTime2++;
+      empatesTime3++;
       ptsTime2++;
       ptsTime3++;
     }
@@ -278,6 +298,20 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                       bottom: 4,
                     ),
                     child: Text(
+                      'E',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                                    Padding(
+                    padding: const EdgeInsets.only(
+                      top: 4.0,
+                      bottom: 4,
+                    ),
+                    child: Text(
                       'P',
                       style: TextStyle(
                           color: Colors.black,
@@ -287,9 +321,9 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                     ),
                   ),
                 ]),                
-                tableRow(retJogos[0].timeA, partidasTime1, vitoriasTime1, derrotasTime1, ptsTime1),
-                tableRow(retJogos[0].timeB, partidasTime2, vitoriasTime2, derrotasTime2, ptsTime2),
-                tableRow(retJogos[1].timeB, partidasTime3, vitoriasTime3, derrotasTime3, ptsTime3),
+                tableRow(retJogos[0].timeA, partidasTime1, vitoriasTime1, derrotasTime1, empatesTime1, ptsTime1),
+                tableRow(retJogos[0].timeB, partidasTime2, vitoriasTime2, derrotasTime2, empatesTime2, ptsTime2),
+                tableRow(retJogos[1].timeB, partidasTime3, vitoriasTime3, derrotasTime3, empatesTime3, ptsTime3),
               ],
             ),
             Align(
