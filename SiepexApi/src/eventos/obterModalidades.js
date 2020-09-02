@@ -282,7 +282,7 @@ function proxima_fase(id_modalidade, faseAtual) {
             fase: modalidade_atual.fase + 1,
         }, {
             where: {
-                fase: faseAtual,
+                id: id_modalidade,
             }
         })
     }).catch((err) => {

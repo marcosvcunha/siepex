@@ -13,9 +13,15 @@ class PaginaTabela extends StatefulWidget {
 
 class _PaginaTabelaState extends State<PaginaTabela> {
 
-  int _currentFase = 0;
-  List<String> fases = ['1ª Fase', 'Quartas de Final', 'Semi-final', 'Final'];
-  Widget selectionBar() {
+  int _currentFase = 1;
+  List<String> fases = [
+  'Inscrição',
+  'Fase de Grupos',
+  'Quartas de Final',
+  'Semi-Final',
+  'Final',
+  ];
+  Widget selectionBar(int modalidadeFase) {
     return Align(
       alignment: Alignment.topCenter,
       child: Padding(
@@ -43,9 +49,9 @@ class _PaginaTabelaState extends State<PaginaTabela> {
                   icon: Icon(
                     Icons.chevron_left,
                     size: 32,
-                    color: _currentFase > 0 ? Colors.green[600] : Colors.grey[500],
+                    color: _currentFase > 1 ? Colors.green[600] : Colors.grey[500],
                   ),
-                  onPressed: _currentFase > 0 ? (){
+                  onPressed: _currentFase > 1 ? (){
                     setState(() {
                       _currentFase --;
                     });
@@ -65,10 +71,10 @@ class _PaginaTabelaState extends State<PaginaTabela> {
                   icon: Icon(
                     Icons.chevron_right,
                     size: 32,
-                    color: _currentFase < 3 ? Colors.green[600] : Colors.grey[500]
+                    color: _currentFase < modalidadeFase ? Colors.green[600] : Colors.grey[500]
                   ),
 
-                  onPressed: _currentFase < 3 ? (){
+                  onPressed: _currentFase < modalidadeFase ? (){
                     setState(() {
                       _currentFase ++;
                     });
@@ -83,28 +89,44 @@ class _PaginaTabelaState extends State<PaginaTabela> {
   }
 
   Widget currentPage(Modalidade modalidade){
-    if(_currentFase == 0)
+    if(_currentFase == 1)
       return TabelaGrupos(modalidade);
-    else if(_currentFase == 1)
-      return TabelaQuartas();
     else if(_currentFase == 2)
+      return TabelaQuartas();
+    else if(_currentFase == 3)
       return TabelaSemi();
     else
       return TabelaFinal();
   }
 
+  Widget faseDeInscricao(){
+    return Center(
+      child: Text('A competição ainda não começou!', 
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.w500,
+        fontSize: 32
+        ),),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // TODO: Arrumar para não calcular os pontos nem os resultados enquanto a partida não tiver terminado.
     Modalidade modalidade = ModalRoute.of(context).settings.arguments;
+    print(modalidade.faseStr);
     return Scaffold(
       backgroundColor: Colors.grey[400],
-      appBar: AppBar(title: Text('Tabela Futsal Masculino')),
-      body: Stack(
+      // backgroundColor: Colors.white,
+      appBar: AppBar(title: Text('Tabela ' + modalidade.nome)),
+      body: modalidade.fase == 0 ? faseDeInscricao() : 
+        Stack(
         children: <Widget>[
           AnimatedSwitcher(duration: Duration(milliseconds: 200),
           child: currentPage(modalidade),
           ),
-          selectionBar(),
+          selectionBar(modalidade.fase),
         ],
       ),
       

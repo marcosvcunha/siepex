@@ -32,9 +32,9 @@ ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
 	VALUES ('Futsal Masculino', '10', '2020-10-10 23:59:59', current_timestamp(), 0);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('Futsal Feminino', '10', '2020-10-25 17:45:59', current_timestamp(), 1);
+	VALUES ('Futsal Feminino', '10', '2020-10-25 17:45:59', current_timestamp(), 0);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('Vôlei Misto', '10', '2020-10-22 17:40:00', current_timestamp(), 2);
+	VALUES ('Vôlei Misto', '10', '2020-10-22 17:40:00', current_timestamp(), 0);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
 	VALUES ('Handebol Masculino', '10', '2020-10-12 17:35:59', current_timestamp(), 3);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 

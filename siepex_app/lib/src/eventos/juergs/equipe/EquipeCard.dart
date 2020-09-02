@@ -8,7 +8,7 @@ import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 class EquipeCard extends StatelessWidget {
   final bool isActive;
   EquipeCard({@required this.isActive});
-
+  var corCinza = Colors.grey[900]; // Cor dos itens menores do card
   Widget body(BuildContext context, Equipe equipe, int index) {
     Modalidade modalidade = Provider.of<Modalidade>(context);
     bool temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);
@@ -48,7 +48,7 @@ class EquipeCard extends StatelessWidget {
                     Text(
                       'Capitão: ' + equipe.nomeCapitao,
                       style: TextStyle(
-                          color: Colors.blueGrey[900],
+                          color: corCinza,
                           fontSize: 18,
                           fontWeight: FontWeight.w400),
                     ),
@@ -56,7 +56,7 @@ class EquipeCard extends StatelessWidget {
                     Text(
                       'Contato: ' + equipe.celCapitaoFormated,
                       style: TextStyle(
-                          color: Colors.blueGrey[900],
+                          color: corCinza,
                           fontSize: 16,
                           fontWeight: FontWeight.w400),
                     ),
@@ -64,7 +64,7 @@ class EquipeCard extends StatelessWidget {
                     Text(
                       'Participantes: ${equipe.numeroParticipantes}/${equipe.maximoParticipantes}',
                       style: TextStyle(
-                          color: Colors.blueGrey[900],
+                          color: corCinza,
                           fontSize: 16,
                           fontWeight: FontWeight.w400),
                     ),
@@ -116,7 +116,7 @@ class EquipeCard extends StatelessWidget {
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: temEquipe
-                                      ? Colors.blueGrey[800]
+                                      ? Colors.grey[800]
                                       : Colors.black87),
                             )),
                           ),
@@ -188,13 +188,13 @@ class EquipeCard extends StatelessWidget {
           style: TextStyle(
               color: Colors.red[900],
               fontSize: 16,
-              fontWeight: FontWeight.w400),
+              fontWeight: FontWeight.w500),
         );
       } else {
         return Text(
           'Equipe: ' + (index + 1).toString() + '/16',
           style: TextStyle(
-              color: Colors.blueGrey[900],
+              color: corCinza,
               fontSize: 16,
               fontWeight: FontWeight.w400),
         );
@@ -212,7 +212,7 @@ class EquipeCard extends StatelessWidget {
         return Text(
           'Equipe: ' + (index + 1).toString() + '/12',
           style: TextStyle(
-              color: Colors.blueGrey[900],
+              color: corCinza,
               fontSize: 16,
               fontWeight: FontWeight.w400),
         );
@@ -231,7 +231,7 @@ class EquipeCard extends StatelessWidget {
       return Text(
         'Equipe: ' + (index + 1).toString() + '/8',
         style: TextStyle(
-            color: Colors.blueGrey[900],
+            color: corCinza,
             fontSize: 16,
             fontWeight: FontWeight.w400),
       );

@@ -90,8 +90,12 @@ class JuergsDrawer extends StatelessWidget {
               context,
               'Gerenciar Competições',
               Sport.volleyball_silhouette,
-              () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ManageCompPage())))
+              () { 
+                Navigator.pop(context);
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ManageCompPage()));
+              }
+                  )
         ],
       ),
     );
