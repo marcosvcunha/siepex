@@ -5,7 +5,7 @@ import 'package:siepex/src/eventos/juergs/Widgets/ColumnBuilder.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 
 class PaginaTabelas extends StatelessWidget {
-  Widget competicaoButton(BuildContext context, IconData icone, String comp, String fase, int idModalidade){
+  Widget competicaoButton(BuildContext context, IconData icone, String comp, String fase, Modalidade modalidade){
     return Container(
               //color: Colors.blue,
               height: 65,
@@ -13,7 +13,7 @@ class PaginaTabelas extends StatelessWidget {
                 leading: Icon(icone, size: 35, color: Color(0xff372554)),
                 title: Text(comp, style: TextStyle(fontSize: 22, color: Colors.black87, fontWeight: FontWeight.w600),),
                 subtitle: Text(fase, style: TextStyle(color: Colors.black87),),
-                onTap: () => Navigator.pushNamed(context, 'tabelaPage', arguments: idModalidade),
+                onTap: () => Navigator.pushNamed(context, 'tabelaPage', arguments: modalidade),
               ),
             );
   }
@@ -51,7 +51,7 @@ class PaginaTabelas extends StatelessWidget {
               );
                     }else{
                       return competicaoButton(context, modalidades[index - 1].icon, modalidades[index - 1].nome, 
-                        modalidades[index - 1].faseStr + ' - Ginásio Local', modalidades[index - 1].id);
+                        modalidades[index - 1].faseStr + ' - Ginásio Local', modalidades[index - 1]);
                     }
                   },);
               }

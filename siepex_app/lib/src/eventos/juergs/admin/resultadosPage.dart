@@ -90,7 +90,7 @@ class _ResultadosPageState extends State<ResultadosPage> {
     );
   }
 
-  Widget currentPage(int modalidade) {
+  Widget currentPage(Modalidade modalidade) {
     if (_currentFase == 0)
       return TabelaGruposAdmin(modalidade);
   }
@@ -105,7 +105,7 @@ class _ResultadosPageState extends State<ResultadosPage> {
         children: <Widget>[
           AnimatedSwitcher(
             duration: Duration(milliseconds: 200),
-            child: currentPage(modalidade.fase),
+            child: currentPage(modalidade),
           ),
         ],
       ),

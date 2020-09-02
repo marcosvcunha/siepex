@@ -26,7 +26,7 @@ router.put('/getAll', async (req, res) => {
 });
 
 router.put('/listaTabela', async (req, res) => {
-    retorno = await listarTabela(req.body['idModalidade']);
+    retorno = await listarTabela(req.body['idModalidade'], req.body['etapa']);
     if (retorno) {
         res.json({
             status: 'ok',
@@ -128,16 +128,45 @@ router.put('/nextFase', async (req, res) => {
     }
 });
 
+router.put('/lancaResultado', async (req, res) => {
+    var modalidade = parseInt(req.body['idModalidade']);
+    var etapa = req.body['etapa'];
+    var resultados = req.body['resultados'].split(',');
+    retorno = await atualizaTabelaSelect(modalidade, etapa);
+    if (retorno) {
+
+        switch (modalidade) {
+            case 1:
+            case 3:
+                for (var i = 0; i != retorno.count; i++) {
+                    atualizaTabelaUpdate(retorno.rows[i].id, resultados[i*2], resultados[(i*2) + 1]);
+                }
+
+                break;
+        }
+        res.json({
+            status: 'ok',
+            data: retorno.rows,
+            count: retorno.count,
+        })
+    }
+    else {
+        res.json({
+            status: 'nao_achou',
+        })
+    }
+});
+
 function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
 
     switch (idModalidade) {
         case 1:
         case 3:
-            for (var i = 0; i < 7; i ++) {
-                var nome_time_a = equipesGrupoNome[(i*3)].replace('[', '').replace(']', '').trim();
-                var nome_time_b = equipesGrupoNome[(i*3) + 1].replace('[', '').replace(']', '').trim();
-                var id_time_a = idEquipes[(i*3)];
-                var id_time_b = idEquipes[(i*3) + 1];
+            for (var i = 0; i < 8; i++) {
+                var nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
+                var nome_time_b = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
+                var id_time_a = idEquipes[(i * 3)];
+                var id_time_b = idEquipes[(i * 3) + 1];
                 var resultado_a = 0;
                 var resultado_b = 0;
                 var encerrado = 0;
@@ -146,21 +175,21 @@ function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
                 insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
 
-                nome_time_a = equipesGrupoNome[(i*3)].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i*3) + 2].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i*3)];
-                id_time_b = idEquipes[(i*3) + 2];
+                nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
+                nome_time_b = equipesGrupoNome[(i * 3) + 2].replace('[', '').replace(']', '').trim();
+                id_time_a = idEquipes[(i * 3)];
+                id_time_b = idEquipes[(i * 3) + 2];
                 insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
 
-                nome_time_a = equipesGrupoNome[(i*3)+1].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i*3) + 2].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i*3)+1];
-                id_time_b = idEquipes[(i*3) + 2];
+                nome_time_a = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
+                nome_time_b = equipesGrupoNome[(i * 3) + 2].replace('[', '').replace(']', '').trim();
+                id_time_a = idEquipes[(i * 3) + 1];
+                id_time_b = idEquipes[(i * 3) + 2];
                 insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
             }
-            for (var i = 0; i != 16; i++) {
+            for (var i = 0; i != 24; i++) {
                 atualiza_equipes_juergs(idEquipes, i);
             }
             break;
@@ -222,13 +251,10 @@ function insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, res
             etapa_jogo: etapa_jogo + 1,
         }
     ).then((result) => {
-        resolve(result);
+        return result;
+
     }).catch((Exception) => {
         console.log(Exception)
-        res.json({
-            status: 'erro',
-            erro: String(Exception)
-        })
     })
 }
 
@@ -246,9 +272,6 @@ function atualiza_equipes_juergs(id_time, i) {
         })
     }).catch((err) => {
         console.log(err);
-        res.json({
-            status: 'erro',
-        })
     }
     );
 }
@@ -279,16 +302,52 @@ async function listar(estudanteCpf) {
     })
 }
 
-async function listarTabela(idModalidade) {
+async function listarTabela(idModalidade, etapa) {
     return new Promise(function (resolve, reject) {
         jogos_juergs.findAndCountAll({
             where: {
                 modalidade: idModalidade,
+                etapa_jogo: etapa,
             }
         }).then((result) => {
             resolve(result);
         })
     })
+}
+
+async function atualizaTabelaSelect(idModalidade, etapa) {
+    return new Promise(function (resolve, reject) {
+        jogos_juergs.findAndCountAll({
+            where: {
+                modalidade: idModalidade,
+                etapa_jogo: etapa,
+            },
+            order: [
+                ['id', 'ASC'],
+            ],
+        }).then((jogosRetornados) => {
+            resolve(jogosRetornados);
+        })
+    })
+}
+
+function atualizaTabelaUpdate(id, resultado_a, resultado_b) {
+    jogos_juergs.findByPk(id).then((jogo_atual) => {
+        jogos_juergs.update({
+            resultado_a: resultado_a,
+            resultado_b: resultado_b,
+        }, {
+            where: {
+                id: id,
+            }
+        })
+    }).catch((err) => {
+        console.log(err);
+        res.json({
+            status: 'erro',
+        })
+    }
+    );
 }
 
 module.exports = router;

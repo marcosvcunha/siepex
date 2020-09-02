@@ -1,14 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/config.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/PaginaTabela.dart';
 
 class TabelaGruposAdmin extends StatefulWidget {
-  TabelaGruposAdmin(int modalidade) {
+  TabelaGruposAdmin(Modalidade modalidade) {
     globalModalidade = modalidade;
+    
   }
 
   @override
@@ -42,7 +45,7 @@ class JogosJuers {
   }
 }
 
-int globalModalidade;
+Modalidade globalModalidade;
 
 class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
   List<bool> showTable = List.generate(8, (index) {
@@ -73,13 +76,6 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
   TableRow tableRow(
       String time, int partidas, int vitorias, int derrotas, int pontos) {
     return TableRow(children: [
-      Padding(
-        padding: const EdgeInsets.only(top: 4.0, bottom: 4, left: 6),
-        child: Text(
-          time,
-          style: TextStyle(color: Colors.black, fontSize: 18),
-        ),
-      ),
       Padding(
         padding: const EdgeInsets.only(
           top: 4.0,
@@ -256,7 +252,7 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
   Future<List<JogosJuers>> listarJogos() async {
     var resposta = jsonDecode((await http.put(
             baseUrl + 'modalidades/listaTabela',
-            body: {'idModalidade': globalModalidade.toString()}))
+            body: {'idModalidade': globalModalidade.id.toString(),'etapa' : globalModalidade.fase.toString()}))
         .body);
     List<JogosJuers> listaJogos = new List<JogosJuers>();
 
@@ -278,10 +274,10 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
       child: TextField(
         controller: controllers[controllerIndex],
         keyboardType: TextInputType.number,
+        inputFormatters: <TextInputFormatter>[
+          WhitelistingTextInputFormatter.digitsOnly
+        ],
         onSubmitted: (value) {
-          // TODO:: Conferir se Value é númerico
-
-          // se nao numerico
           // if (id == 'A')
           //   controllers[controllerIndex].text =
           //       jogoJuergs.resultadoA.toString();
@@ -311,18 +307,39 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
               }
               jaCarregou = true;
             }
-            return ListView.builder(
-              itemCount: 8,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return SizedBox(height: 70);
-                }
-                return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 200),
-                  child: jogosCard(index - 1, retJogos),
-                );
-              },
-            );
+            return Column(children: [
+              Expanded(
+                  child: ListView.builder(
+                itemCount: 8,
+                itemBuilder: (context, index) {
+                  return AnimatedSwitcher(
+                    duration: Duration(milliseconds: 200),
+                    child: jogosCard(index, retJogos),
+                  );
+                },
+              )),
+              RaisedButton(
+                  child: Text("Salvar"),
+                  color: Colors.blue,
+                  textColor: Colors.white,
+                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  splashColor: Colors.grey,
+                  onPressed: () async {
+                    var resultados = new StringBuffer();
+                    for(TextEditingController textEdit in controllers){
+                      resultados.write(textEdit.text + ',');
+                    }
+                    var resposta = jsonDecode((await http
+                            .put(baseUrl + 'modalidades/lancaResultado', body: {
+                      'idModalidade': globalModalidade.id.toString(),
+                      'etapa': globalModalidade.fase.toString(),
+                      'resultados' :resultados.toString(),
+                    }))
+                        .body);
+                  }
+                  // fill in required params
+                  ),
+            ]);
           }
         });
   }

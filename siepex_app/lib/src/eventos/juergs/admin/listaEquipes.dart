@@ -74,7 +74,7 @@ class ListaEquipesPage extends StatelessWidget {
                           fontWeight: FontWeight.w400),
                     ),
                     SizedBox(height: 2),
-                    ajustaEquipe(equipe.index, equipe.idModalidade),
+                    ajustaEquipe(equipe.index + 1, equipe.idModalidade),
                   ],
                 ),
               ),
