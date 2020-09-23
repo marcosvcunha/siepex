@@ -11,7 +11,6 @@ import 'package:siepex/src/eventos/juergs/tabelas/PaginaTabela.dart';
 class TabelaGruposAdmin extends StatefulWidget {
   TabelaGruposAdmin(Modalidade modalidade) {
     globalModalidade = modalidade;
-    
   }
 
   @override
@@ -250,10 +249,12 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
   }
 
   Future<List<JogosJuers>> listarJogos() async {
-    var resposta = jsonDecode((await http.put(
-            baseUrl + 'modalidades/listaTabela',
-            body: {'idModalidade': globalModalidade.id.toString(),'etapa' : globalModalidade.fase.toString()}))
-        .body);
+    var resposta =
+        jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {
+      'idModalidade': globalModalidade.id.toString(),
+      'etapa': globalModalidade.fase.toString()
+    }))
+            .body);
     List<JogosJuers> listaJogos = new List<JogosJuers>();
 
     if (resposta['status'] != null) {
@@ -300,6 +301,15 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
             );
           } else {
             List<JogosJuers> retJogos = snapshot.data;
+            if (retJogos.length == 0) {
+              return MaterialApp(
+                home: Scaffold(
+                  appBar: AppBar(
+                    title: Text("Nada para mostrar"),
+                  ),
+                ),
+              );
+            }
             if (!jaCarregou) {
               for (int i = 0; i < retJogos.length; i++) {
                 controllers[i * 2 + 0].text = retJogos[i].resultadoA.toString();
@@ -326,14 +336,14 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
                   splashColor: Colors.grey,
                   onPressed: () async {
                     var resultados = new StringBuffer();
-                    for(TextEditingController textEdit in controllers){
+                    for (TextEditingController textEdit in controllers) {
                       resultados.write(textEdit.text + ',');
                     }
                     var resposta = jsonDecode((await http
                             .put(baseUrl + 'modalidades/lancaResultado', body: {
                       'idModalidade': globalModalidade.id.toString(),
                       'etapa': globalModalidade.fase.toString(),
-                      'resultados' :resultados.toString(),
+                      'resultados': resultados.toString(),
                     }))
                         .body);
                   }

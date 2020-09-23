@@ -49,7 +49,8 @@ class _TabelaGruposState extends State<TabelaGrupos> {
   // Apenas para demonstração
   List<String> _groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
-  TableRow tableRow(String time, int partidas, int vitorias, int derrotas, int empates, int pontos) {
+  TableRow tableRow(String time, int partidas, int vitorias, int derrotas,
+      int empates, int pontos) {
     return TableRow(children: [
       Padding(
         padding: const EdgeInsets.only(top: 4.0, bottom: 4, left: 6),
@@ -132,61 +133,56 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     int vitoriasTime3 = 0;
     int derrotasTime3 = 0;
     int empatesTime3 = 0;
-    if(retJogos[0].encerrado){
+
+    if (retJogos[0].encerrado) {
       partidasTime1++;
       partidasTime2++;
     }
-    if(retJogos[1].encerrado){
+    if (retJogos[1].encerrado) {
       partidasTime1++;
       partidasTime3++;
     }
-    if(retJogos[2].encerrado){
+    if (retJogos[2].encerrado) {
       partidasTime2++;
       partidasTime3++;
     }
-    if(retJogos[0].resultadoA > retJogos[0].resultadoB){
+    if (retJogos[0].resultadoA > retJogos[0].resultadoB) {
       ptsTime1 += 3;
       vitoriasTime1++;
       derrotasTime2++;
-    }
-    else if(retJogos[0].resultadoA < retJogos[0].resultadoB){
+    } else if (retJogos[0].resultadoA < retJogos[0].resultadoB) {
       ptsTime2 += 3;
       vitoriasTime2++;
       derrotasTime1++;
-    }
-    else{
+    } else {
       empatesTime1++;
       empatesTime2++;
       ptsTime1++;
       ptsTime2++;
     }
-    if(retJogos[1].resultadoA > retJogos[1].resultadoB){
+    if (retJogos[1].resultadoA > retJogos[1].resultadoB) {
       ptsTime1 += 3;
       vitoriasTime1++;
       derrotasTime3++;
-    }
-    else if(retJogos[1].resultadoA < retJogos[1].resultadoB){
+    } else if (retJogos[1].resultadoA < retJogos[1].resultadoB) {
       ptsTime3 += 3;
       vitoriasTime3++;
       derrotasTime1++;
-    }
-    else{
+    } else {
       empatesTime1++;
       empatesTime3++;
       ptsTime1++;
       ptsTime3++;
     }
-    if(retJogos[2].resultadoA > retJogos[2].resultadoB){
+    if (retJogos[2].resultadoA > retJogos[2].resultadoB) {
       ptsTime2 += 3;
       vitoriasTime2++;
       derrotasTime3++;
-    }
-    else if(retJogos[2].resultadoA < retJogos[2].resultadoB){
+    } else if (retJogos[2].resultadoA < retJogos[2].resultadoB) {
       ptsTime3 += 3;
       vitoriasTime3++;
       derrotasTime2++;
-    }
-    else{
+    } else {
       empatesTime2++;
       empatesTime3++;
       ptsTime2++;
@@ -306,7 +302,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                                    Padding(
+                  Padding(
                     padding: const EdgeInsets.only(
                       top: 4.0,
                       bottom: 4,
@@ -320,10 +316,13 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                ]),                
-                tableRow(retJogos[0].timeA, partidasTime1, vitoriasTime1, derrotasTime1, empatesTime1, ptsTime1),
-                tableRow(retJogos[0].timeB, partidasTime2, vitoriasTime2, derrotasTime2, empatesTime2, ptsTime2),
-                tableRow(retJogos[1].timeB, partidasTime3, vitoriasTime3, derrotasTime3, empatesTime3, ptsTime3),
+                ]),
+                tableRow(retJogos[0].timeA, partidasTime1, vitoriasTime1,
+                    derrotasTime1, empatesTime1, ptsTime1),
+                tableRow(retJogos[0].timeB, partidasTime2, vitoriasTime2,
+                    derrotasTime2, empatesTime2, ptsTime2),
+                tableRow(retJogos[1].timeB, partidasTime3, vitoriasTime3,
+                    derrotasTime3, empatesTime3, ptsTime3),
               ],
             ),
             Align(
@@ -365,7 +364,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     );
   }
 
-  Widget _jogoTile(String timeA, int resultadoA,String timeB, int resultadoB) {
+  Widget _jogoTile(String timeA, int resultadoA, String timeB, int resultadoB) {
     return Container(
       decoration: BoxDecoration(
         //color: Colors.blue,
@@ -485,9 +484,12 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                       fontSize: 22,
                       fontWeight: FontWeight.w500)),
             ),
-            _jogoTile(jogosJuers[0].timeA, jogosJuers[0].resultadoA, jogosJuers[0].timeB, jogosJuers[0].resultadoB),
-            _jogoTile(jogosJuers[1].timeA, jogosJuers[1].resultadoA, jogosJuers[1].timeB, jogosJuers[1].resultadoB),
-            _jogoTile(jogosJuers[2].timeA, jogosJuers[2].resultadoA, jogosJuers[2].timeB, jogosJuers[2].resultadoB),
+            _jogoTile(jogosJuers[0].timeA, jogosJuers[0].resultadoA,
+                jogosJuers[0].timeB, jogosJuers[0].resultadoB),
+            _jogoTile(jogosJuers[1].timeA, jogosJuers[1].resultadoA,
+                jogosJuers[1].timeB, jogosJuers[1].resultadoB),
+            _jogoTile(jogosJuers[2].timeA, jogosJuers[2].resultadoA,
+                jogosJuers[2].timeB, jogosJuers[2].resultadoB),
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
@@ -528,10 +530,12 @@ class _TabelaGruposState extends State<TabelaGrupos> {
   }
 
   Future<List<JogosJuers>> listarJogos() async {
-    var resposta = jsonDecode((await http.put(
-            baseUrl + 'modalidades/listaTabela',
-            body: {'idModalidade': globalModalidade.id.toString(), 'etapa': globalModalidade.fase.toString()}))
-        .body);
+    var resposta =
+        jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {
+      'idModalidade': globalModalidade.id.toString(),
+      'etapa': globalModalidade.fase.toString()
+    }))
+            .body);
     List<JogosJuers> listaJogos = new List<JogosJuers>();
 
     if (resposta['status'] != null) {
@@ -557,6 +561,15 @@ class _TabelaGruposState extends State<TabelaGrupos> {
             );
           } else {
             List<JogosJuers> retJogos = snapshot.data;
+            if (retJogos.length == 0) {
+              return MaterialApp(
+                home: Scaffold(
+                  appBar: AppBar(
+                    title: Text("Nada para mostrar"),
+                  ),
+                ),
+              );
+            }
             return ListView.builder(
               itemCount: 8,
               itemBuilder: (context, index) {
@@ -566,8 +579,14 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                 return AnimatedSwitcher(
                   duration: Duration(milliseconds: 200),
                   child: showTable[index - 1]
-                      ? tabela(index - 1, retJogos.sublist((index-1)*3, ((index-1)*3)+3))
-                      : jogosCard(index - 1, retJogos.sublist((index-1)*3, ((index-1)*3)+3)),
+                      ? tabela(
+                          index - 1,
+                          retJogos.sublist(
+                              (index - 1) * 3, ((index - 1) * 3) + 3))
+                      : jogosCard(
+                          index - 1,
+                          retJogos.sublist(
+                              (index - 1) * 3, ((index - 1) * 3) + 3)),
                 );
                 // return showTable[index - 1] ? tabela(index - 1) : jogosCard(index - 1);
               },
