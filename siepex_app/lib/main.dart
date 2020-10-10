@@ -38,6 +38,7 @@ import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipes.dart';
 import 'package:siepex/src/eventos/forumAreas/forumAreas.dart';
 import 'package:siepex/src/inicio/inicioSiepex.dart';
 import 'package:siepex/src/tabs/tabs.dart';
+
 void main() => runApp(MyApp());
 
 // flutter build --build-number=x --build-name=y
@@ -46,63 +47,65 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        initialRoute: 'inicio',
-        routes: <String, WidgetBuilder>{
-          'tabs': (BuildContext context) => TabsPage(),
-          'eventos': (BuildContext context) => EventosPage(),
-          'agenda': (BuildContext context) => AgendaPage(),
-          'sobre': (BuildContext context) => SobrePage(),
-          'palestrantes': (BuildContext context) => PalestrantesPage(),
-          'inicio': (BuildContext context) => InicioPage(),
-          'hoteis': (BuildContext context) => HoteisPage(),
-          'restaurantes': (BuildContext context) => RestaurantesPage(),
-          'info': (BuildContext context) => InfoPage(),
-          'homeParticipante': (BuildContext context) => HomeParticipante(),
-          'qr': (BuildContext context) => QrPage(),
-          '404': (BuildContext context) => NotFoundPage(),
-          'alimentacao': (BuildContext context) => AlimentacaoPage(),
-          'MapaEvento': (BuildContext context) => MapaEventoPage(),
-          'login': (BuildContext context) => LoginPage(),
-          "minicursos": (BuildContext context) => MinicursosPage(),
-          "visitas": (BuildContext context) => VisitasPage(),
-          "meuseventos": (BuildContext context) => MeusEventosPage(),
-          "mudasenha": (BuildContext context) => MudaSenhaPage(),
-          "avisos": (BuildContext context) => AvisosPage(),
-          "geral": (BuildContext context) => GeralPage(),
-          "comissao": (BuildContext context) => ComissaoPage(),
-          "trabalhos": (BuildContext context) => TrabalhosPage(),
-          "juergsSobre": (BuildContext context) => JuergsSobre(),
-          "forumAreas":(BuildContext context) => ForumPage(),
-          "inicioSiepex":(BuildContext context) => InicioSiepex(),
-          "loginJuergs":(BuildContext context) => LoginJuergs(),
-          "inicioJuergs":(BuildContext context) => InicioJuergs(),
-          "hoteisJuergs":(BuildContext context) => HoteisJuergs(),
-          "modalidadesJuergs":(BuildContext context) => ModalidadesPage(),
-          "restaurantesJuergs":(BuildContext context) => RestaurantesJuergs(),
-          "defaultPage":(BuildContext context) => DefaultPage(),
-          "participanteJuergs":(BuildContext context) => ParticipanteJuergs(),
-          "cadastraParticipante":(BuildContext context) => CadastraParticipante(),
-          "paginaEquipes":(BuildContext context) => PaginaEquipes(),
-          "alternatePage":(BuildContext context) => AlternatePage(),
-          "regulamentoPage":(BuildContext context) => RegulamentoPage(),
-          "tabelaPage":(BuildContext context) => PaginaTabela(),
-          "perfilParticipante":(BuildContext context) => PerfilParticipante(),
-        },
-        title: 'Siepex App',
-        
-        theme: ThemeData(
-          textSelectionColor: Colors.white,
-          primaryColor: Color(0xff2595A6),
-          primaryTextTheme: Typography(platform: TargetPlatform.iOS).white,
-          textTheme: Typography(platform: TargetPlatform.iOS).white,
-          // backgroundColor: Colors.green[30],
-          pageTransitionsTheme: PageTransitionsTheme(builders: {
-            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-          }),
+      initialRoute: 'inicio',
+      routes: <String, WidgetBuilder>{
+        'tabs': (BuildContext context) => TabsPage(),
+        'eventos': (BuildContext context) => EventosPage(),
+        'agenda': (BuildContext context) => AgendaPage(),
+        'sobre': (BuildContext context) => SobrePage(),
+        'palestrantes': (BuildContext context) => PalestrantesPage(),
+        'inicio': (BuildContext context) => InicioPage(),
+        'hoteis': (BuildContext context) => HoteisPage(),
+        'restaurantes': (BuildContext context) => RestaurantesPage(),
+        'info': (BuildContext context) => InfoPage(),
+        'homeParticipante': (BuildContext context) => HomeParticipante(),
+        'qr': (BuildContext context) => QrPage(),
+        '404': (BuildContext context) => NotFoundPage(),
+        'alimentacao': (BuildContext context) => AlimentacaoPage(),
+        'MapaEvento': (BuildContext context) => MapaEventoPage(),
+        'login': (BuildContext context) => LoginPage(),
+        "minicursos": (BuildContext context) => MinicursosPage(),
+        "visitas": (BuildContext context) => VisitasPage(),
+        "meuseventos": (BuildContext context) => MeusEventosPage(),
+        "mudasenha": (BuildContext context) => MudaSenhaPage(),
+        "avisos": (BuildContext context) => AvisosPage(),
+        "geral": (BuildContext context) => GeralPage(),
+        "comissao": (BuildContext context) => ComissaoPage(),
+        "trabalhos": (BuildContext context) => TrabalhosPage(),
+        "juergsSobre": (BuildContext context) => JuergsSobre(),
+        "forumAreas": (BuildContext context) => ForumPage(),
+        "inicioSiepex": (BuildContext context) => InicioSiepex(),
+        "loginJuergs": (BuildContext context) => LoginJuergs(),
+        "inicioJuergs": (BuildContext context) => InicioJuergs(),
+        "hoteisJuergs": (BuildContext context) => HoteisJuergs(),
+        "modalidadesJuergs": (BuildContext context) => ModalidadesPage(),
+        "restaurantesJuergs": (BuildContext context) => RestaurantesJuergs(),
+        "defaultPage": (BuildContext context) => DefaultPage(),
+        "participanteJuergs": (BuildContext context) => ParticipanteJuergs(),
+        "cadastraParticipante": (BuildContext context) =>
+            CadastraParticipante(),
+        "paginaEquipes": (BuildContext context) => PaginaEquipes(),
+        "alternatePage": (BuildContext context) => AlternatePage(),
+        "regulamentoPage": (BuildContext context) => RegulamentoPage(),
+        "tabelaPage": (BuildContext context) => PaginaTabela(),
+        "perfilParticipante": (BuildContext context) => PerfilParticipante(),
+      },
+      title: 'Siepex App',
+
+      theme: ThemeData(
+        // textSelectionColor: Colors.white
+        primaryColor: Color(0xff2595A6),
+        textTheme: TextTheme(
+          subhead: TextStyle(color: Colors.black)
         ),
-        // home: TabsPage(),
-      );
+        // primaryTextTheme: Typography(platform: TargetPlatform.iOS).white,
+        // textTheme: Typography(platform: TargetPlatform.iOS).white,
+        // backgroundColor: Colors.green[30],
+        pageTransitionsTheme: PageTransitionsTheme(builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        }),
+      ),
+      // home: TabsPage(),
+    );
   }
 }
-
-

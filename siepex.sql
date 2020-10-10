@@ -159,7 +159,7 @@ CREATE TABLE cadastro_juergs (
 
 INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
 	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ, MINHAS_EQUIPES) VALUES ('01234567890', 'Marcos Cunha', 
-		'marcoscunha@uergs.deu.br', '51993875092', 'Uergs', 1, 'guaiba', 'Atleta', 0, '', '1;'
+		'marcoscunha@uergs.deu.br', '51993875092', 'Uergs', 1, 'guaiba', 'ADM', 0, '', '1;'
 		 );
          
 DROP TABLE IF EXISTS jogos_juergs;

@@ -87,11 +87,15 @@ class HandleData {
   Future criarEquipe(
       BuildContext context, Modalidade modalidade, String nomeEquipe, bool isActive) async {
     try {
-      if(!isActive){
+      if(!(userJuergs.tipoParticipante == "Atleta")){
+        errorDialog(context, 'Erro', 'Apenas Atletas podem criar equipes!');
+        return;
+      }
+      else if(!isActive){
         errorDialog(context, 'Erro', 'Inscrições Encerradas');
         return;
       }
-      if (nomeEquipe.isNotEmpty) {
+      if(nomeEquipe.isNotEmpty) {
         var resposta =
             jsonDecode((await http.put(baseUrl + 'equipe/cadastra', body: {
           'id_modalidade': modalidade.id.toString(),

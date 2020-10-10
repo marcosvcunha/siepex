@@ -112,7 +112,7 @@ class _CadastraParticipanteState extends State<PerfilParticipante> {
           controller: txtInstituicao,
           keyboardType: TextInputType.text,
           style:
-              TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
+              TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w400),
         ),
       );
     } else {
@@ -124,27 +124,39 @@ class _CadastraParticipanteState extends State<PerfilParticipante> {
           controller: txtInstituicao,
           keyboardType: TextInputType.text,
           style:
-              TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
+              TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w400),
         ),
       );
     }
   }
 
   Widget dropDown(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 5, right: 5),
-          child: Text(
-            "Tipo Participante ",
-            style: TextStyle(
-              color: Colors.black54,
-              fontSize: 16.0,
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            child: Text(
+              "Tipo Participante ",
+              style: TextStyle(
+                color: Colors.black54,
+                fontSize: 16.0,
+              ),
             ),
           ),
-        ),
-        Listener(
+          selectTipoParticipante(),
+        ],
+      ),
+    );
+  }
+
+  Widget selectTipoParticipante(){
+    if(userJuergs.tipoParticipante == "ADM"){
+      return Text('ADM', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16));
+    }else{
+      return Listener(
           onPointerDown: (_) => FocusScope.of(context).unfocus(),
           child: DropdownButton<String>(
             value: comboTipoParticipante,
@@ -171,9 +183,8 @@ class _CadastraParticipanteState extends State<PerfilParticipante> {
               );
             }).toList(),
           ),
-        ),
-      ],
-    );
+        );
+    }
   }
 
   validaCampos(Estudante estudante) {
@@ -399,7 +410,7 @@ class _CadastraParticipanteState extends State<PerfilParticipante> {
             controller: txtNome,
             keyboardType: TextInputType.text,
             style:
-                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
+                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w400),
           ),
         ),
         Padding(
@@ -411,7 +422,7 @@ class _CadastraParticipanteState extends State<PerfilParticipante> {
             keyboardType: TextInputType.number,
             enabled: false,
             style:
-                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
+                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w400),
           ),
         ),
         Padding(
@@ -422,7 +433,7 @@ class _CadastraParticipanteState extends State<PerfilParticipante> {
             controller: txtEmail,
             keyboardType: TextInputType.text,
             style:
-                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
+                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w400),
           ),
         ),
         Padding(
@@ -434,7 +445,7 @@ class _CadastraParticipanteState extends State<PerfilParticipante> {
             inputFormatters: [celularMask],
             keyboardType: TextInputType.number,
             style:
-                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
+                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w400),
           ),
         ),
         Padding(

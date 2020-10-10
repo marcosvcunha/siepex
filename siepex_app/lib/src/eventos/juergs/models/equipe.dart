@@ -72,6 +72,10 @@ class Equipe extends ChangeNotifier {
 
   Future entrarEquipe(BuildContext context, bool isActive) async {
     try {
+      if(userJuergs.tipoParticipante != "Atleta"){
+        errorDialog(context, 'Erro', 'Apenas atletas podem entrar em uma equipe!');
+        return;
+      }
       if (!isActive) {
         errorDialog(context, 'Erro', 'Inscrições Encerradas.');
         return;
