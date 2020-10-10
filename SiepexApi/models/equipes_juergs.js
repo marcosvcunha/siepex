@@ -35,12 +35,17 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.STRING(10),
             allowNull: false,
         },
+        grupo: {
+            type: DataTypes.STRING(10),
+            allowNull: true,
+        },
         participantes_cadastrados: {
             type: DataTypes.STRING(500),
             allowNull: true,
           },
-        grupo: {
-            type: DataTypes.STRING(10),
+        numero_rustica: {
+            type: DataTypes.INTEGER(1),
+            default: 0,
             allowNull: true,
         },
         data_cadastro:{

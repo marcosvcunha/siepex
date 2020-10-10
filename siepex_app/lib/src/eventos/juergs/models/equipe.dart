@@ -14,6 +14,7 @@ class Equipe extends ChangeNotifier {
   String nomeModalidade;
   int maximoParticipantes;
   int numeroParticipantes;
+  int numero_rustica;
   String cpfCapitao;
   String celCapitao;
   List<String> participantesCpf = <String>[];
@@ -49,6 +50,7 @@ class Equipe extends ChangeNotifier {
         .toString()); // Nao entendo porque, mas as vezes a api
     this.numeroParticipantes = int.parse(jsonData['numero_participantes']
         .toString()); // retorna int, outras retorna string. ??
+    this.numero_rustica = jsonData['numero_rustica'];
     this.cpfCapitao = jsonData['cpf_capitao'];
     this.celCapitao = jsonData['celular_capitao'];
     try {

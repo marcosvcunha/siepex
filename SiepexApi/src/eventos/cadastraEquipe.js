@@ -8,6 +8,13 @@ const { json } = require('body-parser');
 
 router.put('/cadastra', async (req, res) => {
     var equipe = await getEquipe(req.body['nome_equipe'], req.body['nome_modalidade']);
+
+    if(req.body['nome_modalidade'] == 'Rústica'){
+        numero_rustica = await countRustica() + 1;
+    }else{
+        numero_rustica = 0;
+    }
+
     if (equipe.count != 0) {
         //criarEquipe(req, res);
         res.json({
@@ -30,7 +37,7 @@ router.put('/cadastra', async (req, res) => {
             }
         }
     }
-    await criarEquipe(req, res);
+    await criarEquipe(req, res, numero_rustica);
     return;
 })
 
@@ -65,7 +72,6 @@ router.put('/entra', async (req, res) => {
                     updatedEquipe['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
                     updatedEquipe['dataValues']['nomes_participantes'] = [];
                     updatedEquipe['dataValues']['nomes_participantes'] = await pegarNomes(userCpfs);
-                    console.log(updatedEquipe);
                     res.json({
                         status: 'sucesso',
                         data: updatedEquipe,
@@ -136,7 +142,6 @@ router.put('/changeCaptain', async (req, res) => {
 })
 
 router.put('/remove', async (req, res) => {
-    console.log('Removendo Equipe')
     try {
         id = parseInt(req.body['equipe_id'])
         // Remove a Equipe da lista de Equipes de cada participante.
@@ -177,7 +182,6 @@ router.put('/remove', async (req, res) => {
         res.json({ status: 'erro' });
         return;
     }
-    console.log('Aqui3');
 })
 
 router.put('/excludeMembers', async (req, res) => {
@@ -185,7 +189,6 @@ router.put('/excludeMembers', async (req, res) => {
         id = parseInt(req.body['equipe_id']);
         userCpfs = JSON.parse(req.body['members_cpf']);
         
-        console.log(userCpfs);
         // Apagar Equipe da lista de Equipe dos Membros excluidos.
         await cadastro_juergs.findAll({
             where:{
@@ -193,7 +196,6 @@ router.put('/excludeMembers', async (req, res) => {
             },
             attributes:['cpf', 'minhas_equipes']
         }).then(async (users) => {
-            console.log(users);
             for(i = 0; i < users.length; i ++){
                 await cadastro_juergs.update({
                     'minhas_equipes':users[i].minhas_equipes.replace(id + ';', ''),
@@ -257,6 +259,16 @@ function pegarNomes(userCpfs) {
     })
 }
 
+// Pega o número de participantes da rústica
+async function countRustica(){
+    result = await equipes_juergs.findAndCountAll({
+        where: {nome_modalidade: 'Rústica'}
+    });
+    return result.count;
+}
+
+
+
 // Confere já existe uma equipe com este nome.
 async function getEquipe(equipe, modalidade) {
     return new Promise(function (resolve, reject) {
@@ -269,7 +281,7 @@ async function getEquipe(equipe, modalidade) {
     )
 }
 
-async function criarEquipe(req, res) {
+async function criarEquipe(req, res, numero_rustica) {
     equipes_juergs.create(
         {
             id_modalidade: parseInt(req.body['id_modalidade']),
@@ -278,6 +290,7 @@ async function criarEquipe(req, res) {
             maximo_participantes: req.body['maximo_participantes'],
             participantes_cadastrados: req.body['user_cpf'] + ';',
             numero_participantes: 1,
+            numero_rustica: numero_rustica,
             cpf_capitao: req.body['user_cpf'],
             celular_capitao: req.body['user_cel'],
         }

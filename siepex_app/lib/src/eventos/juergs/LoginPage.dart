@@ -58,7 +58,6 @@ class _LoginJuergsState extends State<LoginJuergs> {
   }
 
   logar(BuildContext context, String cpf) async {
-    if (this.cpfVerifier(cpf)) {
       try {
         setState(() {
           _isLoading = true;
@@ -94,7 +93,6 @@ class _LoginJuergsState extends State<LoginJuergs> {
           _isLoading = false;
         });
       }
-    }
   }
 
   Widget corpo(BuildContext context) {

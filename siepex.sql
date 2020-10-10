@@ -55,6 +55,7 @@ cpf_capitao VARCHAR(11) NOT NULL,
 celular_capitao VARCHAR(11) NOT NULL,
 grupo VARCHAR(10),
 participantes_cadastrados varchar(500) not null,
+numero_rustica int(1) DEFAULT 0,
 data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
@@ -158,10 +159,24 @@ CREATE TABLE cadastro_juergs (
 );
 
 INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
-	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ, MINHAS_EQUIPES) VALUES ('01234567890', 'Marcos Cunha', 
-		'marcoscunha@uergs.deu.br', '51993875092', 'Uergs', 1, 'guaiba', 'ADM', 0, '', '1;'
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ, MINHAS_EQUIPES) VALUES ('01234567890', 'Administrador', 
+		'useradm@uergs.deu.br', '00000000000', 'Uergs', 1, 'UERGS', 'ADM', 0, '', '1;'
 		 );
-         
+
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ, MINHAS_EQUIPES) VALUES ('11111111111', 'User Atleta 1', 
+		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'guaiba', 'Atleta', 0, '', ''
+		 );
+
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ, MINHAS_EQUIPES) VALUES ('11111111112', 'User Atleta 2', 
+		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'guaiba', 'Atleta', 0, '', ''
+		 );
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ, MINHAS_EQUIPES) VALUES ('11111111113', 'User Atleta 3', 
+		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'guaiba', 'Atleta', 0, '', ''
+		 );
+
 DROP TABLE IF EXISTS jogos_juergs;
 
 CREATE TABLE jogos_juergs (

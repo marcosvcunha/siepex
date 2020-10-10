@@ -47,6 +47,7 @@ async function pegarTodasEquipesPorModalidade(idModalidade) {
 
 // Função para pegar todas as equipes de um dado usuario
 async function pegarTodasEquipesPorUsuario(userCpf) {
+    console.log('Pegando Equipes por usuario');
     return new Promise(function (resolve, reject) {
         // Pega as IDs das minhas equipes
         cadastro_juergs.findAll({
