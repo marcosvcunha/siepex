@@ -59,7 +59,7 @@ class Equipe extends ChangeNotifier {
         participantesNomes.add(jsonData['nomes_participantes'][i]);
       }
     } catch (e) {
-      print('Erro ao Criar Equipe');
+      print(e);
     }
   }
 

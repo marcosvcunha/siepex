@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
+import 'package:siepex/src/eventos/juergs/models/ParticipanteRustica.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:http/http.dart' as http;
 import 'package:siepex/src/config.dart';
@@ -27,7 +28,9 @@ class HandleData {
                 resposta['data'][i]['nome_modalidade'],
                 int.tryParse(
                     resposta['data'][i]['maximo_participantes'].toString()),
-                false, date, resposta['data'][i]['fase']);
+                false,
+                date,
+                resposta['data'][i]['fase']);
             listaModalidade.add(modalidade);
           }
         } else if (resposta['status'] == 'nao_achou') {
@@ -65,8 +68,8 @@ class HandleData {
 
   Future<List<Equipe>> getMyEquipes(String userCpf) async {
     try {
-      var resposta = jsonDecode((await http.put(baseUrl + 'obtemEquipes/',
-              body: {'user_cpf': userCpf}))
+      var resposta = jsonDecode((await http
+              .put(baseUrl + 'obtemEquipes/', body: {'user_cpf': userCpf}))
           .body);
       if (resposta['count'] == 0)
         return [];
@@ -83,19 +86,64 @@ class HandleData {
     }
   }
 
-
-  Future criarEquipe(
-      BuildContext context, Modalidade modalidade, String nomeEquipe, bool isActive) async {
+  Future<List<ParticipanteRustica>> getParticipantesRustica() async {
+    print('pegando participantes rústica');
     try {
-      if(!(userJuergs.tipoParticipante == "Atleta")){
+      var resposta =
+          jsonDecode((await http.get(baseUrl + 'obtemEquipes/rustica')).body);
+      List<ParticipanteRustica> participantes = [];
+      for (var jsonData in resposta['data']) {
+        ParticipanteRustica participante = new ParticipanteRustica(jsonData);
+        participantes.add(participante);
+      }
+      return participantes;
+    } catch (e) {
+      print(e);
+      print("Erro ao obter participantes da rústica");
+      return [];
+    }
+  }
+
+  Future participarRustica(BuildContext context) async {
+    // TODO: Conferir se as incrições ainda estão ativas
+    try {
+      if (!(userJuergs.tipoParticipante == "Atleta")) {
         errorDialog(context, 'Erro', 'Apenas Atletas podem criar equipes!');
         return;
+      } else {
+        var resposta = jsonDecode(
+            (await http.put(baseUrl + 'equipe/cadastraRustica', body: {
+          'nome': userJuergs.nome,
+          'celular': userJuergs.celular,
+          'cpf': userJuergs.cpf,
+          'unidade': userJuergs.campoUergs,
+        }))
+                .body);
+
+        if (resposta['status'] == 'sucesso') {
+        } else if (resposta['erro'] == 'participante cadastrado') {
+          errorDialog(context, 'Erro', 'Você já está incrito na modalidade.');
+        } else {
+          errorDialog(context, 'Erro', 'Um erro desconhecido ocorreu.');
+        }
       }
-      else if(!isActive){
+    } catch (e) {
+      print(e);
+      errorDialog(context, 'Erro', 'Erro ao se inscrever na rústica!');
+    }
+  }
+
+  Future criarEquipe(BuildContext context, Modalidade modalidade,
+      String nomeEquipe, bool isActive) async {
+    try {
+      if (!(userJuergs.tipoParticipante == "Atleta")) {
+        errorDialog(context, 'Erro', 'Apenas Atletas podem criar equipes!');
+        return;
+      } else if (!isActive) {
         errorDialog(context, 'Erro', 'Inscrições Encerradas');
         return;
       }
-      if(nomeEquipe.isNotEmpty) {
+      if (nomeEquipe.isNotEmpty) {
         var resposta =
             jsonDecode((await http.put(baseUrl + 'equipe/cadastra', body: {
           'id_modalidade': modalidade.id.toString(),
@@ -103,22 +151,22 @@ class HandleData {
           'nome_modalidade': modalidade.nome,
           'maximo_participantes': modalidade.maxParticipantes.toString(),
           'user_name': userJuergs.nome,
-          'user_cpf' : userJuergs.cpf,
+          'user_cpf': userJuergs.cpf,
           'user_cel': userJuergs.celular,
-        })).body);
+        }))
+                .body);
         if (resposta['status'] == 'sucesso') {
           userJuergs.minhasEquipes.add(Equipe.fromJson(resposta['data']));
           errorDialog(context, 'Sucesso', 'Equipe Criada');
           return;
-        } else if(resposta['erro'] == 'Equipe já existe'){       
-            errorDialog(context, 'Erro ao criar equipe!',
-                'Já existe uma equipe com este nome.');
-            return;          
-        }
-        else if(resposta['erro'] == 'ja_cadastrado_na_modalidade'){
+        } else if (resposta['erro'] == 'Equipe já existe') {
           errorDialog(context, 'Erro ao criar equipe!',
-                'Você ja esta cadastrado nesta modalidade.');
-            return;   
+              'Já existe uma equipe com este nome.');
+          return;
+        } else if (resposta['erro'] == 'ja_cadastrado_na_modalidade') {
+          errorDialog(context, 'Erro ao criar equipe!',
+              'Você ja esta cadastrado nesta modalidade.');
+          return;
         }
       } else {
         errorDialog(context, 'Erro ao criar equipe!',
@@ -129,5 +177,4 @@ class HandleData {
       return;
     }
   }
-  
 }

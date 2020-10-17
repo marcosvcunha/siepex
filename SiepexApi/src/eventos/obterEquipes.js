@@ -3,6 +3,7 @@ const express = require('express'),
 const {
     equipes_juergs,
     cadastro_juergs,
+    participantes_rustica,
 } = require('../../models');
 
 router.put('/', async (req, res) => {
@@ -21,6 +22,17 @@ router.put('/', async (req, res) => {
             count: equipes.count,
         })
     }
+});
+
+router.get('/rustica', async (req, res) => {
+    participantes = await participantes_rustica.findAll({
+        order: [
+            ['id', 'asc'],
+        ]
+    });
+    res.json({
+        data: participantes,
+    });
 });
 
 async function pegarTodasEquipesPorModalidade(idModalidade) {

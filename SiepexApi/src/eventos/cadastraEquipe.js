@@ -3,17 +3,12 @@ const express = require('express'),
 const {
     equipes_juergs,
     cadastro_juergs,
+    participantes_rustica,
 } = require('../../models');
 const { json } = require('body-parser');
 
 router.put('/cadastra', async (req, res) => {
     var equipe = await getEquipe(req.body['nome_equipe'], req.body['nome_modalidade']);
-
-    if(req.body['nome_modalidade'] == 'Rústica'){
-        numero_rustica = await countRustica() + 1;
-    }else{
-        numero_rustica = 0;
-    }
 
     if (equipe.count != 0) {
         //criarEquipe(req, res);
@@ -37,9 +32,50 @@ router.put('/cadastra', async (req, res) => {
             }
         }
     }
-    await criarEquipe(req, res, numero_rustica);
+    await criarEquipe(req, res);
     return;
 })
+
+router.put('/cadastraRustica', async (req, res) => {
+    nome = req.body['nome'];
+    celular = req.body['celular'];
+    cpf = req.body['cpf'];
+    unidade = req.body['unidade'];
+
+    try {
+        result = await participantes_rustica.findAndCountAll({
+            where: { 'cpf': cpf },
+
+        });
+        if (result.count != 0) {
+            res.json({
+                status: 'erro',
+                erro: 'participante cadastrado',
+            });
+            return;
+        } else {
+            await participantes_rustica.create({
+                nome: nome,
+                celular: celular,
+                cpf: cpf,
+                unidade: unidade,
+                posicao: 0,
+                tempo: 0,
+            });
+            res.json({
+                status:'sucesso',
+            });
+        }
+    } catch (err) {
+        console.log('Erro ao cadastrar participante na rustica !!!!!!');
+        console.log(err.toString());
+        res.json({
+            status:'erro',
+            erro: 'erro desconhecido',
+        });
+        return;
+    }
+});
 
 router.put('/entra', async (req, res) => {
     equipeId = parseInt(req.body['equipe_id']);
@@ -185,21 +221,21 @@ router.put('/remove', async (req, res) => {
 })
 
 router.put('/excludeMembers', async (req, res) => {
-    try{
+    try {
         id = parseInt(req.body['equipe_id']);
         userCpfs = JSON.parse(req.body['members_cpf']);
-        
+
         // Apagar Equipe da lista de Equipe dos Membros excluidos.
         await cadastro_juergs.findAll({
-            where:{
-                cpf:userCpfs
+            where: {
+                cpf: userCpfs
             },
-            attributes:['cpf', 'minhas_equipes']
+            attributes: ['cpf', 'minhas_equipes']
         }).then(async (users) => {
-            for(i = 0; i < users.length; i ++){
+            for (i = 0; i < users.length; i++) {
                 await cadastro_juergs.update({
-                    'minhas_equipes':users[i].minhas_equipes.replace(id + ';', ''),
-                },{
+                    'minhas_equipes': users[i].minhas_equipes.replace(id + ';', ''),
+                }, {
                     where: {
                         cpf: users[i].cpf,
                     }
@@ -208,35 +244,35 @@ router.put('/excludeMembers', async (req, res) => {
 
         }).catch((e) => {
             res.json({
-                status:'erro'
+                status: 'erro'
             });
             return;
         });
         // Apagar cpf dos membros excluidos da lista de participantes da equipe e mudar número de participantes na equipe.
-        await equipes_juergs.findByPk(id,{
+        await equipes_juergs.findByPk(id, {
             attributes: ['numero_participantes', 'participantes_cadastrados'],
-        }).then( async (equipe) => {
+        }).then(async (equipe) => {
             newMemberList = equipe.participantes_cadastrados;
-            for(i = 0; i < userCpfs.length; i++){
+            for (i = 0; i < userCpfs.length; i++) {
                 newMemberList = newMemberList.replace(userCpfs[i] + ';', '');
             }
             await equipes_juergs.update({
                 'participantes_cadastrados': newMemberList,
                 'numero_participantes': equipe.numero_participantes - userCpfs.length,
-            },{
-                where:{
+            }, {
+                where: {
                     id: id,
                 }
             })
         })
         res.json({
-            status:'sucesso',
+            status: 'sucesso',
         });
         return;
-    }catch(e){
+    } catch (e) {
         console.log('Erro ao excluir membros: ' + e.toString())
         res.json({
-            status:'erro'
+            status: 'erro'
         });
         return;
     }
@@ -260,9 +296,9 @@ function pegarNomes(userCpfs) {
 }
 
 // Pega o número de participantes da rústica
-async function countRustica(){
+async function countRustica() {
     result = await equipes_juergs.findAndCountAll({
-        where: {nome_modalidade: 'Rústica'}
+        where: { nome_modalidade: 'Rústica' }
     });
     return result.count;
 }
@@ -281,7 +317,7 @@ async function getEquipe(equipe, modalidade) {
     )
 }
 
-async function criarEquipe(req, res, numero_rustica) {
+async function criarEquipe(req, res) {
     equipes_juergs.create(
         {
             id_modalidade: parseInt(req.body['id_modalidade']),
@@ -290,7 +326,6 @@ async function criarEquipe(req, res, numero_rustica) {
             maximo_participantes: req.body['maximo_participantes'],
             participantes_cadastrados: req.body['user_cpf'] + ';',
             numero_participantes: 1,
-            numero_rustica: numero_rustica,
             cpf_capitao: req.body['user_cpf'],
             celular_capitao: req.body['user_cel'],
         }
@@ -306,7 +341,7 @@ async function criarEquipe(req, res, numero_rustica) {
             })
 
         }).then((otherResult) => {
-            result['dataValues']['nomes_participantes'] = ['Marcos Cunha'];
+            result['dataValues']['nomes_participantes'] = ['Teste Teste'];
             userCpfs = result['dataValues']['participantes_cadastrados'].split(';');
             userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
             result['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado

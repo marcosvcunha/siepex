@@ -42,6 +42,27 @@ INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
 	VALUES ('Rústica', '99', '2020-10-25 00:05:09', current_timestamp(), 0);
 
+DROP TABLE IF EXISTS participantes_rustica;
+
+CREATE TABLE participantes_rustica(
+	id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    celular VARCHAR(11) NOT NULL,
+    cpf VARCHAR(11) NOT NULL,
+    unidade VARCHAR(50) NOT NULL,
+    tem_pos BOOLEAN NOT NULL default false,
+    posicao INT(1) NOT NULL DEFAULT 0,
+    tempo INT(2) NOT NULL DEFAULT -1,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
+);
+
+INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Teste1', '5199999999', '00011122233', 'Guaiba');
+INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Teste2', '5199999999', '00011122233', 'Guaiba');
+INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Teste3', '5199999999', '00011122233', 'Guaiba');
+INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Teste4', '5199999999', '00011122233', 'Guaiba');
+INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Teste5', '5199999999', '00011122233', 'Guaiba');
+
 DROP TABLE IF EXISTS equipes_juergs;
 
 CREATE TABLE equipes_juergs (
@@ -55,7 +76,6 @@ cpf_capitao VARCHAR(11) NOT NULL,
 celular_capitao VARCHAR(11) NOT NULL,
 grupo VARCHAR(10),
 participantes_cadastrados varchar(500) not null,
-numero_rustica int(1) DEFAULT 0,
 data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );

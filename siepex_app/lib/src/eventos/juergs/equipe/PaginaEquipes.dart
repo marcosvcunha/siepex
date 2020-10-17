@@ -4,6 +4,7 @@ import 'package:siepex/models/serializeJuergs.dart';
 // import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipe.dart';
 // import 'package:siepex/src/eventos/juergs/Widgets/participantesdialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/textinputdialog.dart';
+import 'package:siepex/src/eventos/juergs/models/ParticipanteRustica.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import '../models/equipe.dart';
 import 'package:provider/provider.dart';
@@ -24,66 +25,80 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
 
   @override
   Widget build(BuildContext context) {
-    print('PaginaEquipes Build');
     modalidade = Provider.of<Modalidade>(context);
     isActive = modalidade.nome == 'Rústica'
         ? true
         : modalidade.dataLimite.isAfter(
             DateTime.now()); // Vê se a data limite de inscrição já passou.
     return Scaffold(
-        //appBar: titulo(),
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(modalidade.nome),
-        ),
-        body: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(
-                      'assets/img/arte_uergs/Background_App_Uergs.png'),
-                  fit: BoxFit.fill)),
-          child: FutureBuilder(
-              future: HandleData().getEquipes(modalidade.id),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.blue,
-                    ),
-                  );
+      //appBar: titulo(),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(modalidade.nome),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage(
+                    'assets/img/arte_uergs/Background_App_Uergs.png'),
+                fit: BoxFit.fill)),
+        child: FutureBuilder(
+            future: modalidade.nome != 'Rústica'
+                ? HandleData().getEquipes(modalidade.id)
+                : HandleData().getParticipantesRustica(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.blue,
+                  ),
+                );
+              } else {
+                if (modalidade.nome != 'Rústica') {
                 } else {
-                  List<Equipe> equipesList = snapshot.data;
-                  if (snapshot.hasData) {
+                  
+                }
+                if (snapshot.hasData) {
+                  if (modalidade.nome != 'Rústica') {
+                    List<Equipe> equipesList = snapshot.data;
                     return ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
                           equipesList[index].index = index;
                           return ChangeNotifierProvider.value(
-                            value: equipesList[index],             
-                            child: _equipeCard(),
+                            value: equipesList[index],
+                            child: EquipeCard(isActive: isActive),
                           );
                         });
-                  } else {
-                    return Center(
-                      child: Text(
-                        'Nenhuma equipe cadastrada.',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    );
+                  }else{
+                    List<ParticipanteRustica> participantes = snapshot.data;
+                    return ListView.builder(
+                      itemCount: participantes.length,
+                      itemBuilder: (context, index){
+                        return RusticaCard(participante: participantes[index]);
+                      });
                   }
+                } else {
+                  return Center(
+                    child: Text(
+                      'Nenhuma equipe cadastrada.',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  );
                 }
-              }),
-        ),
-        floatingActionButton: Container(
-          decoration: BoxDecoration(
-              //color: Theme.of(context).primaryColor,
-              color: Colors.green[600],
-              borderRadius: BorderRadius.all(Radius.circular(60))),
-          height: 60,
-          width: 80,
-          child: SizedBox.expand(child: selecionaBotao()),
-        ),
-      );
+              }
+            }),
+      ),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+            //color: Theme.of(context).primaryColor,
+            color: Colors.green[600],
+            borderRadius: BorderRadius.all(Radius.circular(60))),
+        height: 60,
+        width: 80,
+        child: SizedBox.expand(child: selecionaBotao()),
+      ),
+    );
   }
 
   Widget selecionaBotao() {
@@ -94,8 +109,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
           highlightColor: Colors.transparent,
           padding: EdgeInsets.all(8),
           onPressed: () async {
-            await HandleData().criarEquipe(
-                context, modalidade, userJuergs.nome, isActive);
+            await HandleData().participarRustica(context);
             modalidade.inscrito = userJuergs.temEquipe(modalidade.nome);
             setState(() {});
           },
@@ -112,8 +126,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
           focusColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onPressed: () async {
-            String nomeEquipe =
-                await textInputDialog(context, modalidade);
+            String nomeEquipe = await textInputDialog(context, modalidade);
             await HandleData()
                 .criarEquipe(context, modalidade, nomeEquipe, isActive);
             setState(() {});
@@ -125,13 +138,6 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
               textAlign: TextAlign.center,
             ),
           ));
-    }
-  }
-  Widget _equipeCard() {
-    if (modalidade.nome != 'Rústica') {
-      return EquipeCard(isActive: isActive);
-    } else {
-      return RusticaCard();
     }
   }
 
