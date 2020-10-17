@@ -34,14 +34,13 @@ class ManageCompPage extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       onTap: () {
-        if (modalidade.nome != 'Rústica')
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ChangeNotifierProvider.value(
-                        value: modalidade,
-                        child: CompetitionPage(),
-                      )));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChangeNotifierProvider.value(
+                      value: modalidade,
+                      child: CompetitionPage(),
+                    )));
       },
     );
   }

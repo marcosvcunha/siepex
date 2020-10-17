@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:provider/provider.dart';
+import 'package:siepex/src/eventos/juergs/admin/ResultadosRustica.dart';
 import 'package:siepex/src/eventos/juergs/admin/selectTeams.dart';
 import 'package:siepex/src/eventos/juergs/admin/resultadosPage.dart';
 
@@ -68,13 +69,20 @@ class CompetitionPage extends StatelessWidget {
         alignment: Alignment.center,
         child: FlatButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ChangeNotifierProvider.value(
-                          value: modalidade,
-                          child: ResultadosPage(),
-                        )));
+            if (modalidade.nome != 'Rústica')
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChangeNotifierProvider.value(
+                            value: modalidade,
+                            child: ResultadosPage(),
+                          )));
+            else
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) => ChangeNotifierProvider.value(
+                  value: modalidade, 
+                  child: ResultadosRustica(),
+                  )));
           },
           highlightColor: Colors.transparent,
           focusColor: Colors.transparent,
@@ -108,6 +116,13 @@ class CompetitionPage extends StatelessWidget {
     } else {
       return Container();
     }
+  }
+
+  Widget selectButton1(context, Modalidade modalidade) {
+    if (modalidade.nome != 'Rústica')
+      return nextFaseButton(context, modalidade);
+    else
+      return Container();
   }
 
   @override
@@ -177,7 +192,7 @@ class CompetitionPage extends StatelessWidget {
         SizedBox(
           height: 40,
         ),
-        nextFaseButton(context, modalidade),
+        selectButton1(context, modalidade),
         SizedBox(
           height: 40,
         ),

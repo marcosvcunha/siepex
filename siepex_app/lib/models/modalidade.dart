@@ -21,6 +21,7 @@ List<String> fases = [
   'Quartas de Final',
   'Semi-Final',
   'Final',
+  'Finalisada',
 ];
 
 class Modalidade extends ChangeNotifier {
