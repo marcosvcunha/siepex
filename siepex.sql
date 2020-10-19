@@ -57,12 +57,13 @@ CREATE TABLE participantes_rustica(
 	ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
 
-INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Teste1', '5199999999', '00011122233', 'Guaiba');
-INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Teste2', '5199999999', '00011122233', 'Guaiba');
-INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Teste3', '5199999999', '00011122233', 'Guaiba');
-INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Teste4', '5199999999', '00011122233', 'Guaiba');
-INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Teste5', '5199999999', '00011122233', 'Guaiba');
-
+INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atleta 1', '51999999999', '11111111111', 'Guaiba');
+INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atleta 2', '51999999999', '11111111112', 'Porto Alegre');
+INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atleta 3', '51999999999', '11111111113', 'Porto Alegre');
+INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atleta 4', '51999999999', '11111111114', 'Cidade Teste');
+INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atleta 5', '51999999999', '11111111115', 'Guaiba');
+INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atleta 6', '51999999999', '11111111116', 'Tanto Faz');
+INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atleta 7', '51999999999', '11111111117', 'Porto Alegre');
 DROP TABLE IF EXISTS equipes_juergs;
 
 CREATE TABLE equipes_juergs (
@@ -196,6 +197,27 @@ INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, C
 	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ, MINHAS_EQUIPES) VALUES ('11111111113', 'User Atleta 3', 
 		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'guaiba', 'Atleta', 0, '', ''
 		 );
+
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ, MINHAS_EQUIPES) VALUES ('11111111114', 'User Atleta 4', 
+		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'guaiba', 'Atleta', 0, '', ''
+		 );
+
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ, MINHAS_EQUIPES) VALUES ('11111111115', 'User Atleta 5', 
+		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'cidade teste', 'Atleta', 0, '', ''
+		 );
+
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ, MINHAS_EQUIPES) VALUES ('11111111116', 'User Atleta 6', 
+		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'guaiba', 'Atleta', 0, '', ''
+		 );
+
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ, MINHAS_EQUIPES) VALUES ('11111111117', 'User Atleta 7', 
+		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'porto alegre', 'Atleta', 0, '', ''
+		 );
+
 
 DROP TABLE IF EXISTS jogos_juergs;
 

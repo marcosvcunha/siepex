@@ -23,3 +23,27 @@ void confirmDialog(BuildContext context, String title, String body, Function onC
       },
     );
   }
+
+Future<bool> confirmDialogWithReturn(BuildContext context, String title, String text) async {
+    return await showDialog(
+      barrierDismissible: false,
+      context: context,
+      child: AlertDialog(
+        title: Text(title),
+        content: Text(
+            text),
+        actions: <Widget>[
+          FlatButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              child: Text('Sim')),
+          FlatButton(
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              child: Text('Não')),
+        ],
+      ),
+    );
+  }

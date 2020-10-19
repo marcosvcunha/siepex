@@ -63,17 +63,44 @@ router.put('/cadastraRustica', async (req, res) => {
                 tempo: 0,
             });
             res.json({
-                status:'sucesso',
+                status: 'sucesso',
             });
         }
     } catch (err) {
         console.log('Erro ao cadastrar participante na rustica !!!!!!');
         console.log(err.toString());
         res.json({
-            status:'erro',
+            status: 'erro',
             erro: 'erro desconhecido',
         });
         return;
+    }
+});
+
+router.put('/updateRustica', async (req, res) => {
+    try {
+        data = JSON.parse(req.body.data);
+        for (i = 0; i < data.length; i++) {
+            await participantes_rustica.update(
+                {
+                    tem_pos: data[i]['temPos'],
+                    posicao: data[i]['posicao'],
+                    tempo: data[i]['tempo'],
+                }, {
+                where: {
+                    cpf: data[i]['cpf'],
+                }
+            }
+            );
+        }
+        res.json({
+            status: 'sucesso',
+        });
+    } catch (e) {
+        res.json({
+            status: 'erro',
+            erro: 'erro desconhecido',
+        });
     }
 });
 

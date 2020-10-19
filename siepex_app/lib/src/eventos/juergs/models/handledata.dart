@@ -133,6 +133,29 @@ class HandleData {
     }
   }
 
+  Future updateRustica(BuildContext context, List<ParticipanteRustica> participantes) async {
+    try {
+      List<Map<String, dynamic>> partsJson = List.generate(
+          participantes.length, (index) => participantes[index].toJson());
+      Map<String, String> headers = {
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Charset': 'utf-8'
+      };
+      var resposta = jsonDecode((await http.put(baseUrl + 'equipe/updateRustica', body: {
+        'data': json.encode(partsJson),
+      })).body);
+      if(resposta['status'] == 'sucesso')
+        return;
+      else
+        errorDialog(context, 'Erro', 'Aconteceu um problema desconhecido!');
+      return;
+      
+    } catch (e) {
+      print('Erro: ' + e.toString());
+      errorDialog(context, 'Erro', 'Aconteceu um problema desconhecido!');
+    }
+  }
+
   Future criarEquipe(BuildContext context, Modalidade modalidade,
       String nomeEquipe, bool isActive) async {
     try {
