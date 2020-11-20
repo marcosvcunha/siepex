@@ -24,7 +24,7 @@ id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 nome_modalidade VARCHAR(30) NOT NULL,
 maximo_participantes int(2) NOT NULL,
 limit_date TIMESTAMP,
-fase int(2) NOT NULL, # Fase atual da competição: 0 - Fase de inscrição, 1 - Fase de Grupos, 2 - Quartas de final
+fase int(2) NOT NULL, # Fase atual da competiÃ§Ã£o: 0 - Fase de inscriÃ§Ã£o, 1 - Fase de Grupos, 2 - Quartas de final
 					  # 3 - Semi Final, 4 - Final e 5 - Encerrado.
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
@@ -34,13 +34,13 @@ INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
 	VALUES ('Futsal Feminino', '10', '2020-10-25 17:45:59', current_timestamp(), 0);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('Vôlei Misto', '10', '2020-10-22 17:40:00', current_timestamp(), 0);
+	VALUES ('VÃ´lei Misto', '10', '2020-10-22 17:40:00', current_timestamp(), 0);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
 	VALUES ('Handebol Masculino', '10', '2020-10-12 17:35:59', current_timestamp(), 3);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
 	VALUES ('Handebol Feminino', '10', '2020-10-25 14:50:00', current_timestamp(), 4);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('Rústica', '99', '2020-10-25 00:05:09', current_timestamp(), 0);
+	VALUES ('RÃºstica', '99', '2020-10-25 00:05:09', current_timestamp(), 0);
 
 DROP TABLE IF EXISTS participantes_rustica;
 
@@ -66,9 +66,11 @@ INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atl
 INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atleta 7', '51999999999', '11111111117', 'Porto Alegre');
 DROP TABLE IF EXISTS equipes_juergs;
 
+drop table equipes_juergs;
 CREATE TABLE equipes_juergs (
 id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 id_modalidade int (2) unsigned not null,
+fase_equipe int (2) unsigned default 0,
 nome_equipe VARCHAR(30) NOT NULL,
 nome_modalidade VARCHAR(30) NOT NULL,
 maximo_participantes int(2) NOT NULL,
