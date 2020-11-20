@@ -45,10 +45,12 @@ class HandleData {
   }
 
   // Pega as equipes registradas para a modalidade.
-  Future<List<Equipe>> getEquipes(int idModalidade) async {
+  Future<List<Equipe>> getEquipes(int idModalidade,int faseAtual) async {
     try {
       var resposta = jsonDecode((await http.put(baseUrl + 'obtemEquipes/',
-              body: {'id_modalidade': idModalidade.toString()}))
+              body: {'id_modalidade': idModalidade.toString(),
+              'fase_atual' : faseAtual.toString()
+              }))
           .body);
       if (resposta['count'] == 0)
         return [];

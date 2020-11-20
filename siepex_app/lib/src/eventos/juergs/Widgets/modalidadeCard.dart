@@ -19,7 +19,6 @@ class _ModalidadeCardState extends State<ModalidadeCard> {
         decoration: BoxDecoration(
             border: Border.all(
               color: Color.fromRGBO(0, 60, 125, 1),
-              //color: Color(0xff56FBFB),
               width: 2,
             ),
             borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -32,12 +31,6 @@ class _ModalidadeCardState extends State<ModalidadeCard> {
                 spreadRadius: 1,
               ),
             ]),
-        //height: 125,
-        // constraints: BoxConstraints(
-        //   // minHeight: 125,
-        //   maxHeight: 125,
-        // ),
-        //width: 300,
         child: FlatButton(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -49,14 +42,16 @@ class _ModalidadeCardState extends State<ModalidadeCard> {
                     border: Border(
                         right: BorderSide(
                       width: 4,
-                      //color: Color.fromRGBO(0, 60, 125, 1),
                       color: Color(0xff5F4BB6),
                     )),
                   ),
                   height: 100,
                   width: 100,
-                  //color:Colors.white,
-                  child: Icon(modalidade.icon, size: 50, color: Colors.black87,),
+                  child: Icon(
+                    modalidade.icon,
+                    size: 50,
+                    color: Colors.black87,
+                  ),
                 ),
               ),
               SizedBox(width: 15),
@@ -91,8 +86,8 @@ class _ModalidadeCardState extends State<ModalidadeCard> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
                           "Fim das inscrições: " + modalidade.dataLimiteString,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 14,
@@ -121,12 +116,10 @@ class _ModalidadeCardState extends State<ModalidadeCard> {
             await Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        ChangeNotifierProvider.value(value: modalidade, child: PaginaEquipes(),)
-                        
-                        
-                        ));
-            
+                    builder: (context) => ChangeNotifierProvider.value(
+                          value: modalidade,
+                          child: PaginaEquipes(),
+                        )));
           },
         ),
       ),

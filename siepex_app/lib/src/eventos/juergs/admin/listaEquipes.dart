@@ -283,7 +283,7 @@ class ListaEquipesPage extends StatelessWidget {
         title: Text('Selecione a equipe ' + equipeId),
       ),
       body: FutureBuilder(
-        future: _handleData.getEquipes(_modalidade.id),
+        future: _handleData.getEquipes(_modalidade.id,_modalidade.fase),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

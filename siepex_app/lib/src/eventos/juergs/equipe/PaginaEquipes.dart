@@ -44,7 +44,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
                 fit: BoxFit.fill)),
         child: FutureBuilder(
             future: modalidade.nome != 'Rústica'
-                ? HandleData().getEquipes(modalidade.id)
+                ? HandleData().getEquipes(modalidade.id,null)
                 : HandleData().getParticipantesRustica(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
