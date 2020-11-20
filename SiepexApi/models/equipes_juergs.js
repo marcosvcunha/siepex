@@ -11,6 +11,10 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.INTEGER(2),
             allowNull: false,
         },
+        fase_equipe:{
+            type: DataTypes.INTEGER(2),
+            allowNull: false,
+        },
         nome_equipe:{
             type: DataTypes.STRING(30),
             allowNull: false,

@@ -10,7 +10,8 @@ router.put('/', async (req, res) => {
     // decide qual função usar com base no parametro passado em req
     if ('id_modalidade' in req.body) {
         idModalidade = parseInt(req.body['id_modalidade']);
-        equipes = await pegarTodasEquipesPorModalidade(idModalidade);
+        faseAtual = (req.body['fase_atual'] != 'null') ? (parseInt(req.body['fase_atual'])) : '';
+        equipes = await pegarTodasEquipesPorModalidade(idModalidade,faseAtual);
         res.json({
             data: equipes.rows,
             count: equipes.count,
@@ -35,11 +36,12 @@ router.get('/rustica', async (req, res) => {
     });
 });
 
-async function pegarTodasEquipesPorModalidade(idModalidade) {
+async function pegarTodasEquipesPorModalidade(idModalidade,faseAtual) {
     return new Promise(function (resolve, reject) {
         equipes_juergs.findAndCountAll({
             where: {
                 id_modalidade: idModalidade,
+                fase_equipe: faseAtual,
             },
             order: [
                 ['data_cadastro', 'asc']
@@ -91,26 +93,6 @@ async function pegarTodasEquipesPorUsuario(userCpf) {
         })
     })
 }
-
-// Dado os cpfs dos users, retorna uma lista com os nomes dos mesmos.
-// function pegarNomes(userCpfs) {
-//     console.log('CPF dos usurarios: ' + userCpfs.toString())
-//     return new Promise(function (resolve, reject) {
-//         var nomes_participantes = [];
-//         cadastro_juergs.findAll({ // pega os nomes de todos participantes da equipe
-//             attributes: ['nome'],
-//             where: {
-//                 cpf: userCpfs,
-//             }
-//         }).then((result2) => {
-//             for (var j = result2.length - 1; j >= 0; j--) { // adiciona cada nome ao resultado
-//                 console.log('Nome do usuario: ' + result2[j]['dataValues']['nome'].toString())
-//                 nomes_participantes.push(result2[j]['dataValues']['nome']);
-//             }
-//             resolve(nomes_participantes);
-//         });
-//     })
-// }
 
 async function pegarNomes(userCpfs) {
     // Faz desta forma (pega um nome por vez) para que os nomes estejam na mesma ordem dos cpfs.

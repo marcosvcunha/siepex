@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/config.dart';
-import 'package:siepex/src/eventos/juergs/models/handledata.dart';
-import 'package:siepex/src/eventos/juergs/tabelas/PaginaTabela.dart';
 
 class TabelaGrupos extends StatefulWidget {
   TabelaGrupos(Modalidade modalidade) {
@@ -47,7 +45,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     return true;
   });
   // Apenas para demonstração
-  List<String> _groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  List<String> _groupsFutsal = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
   TableRow tableRow(String time, int partidas, int vitorias, int derrotas,
       int empates, int pontos) {
@@ -210,7 +208,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 14.0, bottom: 12),
-              child: Text('Grupo ' + _groups[index].toString(),
+              child: Text('Grupo ' + _groupsFutsal[index].toString(),
                   style: TextStyle(
                       color: Colors.black87,
                       fontSize: 22,
@@ -225,10 +223,6 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                 4: FixedColumnWidth(40)
               },
               border: TableBorder(
-                //bottom: BorderSide(color: Colors.deepPurple, width: 2),
-                //left:  BorderSide(color: Colors.deepPurple, width: 2),
-                //right:  BorderSide(color: Colors.deepPurple, width: 2),
-                //top:  BorderSide(color: Colors.deepPurple, width: 2),
                 horizontalInside:
                     BorderSide(color: Colors.deepPurple, width: 2),
                 verticalInside: BorderSide(color: Colors.deepPurple, width: 2),
@@ -330,7 +324,6 @@ class _TabelaGruposState extends State<TabelaGrupos> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 7.0, right: 8),
                 child: Container(
-                    //color: Colors.green,
                     height: 45,
                     width: 120,
                     child: MaterialButton(
@@ -367,13 +360,9 @@ class _TabelaGruposState extends State<TabelaGrupos> {
   Widget _jogoTile(String timeA, int resultadoA, String timeB, int resultadoB) {
     return Container(
       decoration: BoxDecoration(
-        //color: Colors.blue,
-        border: Border(
-            //bottom: BorderSide(color: Colors.deepPurple, width: 2)
-            ),
+        border: Border(),
       ),
       height: 60,
-      //width: 240,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -399,8 +388,6 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        //color: Colors.grey[400],
-                        //6744C7
                         color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
                     height: 35,
                     width: 35,
@@ -412,7 +399,6 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                   ),
                 ),
               ),
-              // SizedBox(width: 30),
               Expanded(
                 flex: 1,
                 child: Center(
@@ -478,7 +464,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 14.0, bottom: 12),
-              child: Text('Grupo ' + _groups[index].toString(),
+              child: Text('Grupo ' + _groupsFutsal[index].toString(),
                   style: TextStyle(
                       color: Colors.black87,
                       fontSize: 22,
@@ -529,11 +515,11 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     );
   }
 
-  Future<List<JogosJuers>> listarJogos() async {
+  Future<List<JogosJuers>> listarJogos(ehUsuario) async {
     var resposta =
         jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {
       'idModalidade': globalModalidade.id.toString(),
-      'etapa': globalModalidade.fase.toString()
+      (!ehUsuario) ? 'etapa': globalModalidade.fase.toString() : ''
     }))
             .body);
     List<JogosJuers> listaJogos = new List<JogosJuers>();
@@ -553,7 +539,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: listarJogos(),
+        future: listarJogos(true),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -571,7 +557,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
               );
             }
             return ListView.builder(
-              itemCount: 8,
+              itemCount: _groupsFutsal.length + 1,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return SizedBox(height: 70);
@@ -588,7 +574,6 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                           retJogos.sublist(
                               (index - 1) * 3, ((index - 1) * 3) + 3)),
                 );
-                // return showTable[index - 1] ? tabela(index - 1) : jogosCard(index - 1);
               },
             );
           }
