@@ -7,12 +7,12 @@ import 'package:siepex/src/eventos/juergs/admin/TabelasGruposAdmin.dart';
 Seleciona o resultado das partidas para alterar
 */
 
-class ResultadosPage extends StatefulWidget {
+class LancaResultadosGruposPage extends StatefulWidget {
   @override
-  _ResultadosPageState createState() => _ResultadosPageState();
+  _LancaResultadosGruposPageState createState() => _LancaResultadosGruposPageState();
 }
 
-class _ResultadosPageState extends State<ResultadosPage> {
+class _LancaResultadosGruposPageState extends State<LancaResultadosGruposPage> {
   bool _isLoading = false;
 
   Modalidade modalidade;
@@ -90,22 +90,17 @@ class _ResultadosPageState extends State<ResultadosPage> {
     );
   }
 
-  Widget currentPage(Modalidade modalidade) {
-    if (_currentFase == 0)
-      return TabelaGruposAdmin(modalidade);
-  }
-
   @override
   Widget build(BuildContext context) {
     modalidade = Provider.of<Modalidade>(context);
     return Scaffold(
       backgroundColor: Colors.grey[400],
-      appBar: AppBar(title: Text('Tabela Futsal Masculino')),
+      appBar: AppBar(title: Text(modalidade.nome)),
       body: Stack(
         children: <Widget>[
           AnimatedSwitcher(
             duration: Duration(milliseconds: 200),
-            child: currentPage(modalidade),
+            child: TabelaGruposAdmin(modalidade),
           ),
         ],
       ),

@@ -298,7 +298,7 @@ function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
 function monta_quartas(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
     switch (idModalidade) {
         case 1:
-            for (var i = 0; i != 2; i++) {
+            for (var i = 0; i < 4; i++) {
                 var nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
                 var nome_time_b = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
                 var id_time_a = idEquipes[(i * 3)];
@@ -393,6 +393,8 @@ async function listar(estudanteCpf) {
 }
 
 async function listarTabela(idModalidade, etapa) {
+    console.log("ETAPA: ");
+    console.log(etapa);
     return new Promise(function (resolve, reject) {
         jogos_juergs.findAndCountAll({
             where: {

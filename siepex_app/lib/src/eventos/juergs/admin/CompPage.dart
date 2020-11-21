@@ -3,9 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:provider/provider.dart';
+import 'package:siepex/src/eventos/juergs/admin/LancaResultGrupos.dart';
+import 'package:siepex/src/eventos/juergs/admin/LancarResultados.dart';
 import 'package:siepex/src/eventos/juergs/admin/ResultadosRustica.dart';
 import 'package:siepex/src/eventos/juergs/admin/selectTeams.dart';
-import 'package:siepex/src/eventos/juergs/admin/resultadosPage.dart';
 
 /*
   Nessa página o ADM pode:
@@ -69,14 +70,24 @@ class CompetitionPage extends StatelessWidget {
         alignment: Alignment.center,
         child: FlatButton(
           onPressed: () {
-            if (modalidade.nome != 'Rústica')
+            if (modalidade.nome != 'Rústica'){
+              if(modalidade.fase == 0)
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => ChangeNotifierProvider.value(
                             value: modalidade,
-                            child: ResultadosPage(),
+                            child: LancaResultadosGruposPage(),
                           )));
+              else
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChangeNotifierProvider.value(
+                            value: modalidade,
+                            child: LancarResultadosPage(),
+                          )));
+            }
             else
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) => ChangeNotifierProvider.value(

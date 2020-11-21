@@ -3,7 +3,9 @@ import 'package:siepex/icons/sport_icons.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/ColumnBuilder.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
+import 'package:siepex/src/eventos/juergs/tabelas/PaginaTabela.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/TabelaRustica.dart';
+import 'package:provider/provider.dart';
 
 class PaginaTabelas extends StatelessWidget {
   Widget competicaoButton(BuildContext context, IconData icone, String comp, String fase, Modalidade modalidade){
@@ -16,7 +18,12 @@ class PaginaTabelas extends StatelessWidget {
                 subtitle: Text(fase, style: TextStyle(color: Colors.black87),),
                 onTap: () {
                   if(modalidade.nome != 'Rústica')
-                    Navigator.pushNamed(context, 'tabelaPage', arguments: modalidade);
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => ChangeNotifierProvider.value(
+                        value: modalidade,
+                        child: PaginaTabela(),
+                      ),
+                      ));
                   else
                     Navigator.push(context, MaterialPageRoute(builder: (context) => TabelaRustica()));
                   },

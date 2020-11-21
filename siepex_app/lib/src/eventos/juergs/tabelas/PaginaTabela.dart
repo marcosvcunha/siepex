@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/TabelaFinal.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/TabelaGrupos.dart';
@@ -114,8 +115,7 @@ class _PaginaTabelaState extends State<PaginaTabela> {
   @override
   Widget build(BuildContext context) {
     // TODO: Arrumar para não calcular os pontos nem os resultados enquanto a partida não tiver terminado.
-    Modalidade modalidade = ModalRoute.of(context).settings.arguments;
-    print(modalidade.faseStr);
+    Modalidade modalidade = Provider.of<Modalidade>(context);
     return Scaffold(
       backgroundColor: Colors.grey[400],
       // backgroundColor: Colors.white,

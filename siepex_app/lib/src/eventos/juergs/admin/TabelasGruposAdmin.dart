@@ -273,6 +273,10 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
       JogosJuers jogoJuergs, String id, int controllerIndex) {
     return Center(
       child: TextField(
+        // maxLength: 2,
+        // maxLengthEnforced: true,
+        enableSuggestions: false,
+        textAlign: TextAlign.center,
         controller: controllers[controllerIndex],
         keyboardType: TextInputType.number,
         inputFormatters: <TextInputFormatter>[

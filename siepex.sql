@@ -64,9 +64,9 @@ INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atl
 INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atleta 5', '51999999999', '11111111115', 'Guaiba');
 INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atleta 6', '51999999999', '11111111116', 'Tanto Faz');
 INSERT INTO participantes_rustica(nome, celular, cpf, unidade) VALUES ('User Atleta 7', '51999999999', '11111111117', 'Porto Alegre');
-DROP TABLE IF EXISTS equipes_juergs;
 
-drop table equipes_juergs;
+
+DROP TABLE IF EXISTS equipes_juergs;
 CREATE TABLE equipes_juergs (
 id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 id_modalidade int (2) unsigned not null,

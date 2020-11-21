@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/config.dart';
+import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 
 class TabelaGrupos extends StatefulWidget {
   TabelaGrupos(Modalidade modalidade) {
@@ -35,6 +37,32 @@ class JogosJuers {
     this.encerrado = json['encerrado'];
     this.classModalidade = json['modalidade'];
     this.etapaJogo = json['etapa_jogo'];
+  }
+
+
+}
+
+class TimeFaseGrupo{
+  String nome;
+  int id;
+  int vitorias;
+  int derrotas;
+  int empates;
+
+  get pontos{
+    return vitorias * 3 + empates;
+  }
+
+  get partidas{
+    return vitorias + empates + derrotas;
+  }
+
+  TimeFaseGrupo(String nome_equipe, int id_equipe){
+    nome = nome_equipe;
+    id = id_equipe;
+    vitorias = 0;
+    derrotas = 0;
+    empates = 0;
   }
 }
 
@@ -116,6 +144,11 @@ class _TabelaGruposState extends State<TabelaGrupos> {
   }
 
   Widget tabela(int index, List<JogosJuers> retJogos) {
+    List<TimeFaseGrupo> times = [
+      TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
+      TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
+      TimeFaseGrupo(retJogos[1].timeB, retJogos[1].idTimeB),
+    ];
     int partidasTime1 = 0;
     int ptsTime1 = 0;
     int vitoriasTime1 = 0;
@@ -132,60 +165,38 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     int derrotasTime3 = 0;
     int empatesTime3 = 0;
 
-    if (retJogos[0].encerrado) {
-      partidasTime1++;
-      partidasTime2++;
-    }
-    if (retJogos[1].encerrado) {
-      partidasTime1++;
-      partidasTime3++;
-    }
-    if (retJogos[2].encerrado) {
-      partidasTime2++;
-      partidasTime3++;
-    }
     if (retJogos[0].resultadoA > retJogos[0].resultadoB) {
-      ptsTime1 += 3;
-      vitoriasTime1++;
-      derrotasTime2++;
+      times[0].vitorias ++;
+      times[1].derrotas ++;
     } else if (retJogos[0].resultadoA < retJogos[0].resultadoB) {
-      ptsTime2 += 3;
-      vitoriasTime2++;
-      derrotasTime1++;
+      times[1].vitorias ++;
+      times[0].derrotas ++;
     } else {
-      empatesTime1++;
-      empatesTime2++;
-      ptsTime1++;
-      ptsTime2++;
+      times[0].empates ++;
+      times[1].empates ++;
     }
     if (retJogos[1].resultadoA > retJogos[1].resultadoB) {
-      ptsTime1 += 3;
-      vitoriasTime1++;
-      derrotasTime3++;
+      times[0].vitorias ++;
+      times[2].derrotas ++;
     } else if (retJogos[1].resultadoA < retJogos[1].resultadoB) {
-      ptsTime3 += 3;
-      vitoriasTime3++;
-      derrotasTime1++;
+      times[2].vitorias ++;
+      times[0].derrotas ++;
     } else {
-      empatesTime1++;
-      empatesTime3++;
-      ptsTime1++;
-      ptsTime3++;
+      times[0].empates ++;
+      times[1].empates ++;
     }
     if (retJogos[2].resultadoA > retJogos[2].resultadoB) {
-      ptsTime2 += 3;
-      vitoriasTime2++;
-      derrotasTime3++;
+      times[1].vitorias ++;
+      times[2].derrotas ++;
     } else if (retJogos[2].resultadoA < retJogos[2].resultadoB) {
-      ptsTime3 += 3;
-      vitoriasTime3++;
-      derrotasTime2++;
+      times[1].derrotas ++;
+      times[2].vitorias ++;
     } else {
-      empatesTime2++;
-      empatesTime3++;
-      ptsTime2++;
-      ptsTime3++;
+      times[1].empates ++;
+      times[2].empates ++;
     }
+    times.sort((a, b) => b.pontos.compareTo(a.pontos));
+
     return Padding(
       key: ValueKey(1),
       padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
@@ -311,12 +322,12 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                     ),
                   ),
                 ]),
-                tableRow(retJogos[0].timeA, partidasTime1, vitoriasTime1,
-                    derrotasTime1, empatesTime1, ptsTime1),
-                tableRow(retJogos[0].timeB, partidasTime2, vitoriasTime2,
-                    derrotasTime2, empatesTime2, ptsTime2),
-                tableRow(retJogos[1].timeB, partidasTime3, vitoriasTime3,
-                    derrotasTime3, empatesTime3, ptsTime3),
+                tableRow(times[0].nome, times[0].partidas, times[0].vitorias,
+                    times[0].derrotas, times[0].empates, times[0].pontos),
+                tableRow(times[1].nome, times[1].partidas, times[1].vitorias,
+                    times[1].derrotas, times[1].empates, times[1].pontos),
+                tableRow(times[2].nome, times[2].partidas, times[2].vitorias,
+                    times[2].derrotas, times[2].empates, times[2].pontos),
               ],
             ),
             Align(
@@ -538,8 +549,10 @@ class _TabelaGruposState extends State<TabelaGrupos> {
 
   @override
   Widget build(BuildContext context) {
+    Modalidade modalidade = Provider.of<Modalidade>(context);
+    HandleData _handleData = HandleData();
     return FutureBuilder(
-        future: listarJogos(true),
+        future: _handleData.listarJogos(modalidade, 1),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

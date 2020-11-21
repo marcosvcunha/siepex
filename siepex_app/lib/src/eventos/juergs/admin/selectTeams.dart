@@ -39,7 +39,7 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
     if (modalidade.fase == 0) {
       groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
     } else if (modalidade.fase == 1) {
-      groups = ['A', 'B'];
+      groups = ['A', 'B', 'C', 'D'];
     }
     // LISTA COM AS TABELAS
     return ListView.builder(

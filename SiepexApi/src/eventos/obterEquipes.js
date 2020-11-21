@@ -10,8 +10,11 @@ router.put('/', async (req, res) => {
     // decide qual função usar com base no parametro passado em req
     if ('id_modalidade' in req.body) {
         idModalidade = parseInt(req.body['id_modalidade']);
-        faseAtual = (req.body['fase_atual'] != 'null') ? (parseInt(req.body['fase_atual'])) : '';
-        equipes = await pegarTodasEquipesPorModalidade(idModalidade,faseAtual);
+        if('fase_atual' in req.body){
+            faseAtual = (req.body['fase_atual'] != 'null') ? (parseInt(req.body['fase_atual'])) : '';
+            equipes = await pegarTodasEquipesPorFase(idModalidade, faseAtual);
+        }else
+            equipes = await pegarTodasEquipesPorModalidade(idModalidade);
         res.json({
             data: equipes.rows,
             count: equipes.count,
@@ -36,7 +39,32 @@ router.get('/rustica', async (req, res) => {
     });
 });
 
-async function pegarTodasEquipesPorModalidade(idModalidade,faseAtual) {
+async function pegarTodasEquipesPorModalidade(idModalidade) {
+    return new Promise(function (resolve, reject) {
+        equipes_juergs.findAndCountAll({
+            where: {
+                id_modalidade: idModalidade,
+            },
+            order: [
+                ['data_cadastro', 'asc']
+            ],
+        }).then(async (result) => {
+            for (var i = 0; i < result.rows.length; i++) { // Repete para cada equipe encontrada.
+                userCpfs = result.rows[i]['dataValues']['participantes_cadastrados'].split(';');
+                userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
+                result.rows[i]['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
+                result.rows[i]['dataValues']['nomes_participantes'] = [];
+                // TODO: Otimizar esta parte. -M
+                result.rows[i]['dataValues']['nomes_participantes'] = await pegarNomes(userCpfs);
+            }
+            resolve(result);
+        })
+    })
+}
+
+
+async function pegarTodasEquipesPorFase(idModalidade, faseAtual) {
+    // Pega as equipes de uma determinada fase e modalidade.
     return new Promise(function (resolve, reject) {
         equipes_juergs.findAndCountAll({
             where: {
@@ -52,6 +80,7 @@ async function pegarTodasEquipesPorModalidade(idModalidade,faseAtual) {
                 userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
                 result.rows[i]['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
                 result.rows[i]['dataValues']['nomes_participantes'] = [];
+                // TODO: Otimizar esta parte. -M
                 result.rows[i]['dataValues']['nomes_participantes'] = await pegarNomes(userCpfs);
             }
             resolve(result);
@@ -64,6 +93,8 @@ async function pegarTodasEquipesPorUsuario(userCpf) {
     console.log('Pegando Equipes por usuario');
     return new Promise(function (resolve, reject) {
         // Pega as IDs das minhas equipes
+        console.log("CPF: ")
+        console.log(userCpf)
         cadastro_juergs.findAll({
             where: {
                 cpf: userCpf,
@@ -72,7 +103,8 @@ async function pegarTodasEquipesPorUsuario(userCpf) {
             equipesIds = user[0]['dataValues']['minhas_equipes'].split(';')
             equipesIds = equipesIds.slice(0, equipesIds.length - 1) // O ultimo elemento é vazio
             equipesIds = equipesIds.map(Number); // Converte um array de String para um array de Numbers
-
+            console.log("IDs: ");
+            console.log(equipesIds);
             equipes_juergs.findAndCountAll({
                 where: {
                     id: equipesIds, // Passo todas as IDs

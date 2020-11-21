@@ -9,6 +9,7 @@ import 'package:siepex/src/eventos/juergs/models/ParticipanteRustica.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:http/http.dart' as http;
 import 'package:siepex/src/config.dart';
+import 'package:siepex/src/eventos/juergs/tabelas/TabelaGrupos.dart';
 
 class HandleData {
   // Aqui vai pegar os dados do DB e retornar uma lista com as modalidades
@@ -202,4 +203,27 @@ class HandleData {
       return;
     }
   }
+
+  Future<List<JogosJuers>> listarJogos(Modalidade modalidade, int fase) async {
+    var resposta =
+        jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {
+      'idModalidade': modalidade.id.toString(),
+      'etapa': fase.toString(),
+    }))
+            .body);
+    List<JogosJuers> listaJogos = new List<JogosJuers>();
+
+    if (resposta['status'] != null) {
+      if (resposta['status'] == 'ok') {
+        for (int i = 0; i != resposta['count']; i++) {
+          JogosJuers jogosJuergs =
+              new JogosJuers.retornaLinhaJuergs(resposta['data'][i]);
+          listaJogos.add(jogosJuergs);
+        }
+        return listaJogos;
+      }
+    }else{
+      return [];
+    }
+   }
 }
