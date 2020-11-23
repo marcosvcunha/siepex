@@ -71,7 +71,7 @@ class CompetitionPage extends StatelessWidget {
         child: FlatButton(
           onPressed: () {
             if (modalidade.nome != 'Rústica'){
-              if(modalidade.fase == 0)
+              if(modalidade.fase == 1) // FAse de grupos
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -79,7 +79,7 @@ class CompetitionPage extends StatelessWidget {
                             value: modalidade,
                             child: LancaResultadosGruposPage(),
                           )));
-              else
+              else if(modalidade.fase > 1) // Fazes eliminatórias
                 Navigator.push(
                   context,
                   MaterialPageRoute(

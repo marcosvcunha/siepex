@@ -64,7 +64,9 @@ class Modalidade extends ChangeNotifier {
           'equipesGrupoNome': equipesGrupoNome.toString(),
         })).body);
     if(resposta['status'] == 'sucesso'){
-      // TODO: Alterar a fase nesta modalidade e dar NotifyListeners.
+      // Alterar a fase nesta modalidade e dar NotifyListeners.
+      this.fase += 1;
+      notifyListeners();
       print('Sucesso');
     }else if(resposta['status'] == 'erro'){
       // TODO:: Conferir os possiveis erros

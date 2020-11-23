@@ -252,6 +252,7 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: estão sendo feitas chamadas a API a cada equipe selecionada: corrigir.
     modalidade = Provider.of<Modalidade>(context);
     return WillPopScope(
       onWillPop: _onWillPop,

@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/config.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
+import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 
 class TabelaGrupos extends StatefulWidget {
   TabelaGrupos(Modalidade modalidade) {
@@ -16,31 +17,33 @@ class TabelaGrupos extends StatefulWidget {
   _TabelaGruposState createState() => _TabelaGruposState();
 }
 
-class JogosJuers {
-  String timeA;
-  String timeB;
-  int idTimeA;
-  int idTimeB;
-  int resultadoA;
-  int resultadoB;
-  bool encerrado;
-  int classModalidade;
-  String etapaJogo;
 
-  JogosJuers.retornaLinhaJuergs(Map<String, dynamic> json) {
-    this.timeA = json['time_a'];
-    this.timeB = json['time_b'];
-    this.idTimeA = json['id_time_a'];
-    this.idTimeB = json['id_time_b'];
-    this.resultadoA = json['resultado_a'];
-    this.resultadoB = json['resultado_b'];
-    this.encerrado = json['encerrado'];
-    this.classModalidade = json['modalidade'];
-    this.etapaJogo = json['etapa_jogo'];
-  }
+/// Esta classe foi unificada com a classe Jogo, no diretorio models.
+// class JogosJuers {
+//   String timeA;
+//   String timeB;
+//   int idTimeA;
+//   int idTimeB;
+//   int resultadoA;
+//   int resultadoB;
+//   bool encerrado;
+//   int classModalidade;
+//   String etapaJogo;
+
+//   JogosJuers.retornaLinhaJuergs(Map<String, dynamic> json) {
+//     this.timeA = json['time_a'];
+//     this.timeB = json['time_b'];
+//     this.idTimeA = json['id_time_a'];
+//     this.idTimeB = json['id_time_b'];
+//     this.resultadoA = json['resultado_a'];
+//     this.resultadoB = json['resultado_b'];
+//     this.encerrado = json['encerrado'];
+//     this.classModalidade = json['modalidade'];
+//     this.etapaJogo = json['etapa_jogo'];
+//   }
 
 
-}
+// }
 
 class TimeFaseGrupo{
   String nome;
@@ -143,7 +146,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     ]);
   }
 
-  Widget tabela(int index, List<JogosJuers> retJogos) {
+  Widget tabela(int index, List<Jogo> retJogos) {
     List<TimeFaseGrupo> times = [
       TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
       TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
@@ -165,30 +168,30 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     int derrotasTime3 = 0;
     int empatesTime3 = 0;
 
-    if (retJogos[0].resultadoA > retJogos[0].resultadoB) {
+    if (retJogos[0].resultA > retJogos[0].resultB) {
       times[0].vitorias ++;
       times[1].derrotas ++;
-    } else if (retJogos[0].resultadoA < retJogos[0].resultadoB) {
+    } else if (retJogos[0].resultA < retJogos[0].resultB) {
       times[1].vitorias ++;
       times[0].derrotas ++;
     } else {
       times[0].empates ++;
       times[1].empates ++;
     }
-    if (retJogos[1].resultadoA > retJogos[1].resultadoB) {
+    if (retJogos[1].resultA > retJogos[1].resultB) {
       times[0].vitorias ++;
       times[2].derrotas ++;
-    } else if (retJogos[1].resultadoA < retJogos[1].resultadoB) {
+    } else if (retJogos[1].resultA < retJogos[1].resultB) {
       times[2].vitorias ++;
       times[0].derrotas ++;
     } else {
       times[0].empates ++;
-      times[1].empates ++;
+      times[2].empates ++;
     }
-    if (retJogos[2].resultadoA > retJogos[2].resultadoB) {
+    if (retJogos[2].resultA > retJogos[2].resultB) {
       times[1].vitorias ++;
       times[2].derrotas ++;
-    } else if (retJogos[2].resultadoA < retJogos[2].resultadoB) {
+    } else if (retJogos[2].resultA < retJogos[2].resultB) {
       times[1].derrotas ++;
       times[2].vitorias ++;
     } else {
@@ -452,7 +455,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     );
   }
 
-  Widget jogosCard(int index, List<JogosJuers> jogosJuers) {
+  Widget jogosCard(int index, List<Jogo> jogosJuers) {
     return Padding(
       key: ValueKey(2),
       padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
@@ -481,12 +484,12 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                       fontSize: 22,
                       fontWeight: FontWeight.w500)),
             ),
-            _jogoTile(jogosJuers[0].timeA, jogosJuers[0].resultadoA,
-                jogosJuers[0].timeB, jogosJuers[0].resultadoB),
-            _jogoTile(jogosJuers[1].timeA, jogosJuers[1].resultadoA,
-                jogosJuers[1].timeB, jogosJuers[1].resultadoB),
-            _jogoTile(jogosJuers[2].timeA, jogosJuers[2].resultadoA,
-                jogosJuers[2].timeB, jogosJuers[2].resultadoB),
+            _jogoTile(jogosJuers[0].timeA, jogosJuers[0].resultA,
+                jogosJuers[0].timeB, jogosJuers[0].resultB),
+            _jogoTile(jogosJuers[1].timeA, jogosJuers[1].resultA,
+                jogosJuers[1].timeB, jogosJuers[1].resultB),
+            _jogoTile(jogosJuers[2].timeA, jogosJuers[2].resultA,
+                jogosJuers[2].timeB, jogosJuers[2].resultB),
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
@@ -526,26 +529,26 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     );
   }
 
-  Future<List<JogosJuers>> listarJogos(ehUsuario) async {
-    var resposta =
-        jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {
-      'idModalidade': globalModalidade.id.toString(),
-      (!ehUsuario) ? 'etapa': globalModalidade.fase.toString() : ''
-    }))
-            .body);
-    List<JogosJuers> listaJogos = new List<JogosJuers>();
+  // Future<List<JogosJuers>> listarJogos(ehUsuario) async {
+  //   var resposta =
+  //       jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {
+  //     'idModalidade': globalModalidade.id.toString(),
+  //     (!ehUsuario) ? 'etapa': globalModalidade.fase.toString() : ''
+  //   }))
+  //           .body);
+  //   List<JogosJuers> listaJogos = new List<JogosJuers>();
 
-    if (resposta['status'] != null) {
-      if (resposta['status'] == 'ok') {
-        for (int i = 0; i != resposta['count']; i++) {
-          JogosJuers jogosJuergs =
-              new JogosJuers.retornaLinhaJuergs(resposta['data'][i]);
-          listaJogos.add(jogosJuergs);
-        }
-        return listaJogos;
-      }
-    }
-  }
+  //   if (resposta['status'] != null) {
+  //     if (resposta['status'] == 'ok') {
+  //       for (int i = 0; i != resposta['count']; i++) {
+  //         JogosJuers jogosJuergs =
+  //             new JogosJuers.retornaLinhaJuergs(resposta['data'][i]);
+  //         listaJogos.add(jogosJuergs);
+  //       }
+  //       return listaJogos;
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -559,7 +562,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
               child: CircularProgressIndicator(),
             );
           } else {
-            List<JogosJuers> retJogos = snapshot.data;
+            List<Jogo> retJogos = snapshot.data;
             if (retJogos.length == 0) {
               return MaterialApp(
                 home: Scaffold(

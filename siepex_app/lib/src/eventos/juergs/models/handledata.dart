@@ -12,7 +12,6 @@ import 'package:siepex/src/config.dart';
 import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/TabelaGrupos.dart';
 
-
 // HandleData possui metodos que interagem com a API
 class HandleData {
   // Aqui vai pegar os dados do DB e retornar uma lista com as modalidades
@@ -49,12 +48,13 @@ class HandleData {
   }
 
   // Pega as equipes registradas para a modalidade.
-  Future<List<Equipe>> getEquipes(int idModalidade,int faseAtual) async {
+  Future<List<Equipe>> getEquipes(int idModalidade, int faseAtual) async {
     try {
       var resposta = jsonDecode((await http.put(baseUrl + 'obtemEquipes/',
-              body: {'id_modalidade': idModalidade.toString(),
-              'fase_atual' : faseAtual.toString()
-              }))
+              body: {
+            'id_modalidade': idModalidade.toString(),
+            'fase_atual': faseAtual.toString()
+          }))
           .body);
       if (resposta['count'] == 0)
         return [];
@@ -139,7 +139,8 @@ class HandleData {
     }
   }
 
-  Future updateRustica(BuildContext context, List<ParticipanteRustica> participantes) async {
+  Future updateRustica(
+      BuildContext context, List<ParticipanteRustica> participantes) async {
     try {
       List<Map<String, dynamic>> partsJson = List.generate(
           participantes.length, (index) => participantes[index].toJson());
@@ -147,15 +148,16 @@ class HandleData {
         'Content-Type': 'application/json;charset=UTF-8',
         'Charset': 'utf-8'
       };
-      var resposta = jsonDecode((await http.put(baseUrl + 'equipe/updateRustica', body: {
+      var resposta =
+          jsonDecode((await http.put(baseUrl + 'equipe/updateRustica', body: {
         'data': json.encode(partsJson),
-      })).body);
-      if(resposta['status'] == 'sucesso')
+      }))
+              .body);
+      if (resposta['status'] == 'sucesso')
         return;
       else
         errorDialog(context, 'Erro', 'Aconteceu um problema desconhecido!');
       return;
-      
     } catch (e) {
       print('Erro: ' + e.toString());
       errorDialog(context, 'Erro', 'Aconteceu um problema desconhecido!');
@@ -207,36 +209,54 @@ class HandleData {
     }
   }
 
-  Future<List<JogosJuers>> listarJogos(Modalidade modalidade, int fase) async {
+  Future<List<Jogo>> listarJogos(Modalidade modalidade, int fase) async {
     var resposta =
         jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {
       'idModalidade': modalidade.id.toString(),
       'etapa': fase.toString(),
     }))
             .body);
-    List<JogosJuers> listaJogos = new List<JogosJuers>();
+    List<Jogo> listaJogos = new List<Jogo>();
 
     if (resposta['status'] != null) {
       if (resposta['status'] == 'ok') {
         for (int i = 0; i != resposta['count']; i++) {
-          JogosJuers jogosJuergs =
-              new JogosJuers.retornaLinhaJuergs(resposta['data'][i]);
+          Jogo jogosJuergs = new Jogo.fromJson(resposta['data'][i]);
           listaJogos.add(jogosJuergs);
         }
         return listaJogos;
-      }
-    }else{
+      } else
+        return [];
+    } else {
       return [];
     }
-   }
+  }
 
-    // static Future<List<Jogo>> getJogos(Modalidade modalidade) async {
-    //   var resposta =
-    //     jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {
-    //   'idModalidade': modalidade.id.toString(),
-    //   'etapa': fase.toString(),
-    // }))
-    //         .body);
-    // return [];
-    // }
+  Future<void> atualizaJogos(List<Jogo> jogos) async {
+    // Recebe uma lista de jogos de qualquer tamanho e envia os que foram editados (edited == true) ...
+    // ... para a API atualizar os resultados
+
+    print('AQUI!!');
+    List<Map<String, dynamic>> jogosJson = [];
+
+    for (Jogo jogo in jogos) {
+      if (jogo.edited) jogosJson.add(jogo.toJson());
+    }
+    print(jogosJson);
+    if (jogosJson.length > 0) {
+      // var resposta = jsonDecode(
+      //     (await http.put(baseUrl + 'modalidade/atualizaJogos', body: {}))
+      //         .body);
+    }
+  }
+
+  // static Future<List<Jogo>> getJogos(Modalidade modalidade) async {
+  //   var resposta =
+  //     jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {
+  //   'idModalidade': modalidade.id.toString(),
+  //   'etapa': fase.toString(),
+  // }))
+  //         .body);
+  // return [];
+  // }
 }

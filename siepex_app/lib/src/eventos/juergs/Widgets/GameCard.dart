@@ -63,7 +63,7 @@ class _GameCardState extends State<GameCard> {
     }
   }
 
-  Widget nonEditable() {
+  Widget body() {
     // Widget que representa um jogo.
     // Mostra o nome de um time em cima do outro e os gols a direita de cada um.
     // Em cima do card vai o "nome" do jogo: Jogo 1, Jogo 2, ...
@@ -181,6 +181,6 @@ class _GameCardState extends State<GameCard> {
   @override
   Widget build(BuildContext context) {
     jogo = Provider.of<Jogo>(context);
-    return nonEditable();
+    return body();
   }
 }
