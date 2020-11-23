@@ -9,8 +9,11 @@ import 'package:siepex/src/eventos/juergs/models/ParticipanteRustica.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:http/http.dart' as http;
 import 'package:siepex/src/config.dart';
+import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/TabelaGrupos.dart';
 
+
+// HandleData possui metodos que interagem com a API
 class HandleData {
   // Aqui vai pegar os dados do DB e retornar uma lista com as modalidades
   Future<List<Modalidade>> getModalidades() async {
@@ -226,4 +229,14 @@ class HandleData {
       return [];
     }
    }
+
+    // static Future<List<Jogo>> getJogos(Modalidade modalidade) async {
+    //   var resposta =
+    //     jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {
+    //   'idModalidade': modalidade.id.toString(),
+    //   'etapa': fase.toString(),
+    // }))
+    //         .body);
+    // return [];
+    // }
 }
