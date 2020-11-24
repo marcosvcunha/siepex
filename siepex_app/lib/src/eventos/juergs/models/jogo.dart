@@ -67,29 +67,3 @@ class Jogo{
   }
 
 }
-
-// class JogosJuers {
-//   String timeA;
-//   String timeB;
-//   int idTimeA;
-//   int idTimeB;
-//   int resultadoA;
-//   int resultadoB;
-//   bool encerrado;
-//   int classModalidade;
-//   String etapaJogo;
-
-//   JogosJuers.retornaLinhaJuergs(Map<String, dynamic> json) {
-//     this.timeA = json['time_a'];
-//     this.timeB = json['time_b'];
-//     this.idTimeA = json['id_time_a'];
-//     this.idTimeB = json['id_time_b'];
-//     this.resultadoA = json['resultado_a'];
-//     this.resultadoB = json['resultado_b'];
-//     this.encerrado = json['encerrado'];
-//     this.classModalidade = json['modalidade'];
-//     this.etapaJogo = json['etapa_jogo'];
-//   }
-
-
-// }

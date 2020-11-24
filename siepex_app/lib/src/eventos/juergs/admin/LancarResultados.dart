@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:provider/provider.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/GameCard.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 
@@ -14,44 +16,39 @@ class LancarResultadosPage extends StatefulWidget {
 
 class _LancarResultadosPageState extends State<LancarResultadosPage> {
   List<Jogo> jogos = [];
-  // List<Jogo> jogos = [
-  //   Jogo('Time Legal', 'Time Maneiro', 2, 1, false, 'Jogo 1'),
-  //   Jogo('Time Show', 'Time de Bola', 2, 3, false, 'Jogo 2'),
-  //   Jogo('Time Massa', 'Time Chato', 1, 0, false, 'Jogo 3'),
-  //   Jogo('Time Bonito', 'Time Feio', 1, 1, false, 'Jogo 4'),
-  // ];
-
-  SnackBar snackBar = SnackBar(
-                  duration: Duration(seconds: 2),
-                  content: Text(
-                      'Você deve terminar de editar cada jogo antes de salvar!'));
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
     HandleData _handleData = HandleData();
     Modalidade modalidade = Provider.of<Modalidade>(context);
-    print(modalidade.nome);
-    print(modalidade.faseStr);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.done),
-        onPressed: () async {
-          
-          print('OI!!!');
-          if (jogos.length > 0) {
-            bool beeingEdited = false;
-            for (Jogo jogo in jogos) {
-              if (jogo.beeingEdited) beeingEdited = true;
-            }
-            if (beeingEdited) {
-              print('AQUI!!!');
-              // TODO:: Não tá mostrando snackbar
-              Scaffold.of(context).showSnackBar(snackBar);
-            } else {
-              await _handleData.atualizaJogos(jogos);
-            }
-          }
-        },
+      floatingActionButton: Builder(
+        builder: (context) {
+          return FloatingActionButton(
+            child: Icon(Icons.done),
+            onPressed: () async {
+              
+              if (jogos.length > 0) {
+                bool beeingEdited = false;
+                for (Jogo jogo in jogos) {
+                  if (jogo.beeingEdited) beeingEdited = true;
+                }
+                if (beeingEdited) {
+                  errorDialog(context, 'Desculpe!', 'Antes de atualizar os jogos você deve terminar de editar cada um.');
+                } else {
+                  bool confirm = await confirmDialogWithReturn(context, 'Atenção!', 'Deseja mesmo atualizar os resultados?');
+                  if(confirm){
+                    final snackbar = SnackBar(content: Text('Carregando'));
+                    Scaffold.of(context).showSnackBar(snackbar);
+                    await _handleData.atualizaJogos(jogos, context);
+                    Scaffold.of(context).hideCurrentSnackBar();
+                  }
+                }
+              }
+            },
+          );
+        }
       ),
       appBar: AppBar(
         title: Text(
@@ -59,7 +56,8 @@ class _LancarResultadosPageState extends State<LancarResultadosPage> {
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      body: FutureBuilder(
+      body: _loading ? Center(child: CircularProgressIndicator(),) :
+      FutureBuilder(
           future: _handleData.listarJogos(modalidade, modalidade.fase),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

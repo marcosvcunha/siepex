@@ -5,6 +5,7 @@ void errorDialog(BuildContext context, String title, String error){
     context: context,
     builder: (context){
       return AlertDialog(
+
         title: Text(title, style: TextStyle(color: Colors.black),),
         content: Text(error, style: TextStyle(color: Colors.grey[700]),),
         actions: <Widget>[

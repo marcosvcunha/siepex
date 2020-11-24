@@ -56,11 +56,11 @@ router.put('/nextFase', async (req, res) => {
             // TODO:: Avançar a competição de fase e criar os respectivos jogos.
             switch (faseAtual) {
                 case 0:
-                    monta_tabela(idEquipes, equipesGrupoNome, id, faseAtual);
+                    await monta_tabela(idEquipes, equipesGrupoNome, id, faseAtual);
                     proxima_fase(id, faseAtual);
                     break;
                 case 1:
-                    monta_quartas(idEquipes, equipesGrupoNome, id, faseAtual);
+                    await monta_quartas(idEquipes, equipesGrupoNome, id, faseAtual);
                     proxima_fase(id, faseAtual);
                     break;
                 case 2:
@@ -129,7 +129,43 @@ router.put('/lancaResultado', async (req, res) => {
     }
 });
 
-function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
+
+router.put('/atualizaJogos', async (req, res) => {
+    try{
+        jogos = JSON.parse(req.body['jogos']);
+        for(i = 0; i < jogos.length; i ++){
+            // Atualiza cada um dos jogos
+            await jogos_juergs.update({
+                resultado_a: jogos[i]['resultA'],
+                resultado_b: jogos[i]['resultB'],
+                encerrado: jogos[i]['encerrado'],
+            }, {
+                where: {
+                    id: jogos[i]['id'],
+                }
+            }).catch((e) => {
+                console.log('Erro ao atualizar valores: ' + String(e) );
+                res.json({
+                    status: 'erro',
+                });
+                return;
+            })
+        }
+
+        res.json({
+            status:'sucesso',
+        });
+        return;
+    }catch(e){
+        console.log("Erro!!");
+        res.json({
+            status: 'erro',
+        });
+        return;
+    }
+});
+
+async function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
 
     switch (idModalidade) {
         case 1:
@@ -143,21 +179,21 @@ function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
                 var encerrado = 0;
                 var modalidade = idModalidade;
                 var etapa_jogo = faseAtual;
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
 
                 nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 3) + 2].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 3)];
                 id_time_b = idEquipes[(i * 3) + 2];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
 
                 nome_time_a = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 3) + 2].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 3) + 1];
                 id_time_b = idEquipes[(i * 3) + 2];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
             }
             for (var i = 0; i != 24; i++) {
@@ -175,19 +211,19 @@ function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
                 var encerrado = 0;
                 var modalidade = idModalidade;
                 var etapa_jogo = faseAtual;
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
                 nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 3) + 2].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 3)];
                 id_time_b = idEquipes[(i * 3) + 2];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
                 nome_time_a = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 3) + 2].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 3) + 1];
                 id_time_b = idEquipes[(i * 3) + 2];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
             }
             for (var i = 0; i != 12; i++) {
@@ -205,37 +241,37 @@ function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
                 var encerrado = 0;
                 var modalidade = idModalidade;
                 var etapa_jogo = faseAtual;
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
                 nome_time_a = equipesGrupoNome[(i * 4)].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 4) + 2].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 4)];
                 id_time_b = idEquipes[(i * 4) + 2];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
                 nome_time_a = equipesGrupoNome[(i * 4)].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 4) + 3].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 4)];
                 id_time_b = idEquipes[(i * 4) + 3];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
                 nome_time_a = equipesGrupoNome[(i * 4) + 1].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 4) + 2].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 4) + 1];
                 id_time_b = idEquipes[(i * 4) + 2];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
                 nome_time_a = equipesGrupoNome[(i * 4) + 1].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 4) + 3].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 4) + 1];
                 id_time_b = idEquipes[(i * 4) + 3];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
                 nome_time_a = equipesGrupoNome[(i * 4) + 2].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 4) + 3].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 4) + 2];
                 id_time_b = idEquipes[(i * 4) + 3];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
             }
             for (var i = 0; i != 16; i++) {
@@ -254,37 +290,37 @@ function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
                 var encerrado = 0;
                 var modalidade = idModalidade;
                 var etapa_jogo = faseAtual;
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
                 nome_time_a = equipesGrupoNome[(i * 4)].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 4) + 2].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 4)];
                 id_time_b = idEquipes[(i * 4) + 2];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
                 nome_time_a = equipesGrupoNome[(i * 4)].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 4) + 3].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 4)];
                 id_time_b = idEquipes[(i * 4) + 3];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
                 nome_time_a = equipesGrupoNome[(i * 4) + 1].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 4) + 2].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 4) + 1];
                 id_time_b = idEquipes[(i * 4) + 2];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
                 nome_time_a = equipesGrupoNome[(i * 4) + 1].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 4) + 3].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 4) + 1];
                 id_time_b = idEquipes[(i * 4) + 3];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
                 nome_time_a = equipesGrupoNome[(i * 4) + 2].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 4) + 3].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 4) + 2];
                 id_time_b = idEquipes[(i * 4) + 3];
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
             }
             for (var i = 0; i != 8; i++) {
@@ -295,7 +331,7 @@ function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
 
 }
 
-function monta_quartas(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
+async function monta_quartas(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
     switch (idModalidade) {
         case 1:
             for (var i = 0; i < 4; i++) {
@@ -308,7 +344,7 @@ function monta_quartas(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
                 var encerrado = 0;
                 var modalidade = idModalidade;
                 var etapa_jogo = faseAtual;
-                insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
             }
             for (var i = 0; i != 4; i++) {
@@ -325,9 +361,9 @@ function monta_quartas(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
     }
 }
 
-function insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-    encerrado, modalidade, etapa_jogo) {
-    jogos_juergs.create(
+async function insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+    encerrado, modalidade, etapa_jogo)  {
+    await jogos_juergs.create(
         {
             time_a: nome_time_a,
             time_b: nome_time_b,

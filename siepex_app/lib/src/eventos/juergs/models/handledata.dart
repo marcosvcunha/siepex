@@ -144,10 +144,10 @@ class HandleData {
     try {
       List<Map<String, dynamic>> partsJson = List.generate(
           participantes.length, (index) => participantes[index].toJson());
-      Map<String, String> headers = {
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Charset': 'utf-8'
-      };
+      // Map<String, String> headers = {
+      //   'Content-Type': 'application/json;charset=UTF-8',
+      //   'Charset': 'utf-8'
+      // };
       var resposta =
           jsonDecode((await http.put(baseUrl + 'equipe/updateRustica', body: {
         'data': json.encode(partsJson),
@@ -232,21 +232,35 @@ class HandleData {
     }
   }
 
-  Future<void> atualizaJogos(List<Jogo> jogos) async {
+  Future<void> atualizaJogos(List<Jogo> jogos, BuildContext context) async {
     // Recebe uma lista de jogos de qualquer tamanho e envia os que foram editados (edited == true) ...
     // ... para a API atualizar os resultados
 
-    print('AQUI!!');
     List<Map<String, dynamic>> jogosJson = [];
+
+    // await Future.delayed(Duration(seconds: 2));
 
     for (Jogo jogo in jogos) {
       if (jogo.edited) jogosJson.add(jogo.toJson());
     }
-    print(jogosJson);
     if (jogosJson.length > 0) {
-      // var resposta = jsonDecode(
-      //     (await http.put(baseUrl + 'modalidade/atualizaJogos', body: {}))
-      //         .body);
+      try {
+        var resposta =
+          jsonDecode((await http.put(baseUrl + 'modalidades/atualizaJogos', body: {
+        'jogos': json.encode(jogosJson),
+      }))
+              .body);
+        if(resposta['status'] == 'sucesso'){
+          Navigator.pop(context);
+        }else{
+          errorDialog(
+            context, 'Erro!', 'Ocorreu um problema ao atualizar os jogos.');
+        }
+      } catch (e) {
+        print('Um erro aconteceu ao atualizar os jogos: ' + e.toString());
+        errorDialog(
+            context, 'Erro!', 'Ocorreu um problema ao atualizar os jogos.');
+      }
     }
   }
 

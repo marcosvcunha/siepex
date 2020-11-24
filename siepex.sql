@@ -34,13 +34,13 @@ INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
 	VALUES ('Futsal Feminino', '10', '2020-10-25 17:45:59', current_timestamp(), 0);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('VÃ´lei Misto', '10', '2020-10-22 17:40:00', current_timestamp(), 0);
+	VALUES ('Vôlei Misto', '10', '2020-10-22 17:40:00', current_timestamp(), 0);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
 	VALUES ('Handebol Masculino', '10', '2020-10-12 17:35:59', current_timestamp(), 3);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
 	VALUES ('Handebol Feminino', '10', '2020-10-25 14:50:00', current_timestamp(), 4);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('RÃºstica', '99', '2020-10-25 00:05:09', current_timestamp(), 0);
+	VALUES ('Rústica', '99', '2020-10-25 00:05:09', current_timestamp(), 0);
 
 DROP TABLE IF EXISTS participantes_rustica;
 
