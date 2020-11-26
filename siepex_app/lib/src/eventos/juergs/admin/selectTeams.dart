@@ -40,6 +40,8 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
       groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
     } else if (modalidade.fase == 1) {
       groups = ['A', 'B', 'C', 'D'];
+    }else if(modalidade.fase == 2 || modalidade.fase == 3){
+      groups = ['A', 'B'];
     }
     // LISTA COM AS TABELAS
     return ListView.builder(
@@ -142,7 +144,7 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
             Align(
                 alignment: Alignment.center,
                 child: Text(
-                  'Finalistas ' + grupo,
+                  'Semi ' + grupo,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 24,
@@ -155,6 +157,32 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
               endIndent: 20,
             ),
             grupoLinha(context, grupo + '1', index),
+            grupoLinha(context, grupo + '2', index + 1),
+          ],
+        ),
+      );
+    }else if(modalidade.fase == 3){
+      return Padding(
+        padding: const EdgeInsets.only(top: 16.0),
+        child: Column(
+          children: <Widget>[
+            Align(
+                alignment: Alignment.center,
+                child: Text(
+                  grupo == 'A' ? 'Final' : '3º lugar',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500),
+                )),
+            Divider(
+              color: Colors.black,
+              indent: 20,
+              thickness: 0.8,
+              endIndent: 20,
+            ),
+            grupoLinha(context, grupo + '1', index),
+            grupoLinha(context, grupo + '2', index + 1),
           ],
         ),
       );

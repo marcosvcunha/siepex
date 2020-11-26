@@ -292,6 +292,7 @@ class ListaEquipesPage extends StatelessWidget {
           } else {
             if (snapshot.hasData) {
               List<Equipe> equipes = snapshot.data;
+              print(equipes.length);
               // print(equipesSelecionadas);
               print(equipes.length);
               equipes.retainWhere(

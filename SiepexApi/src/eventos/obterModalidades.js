@@ -197,7 +197,7 @@ async function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual
                     encerrado, modalidade, etapa_jogo);
             }
             for (var i = 0; i != 24; i++) {
-                atualiza_equipes_juergs(idEquipes, i, faseAtual);
+                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
             }
             break;
         case 2:
@@ -227,7 +227,7 @@ async function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual
                     encerrado, modalidade, etapa_jogo);
             }
             for (var i = 0; i != 12; i++) {
-                atualiza_equipes_juergs(idEquipes, i, faseAtual);
+                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
             }
             break;
         case 3:
@@ -275,7 +275,7 @@ async function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual
                     encerrado, modalidade, etapa_jogo);
             }
             for (var i = 0; i != 16; i++) {
-                atualiza_equipes_juergs(idEquipes, i, faseAtual);
+                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
             }
             break;
         case 4:
@@ -323,8 +323,10 @@ async function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual
                 await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
             }
+            console.log('ID EQUIPES:');
+            console.log(idEquipes);
             for (var i = 0; i != 8; i++) {
-                atualiza_equipes_juergs(idEquipes, i, faseAtual);
+                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
             }
             break;
     }
@@ -332,6 +334,7 @@ async function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual
 }
 
 async function monta_quartas(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
+    console.log(idEquipes)
     switch (idModalidade) {
         case 1:
             for (var i = 0; i < 4; i++) {
@@ -347,8 +350,8 @@ async function monta_quartas(idEquipes, equipesGrupoNome, idModalidade, faseAtua
                 await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
             }
-            for (var i = 0; i != 4; i++) {
-                atualiza_equipes_juergs(idEquipes, i, faseAtual);
+            for (var i = 0; i < 8; i++) {
+                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
             }
             break;
         case 2:
@@ -383,11 +386,11 @@ async function insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_
     })
 }
 
-function atualiza_equipes_juergs(id_time, i, faseAtual) {
+async function atualiza_equipes_juergs(id_time, i, faseAtual) {
     if (id_time[i] == -2) {
         return;
     }
-    equipes_juergs.findByPk(id_time[i]).then((equipe) => {
+    await equipes_juergs.findByPk(id_time[i]).then((equipe) => {
         equipes_juergs.update({
             grupo: grupos[i],
             fase_equipe: faseAtual + 1,
