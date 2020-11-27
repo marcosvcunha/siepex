@@ -56,6 +56,8 @@ class Modalidade extends ChangeNotifier {
   }
 
   Future<void> nextFase(List<int> idEquipes, List<String> equipesGrupoNome) async {
+    idEquipes.removeWhere((item) => item == -2);
+    equipesGrupoNome.removeWhere((item) => item == 'Selecione');
     var resposta =
             jsonDecode((await http.put(baseUrl + 'modalidades/nextFase', body: {
           'id_modalidade': id.toString(),

@@ -64,10 +64,12 @@ router.put('/nextFase', async (req, res) => {
                     proxima_fase(id, faseAtual);
                     break;
                 case 2:
-                    // TODO: Vai das Quartas de Final para a Semi Final
+                    monta_semi(idEquipes, equipesGrupoNome, id, faseAtual);
+                    proxima_fase(id, faseAtual);
                     break;
                 case 3:
-                    // TODO: Vai da Semi para a Final
+                    monta_final(idEquipes, equipesGrupoNome, id, faseAtual);
+                    proxima_fase(id, faseAtual);
                     break;
                 case 4:
                     // TODO: Encerra a competição.
@@ -131,9 +133,9 @@ router.put('/lancaResultado', async (req, res) => {
 
 
 router.put('/atualizaJogos', async (req, res) => {
-    try{
+    try {
         jogos = JSON.parse(req.body['jogos']);
-        for(i = 0; i < jogos.length; i ++){
+        for (i = 0; i < jogos.length; i++) {
             // Atualiza cada um dos jogos
             await jogos_juergs.update({
                 resultado_a: jogos[i]['resultA'],
@@ -144,7 +146,7 @@ router.put('/atualizaJogos', async (req, res) => {
                     id: jogos[i]['id'],
                 }
             }).catch((e) => {
-                console.log('Erro ao atualizar valores: ' + String(e) );
+                console.log('Erro ao atualizar valores: ' + String(e));
                 res.json({
                     status: 'erro',
                 });
@@ -153,10 +155,10 @@ router.put('/atualizaJogos', async (req, res) => {
         }
 
         res.json({
-            status:'sucesso',
+            status: 'sucesso',
         });
         return;
-    }catch(e){
+    } catch (e) {
         console.log("Erro!!");
         res.json({
             status: 'erro',
@@ -170,6 +172,19 @@ async function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual
     switch (idModalidade) {
         case 1:
             for (var i = 0; i < 8; i++) {
+                if (!equipesGrupoNome[(i * 3)]) {
+                    break;
+                }
+                if (equipesGrupoNome[(i * 3)]) {
+                    if (!equipesGrupoNome[(i * 3) + 1]) {
+                        equipesGrupoNome[(i * 3) + 1] = 'Sem Equipe';
+                        idEquipes[(i * 3) + 1] = -2;
+                    }
+                    if (!equipesGrupoNome[(i * 3) + 2]) {
+                        equipesGrupoNome[(i * 3) + 2] = 'Sem Equipe';
+                        idEquipes[(i * 3) + 2] = -2;
+                    }
+                }
                 var nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
                 var nome_time_b = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
                 var id_time_a = idEquipes[(i * 3)];
@@ -181,7 +196,6 @@ async function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual
                 var etapa_jogo = faseAtual;
                 await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                     encerrado, modalidade, etapa_jogo);
-
                 nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
                 nome_time_b = equipesGrupoNome[(i * 3) + 2].replace('[', '').replace(']', '').trim();
                 id_time_a = idEquipes[(i * 3)];
@@ -197,6 +211,9 @@ async function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual
                     encerrado, modalidade, etapa_jogo);
             }
             for (var i = 0; i != 24; i++) {
+                if (!idEquipes[i]) {
+                    return;
+                }
                 await atualiza_equipes_juergs(idEquipes, i, faseAtual);
             }
             break;
@@ -334,10 +351,18 @@ async function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual
 }
 
 async function monta_quartas(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
-    console.log(idEquipes)
     switch (idModalidade) {
         case 1:
             for (var i = 0; i < 4; i++) {
+                if (!equipesGrupoNome[(i * 3)]) {
+                    break;
+                }
+                if (equipesGrupoNome[(i * 3)]) {
+                    if (!equipesGrupoNome[(i * 3) + 1]) {
+                        equipesGrupoNome[(i * 3) + 1] = 'Sem Equipe';
+                        idEquipes[(i * 3) + 1] = -2;
+                    }
+                }
                 var nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
                 var nome_time_b = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
                 var id_time_a = idEquipes[(i * 3)];
@@ -351,6 +376,9 @@ async function monta_quartas(idEquipes, equipesGrupoNome, idModalidade, faseAtua
                     encerrado, modalidade, etapa_jogo);
             }
             for (var i = 0; i < 8; i++) {
+                if (!idEquipes[i]) {
+                    return;
+                }
                 await atualiza_equipes_juergs(idEquipes, i, faseAtual);
             }
             break;
@@ -364,8 +392,79 @@ async function monta_quartas(idEquipes, equipesGrupoNome, idModalidade, faseAtua
     }
 }
 
+async function monta_semi(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
+    switch (idModalidade) {
+        case 1:
+            for (var i = 0; i < 2; i++) {
+                if (!equipesGrupoNome[(i * 3)]) {
+                    break;
+                }
+                if (equipesGrupoNome[(i * 3)]) {
+                    if (!equipesGrupoNome[(i * 3) + 1]) {
+                        equipesGrupoNome[(i * 3) + 1] = 'Sem Equipe';
+                        idEquipes[(i * 3) + 1] = -2;
+                    }
+                }
+                var nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
+                var nome_time_b = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
+                var id_time_a = idEquipes[(i * 3)];
+                var id_time_b = idEquipes[(i * 3) + 1];
+                var resultado_a = 0;
+                var resultado_b = 0;
+                var encerrado = 0;
+                var modalidade = idModalidade;
+                var etapa_jogo = faseAtual;
+                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                    encerrado, modalidade, etapa_jogo);
+            }
+            for (var i = 0; i < 4; i++) {
+                if (!idEquipes[i]) {
+                    return;
+                }
+                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
+            }
+            break;
+        //todo outros cases para outras modalidades
+    }
+}
+
+async function monta_final(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
+    switch (idModalidade) {
+        case 1:
+            if (!equipesGrupoNome[0]) {
+                break;
+            }
+            if (equipesGrupoNome[0]) {
+                if (!equipesGrupoNome[1]) {
+                    equipesGrupoNome[1] = 'Sem Equipe';
+                    idEquipes[1] = -2;
+                }
+            }
+            var nome_time_a = equipesGrupoNome[0].replace('[', '').replace(']', '').trim();
+            var nome_time_b = equipesGrupoNome[1].replace('[', '').replace(']', '').trim();
+            var id_time_a = idEquipes[0];
+            var id_time_b = idEquipes[1];
+            var resultado_a = 0;
+            var resultado_b = 0;
+            var encerrado = 0;
+            var modalidade = idModalidade;
+            var etapa_jogo = faseAtual;
+            await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                encerrado, modalidade, etapa_jogo);
+
+            for (var i = 0; i < 2; i++) {
+                if (!idEquipes[i]) {
+                    return;
+                }
+                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
+            }
+            break;
+        //todo outros cases para outras modalidades
+    }
+}
+
 async function insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-    encerrado, modalidade, etapa_jogo)  {
+    encerrado, modalidade, etapa_jogo) {
     await jogos_juergs.create(
         {
             time_a: nome_time_a,
