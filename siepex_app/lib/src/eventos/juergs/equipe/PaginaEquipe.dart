@@ -6,6 +6,7 @@ import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/roundButton.dart';
 import 'package:siepex/src/eventos/juergs/equipe/changeCaptainPage.dart';
 import 'package:siepex/src/eventos/juergs/equipe/excludeMemberPage.dart';
+import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 import '../Widgets/ColumnBuilder.dart';
 import '../tabelas/widgets.dart';
 import '../models/equipe.dart';
@@ -318,7 +319,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
           ColumnBuilder(
             // TODO: Implementar para pegar os jogos reais!
             itemCount: 6,
-            itemBuilder: (context, index) => jogoCard(),
+            itemBuilder: (context, index) => jogoCard(new Jogo('time A', 'time B', 0, 0, false, 'nome')),
           ),
         ],
       ),

@@ -173,18 +173,18 @@ async function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual
         case 1:
             for (var i = 0; i < 8; i++) {
                 if (!equipesGrupoNome[(i * 3)]) {
-                    break;
+                    equipesGrupoNome[(i * 3)] = 'Sem Equipe';
+                    idEquipes[(i * 3)] = -2;
                 }
-                if (equipesGrupoNome[(i * 3)]) {
-                    if (!equipesGrupoNome[(i * 3) + 1]) {
-                        equipesGrupoNome[(i * 3) + 1] = 'Sem Equipe';
-                        idEquipes[(i * 3) + 1] = -2;
-                    }
-                    if (!equipesGrupoNome[(i * 3) + 2]) {
-                        equipesGrupoNome[(i * 3) + 2] = 'Sem Equipe';
-                        idEquipes[(i * 3) + 2] = -2;
-                    }
+                if (!equipesGrupoNome[(i * 3) + 1]) {
+                    equipesGrupoNome[(i * 3) + 1] = 'Sem Equipe';
+                    idEquipes[(i * 3) + 1] = -2;
                 }
+                if (!equipesGrupoNome[(i * 3) + 2]) {
+                    equipesGrupoNome[(i * 3) + 2] = 'Sem Equipe';
+                    idEquipes[(i * 3) + 2] = -2;
+                }
+
                 var nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
                 var nome_time_b = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
                 var id_time_a = idEquipes[(i * 3)];
@@ -355,13 +355,12 @@ async function monta_quartas(idEquipes, equipesGrupoNome, idModalidade, faseAtua
         case 1:
             for (var i = 0; i < 4; i++) {
                 if (!equipesGrupoNome[(i * 3)]) {
-                    break;
+                    equipesGrupoNome[(i * 3)] = 'Sem Equipe';
+                    idEquipes[(i * 3)] = -2;
                 }
-                if (equipesGrupoNome[(i * 3)]) {
-                    if (!equipesGrupoNome[(i * 3) + 1]) {
-                        equipesGrupoNome[(i * 3) + 1] = 'Sem Equipe';
-                        idEquipes[(i * 3) + 1] = -2;
-                    }
+                if (!equipesGrupoNome[(i * 3) + 1]) {
+                    equipesGrupoNome[(i * 3) + 1] = 'Sem Equipe';
+                    idEquipes[(i * 3) + 1] = -2;
                 }
                 var nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
                 var nome_time_b = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
@@ -397,13 +396,12 @@ async function monta_semi(idEquipes, equipesGrupoNome, idModalidade, faseAtual) 
         case 1:
             for (var i = 0; i < 2; i++) {
                 if (!equipesGrupoNome[(i * 3)]) {
-                    break;
+                    equipesGrupoNome[(i * 3)] = 'Sem Equipe';
+                    idEquipes[(i * 3)] = -2;
                 }
-                if (equipesGrupoNome[(i * 3)]) {
-                    if (!equipesGrupoNome[(i * 3) + 1]) {
-                        equipesGrupoNome[(i * 3) + 1] = 'Sem Equipe';
-                        idEquipes[(i * 3) + 1] = -2;
-                    }
+                if (!equipesGrupoNome[(i * 3) + 1]) {
+                    equipesGrupoNome[(i * 3) + 1] = 'Sem Equipe';
+                    idEquipes[(i * 3) + 1] = -2;
                 }
                 var nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
                 var nome_time_b = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
@@ -432,14 +430,15 @@ async function monta_final(idEquipes, equipesGrupoNome, idModalidade, faseAtual)
     switch (idModalidade) {
         case 1:
             if (!equipesGrupoNome[0]) {
-                break;
+                equipesGrupoNome[0] = 'Sem Equipe';
+                idEquipes[0] = -2;
             }
-            if (equipesGrupoNome[0]) {
-                if (!equipesGrupoNome[1]) {
-                    equipesGrupoNome[1] = 'Sem Equipe';
-                    idEquipes[1] = -2;
-                }
+
+            if (!equipesGrupoNome[1]) {
+                equipesGrupoNome[1] = 'Sem Equipe';
+                idEquipes[1] = -2;
             }
+
             var nome_time_a = equipesGrupoNome[0].replace('[', '').replace(']', '').trim();
             var nome_time_b = equipesGrupoNome[1].replace('[', '').replace(']', '').trim();
             var id_time_a = idEquipes[0];
