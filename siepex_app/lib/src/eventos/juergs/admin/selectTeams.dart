@@ -35,13 +35,24 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
   }
 
   Widget gruposSelection() {
-    List<String> groups;
+    List<String> groups = new List<String>();
     if (modalidade.fase == 0) {
-      groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+      groups.add('A');
+      groups.add('B');
+      groups.add('C');
+      groups.add('D');
+      groups.add('E');
+      groups.add('F');
+      groups.add('G');
+      groups.add('H');
     } else if (modalidade.fase == 1) {
-      groups = ['A', 'B', 'C', 'D'];
+      groups.add('A');
+      groups.add('B');
+      groups.add('C');
+      groups.add('D');
     }else if(modalidade.fase == 2 || modalidade.fase == 3){
-      groups = ['A', 'B'];
+      groups.add('A');
+      groups.add('B');
     }
     // LISTA COM AS TABELAS
     return ListView.builder(
@@ -69,7 +80,7 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                     Navigator.pop(context);
                     Scaffold.of(context).showSnackBar(loadingSnackbar());
                     // TODO: receber resposta e verificar se deu certo.
-                    await modalidade.nextFase(equipesGrupoId, equipesGrupoNome);
+                    await modalidade.nextFase(equipesGrupoId,equipesGrupoNome);
                     Scaffold.of(context).hideCurrentSnackBar();
                     Navigator.pop(context);
                   }, () => Navigator.pop(context));

@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:siepex/models/modalidade.dart';
-import 'package:siepex/src/config.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 
@@ -16,34 +13,6 @@ class TabelaGrupos extends StatefulWidget {
   @override
   _TabelaGruposState createState() => _TabelaGruposState();
 }
-
-
-/// Esta classe foi unificada com a classe Jogo, no diretorio models.
-// class JogosJuers {
-//   String timeA;
-//   String timeB;
-//   int idTimeA;
-//   int idTimeB;
-//   int resultadoA;
-//   int resultadoB;
-//   bool encerrado;
-//   int classModalidade;
-//   String etapaJogo;
-
-//   JogosJuers.retornaLinhaJuergs(Map<String, dynamic> json) {
-//     this.timeA = json['time_a'];
-//     this.timeB = json['time_b'];
-//     this.idTimeA = json['id_time_a'];
-//     this.idTimeB = json['id_time_b'];
-//     this.resultadoA = json['resultado_a'];
-//     this.resultadoB = json['resultado_b'];
-//     this.encerrado = json['encerrado'];
-//     this.classModalidade = json['modalidade'];
-//     this.etapaJogo = json['etapa_jogo'];
-//   }
-
-
-// }
 
 class TimeFaseGrupo{
   String nome;
@@ -528,27 +497,6 @@ class _TabelaGruposState extends State<TabelaGrupos> {
       ),
     );
   }
-
-  // Future<List<JogosJuers>> listarJogos(ehUsuario) async {
-  //   var resposta =
-  //       jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {
-  //     'idModalidade': globalModalidade.id.toString(),
-  //     (!ehUsuario) ? 'etapa': globalModalidade.fase.toString() : ''
-  //   }))
-  //           .body);
-  //   List<JogosJuers> listaJogos = new List<JogosJuers>();
-
-  //   if (resposta['status'] != null) {
-  //     if (resposta['status'] == 'ok') {
-  //       for (int i = 0; i != resposta['count']; i++) {
-  //         JogosJuers jogosJuergs =
-  //             new JogosJuers.retornaLinhaJuergs(resposta['data'][i]);
-  //         listaJogos.add(jogosJuergs);
-  //       }
-  //       return listaJogos;
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

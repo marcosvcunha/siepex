@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 
-Widget jogoCard() {
-    String timeA = 'Time A';
-    String timeB = 'Time B';
+Widget jogoCard(Jogo jogo) {
+    String timeA = jogo.timeA;
+    String timeB = jogo.timeB;
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 12, bottom: 16),
       child: Container(
@@ -50,7 +51,7 @@ Widget jogoCard() {
                       width: 35,
                       child: Center(
                           child: Text(
-                        '0',
+                        jogo.resultA.toString(),
                         style: TextStyle(fontSize: 18, color: Colors.black),
                       )),
                     ),
@@ -68,7 +69,7 @@ Widget jogoCard() {
                       width: 35,
                       child: Center(
                           child: Text(
-                        '0',
+                        jogo.resultB.toString(),
                         style: TextStyle(fontSize: 18, color: Colors.black),
                       )),
                     ),
