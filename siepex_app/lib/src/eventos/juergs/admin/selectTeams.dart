@@ -276,12 +276,12 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
             ),
             actions: <Widget>[
               new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('Nao'),
-              ),
-              new FlatButton(
                 onPressed: () => Navigator.of(context).pop(true),
                 child: new Text('Sim'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('Nao'),
               ),
             ],
           ),

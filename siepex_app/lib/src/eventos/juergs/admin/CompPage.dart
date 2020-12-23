@@ -36,14 +36,14 @@ class CompetitionPage extends StatelessWidget {
           splashColor: Colors.transparent,
           child: Container(
             height: 45,
-            width: 160,
+            width: 400,
             decoration: BoxDecoration(
               color: Colors.green,
-              borderRadius: BorderRadius.all(Radius.circular(22)),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
               boxShadow: [
                 BoxShadow(
                     blurRadius: 2,
-                    color: Colors.black87,
+                    color: Colors.white30,
                     spreadRadius: 1,
                     offset: Offset(0, 2))
               ],
@@ -65,7 +65,7 @@ class CompetitionPage extends StatelessWidget {
   }
 
   Widget lancarResultados(BuildContext context, Modalidade modalidade) {
-    if (modalidade.fase < 4) {
+    if (modalidade.fase < 5) {
       return Align(
         alignment: Alignment.center,
         child: FlatButton(
@@ -101,14 +101,14 @@ class CompetitionPage extends StatelessWidget {
           splashColor: Colors.transparent,
           child: Container(
             height: 45,
-            width: 160,
+            width: 400,
             decoration: BoxDecoration(
               color: Colors.green,
-              borderRadius: BorderRadius.all(Radius.circular(22)),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
               boxShadow: [
                 BoxShadow(
                     blurRadius: 2,
-                    color: Colors.black87,
+                    color: Colors.white30,
                     spreadRadius: 1,
                     offset: Offset(0, 2))
               ],
@@ -118,7 +118,9 @@ class CompetitionPage extends StatelessWidget {
                 'Lançar Resultados',
                 style: TextStyle(
                   fontSize: 18,
+                  color: Colors.black,
                 ),
+                
               ),
             ),
           ),

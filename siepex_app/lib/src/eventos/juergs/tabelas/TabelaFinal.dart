@@ -36,7 +36,7 @@ class TabelaFinal extends StatelessWidget {
     Modalidade modalidade = Provider.of<Modalidade>(context);
     HandleData _handleData = HandleData();
     return FutureBuilder(
-        future: _handleData.listarJogos(modalidade, 3),
+        future: _handleData.listarJogos(modalidade, 4),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

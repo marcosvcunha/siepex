@@ -22,7 +22,7 @@ class InicioJuergs extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: Colors.grey[400],
+        backgroundColor: Colors.grey[200],
         appBar: AppBar(
           elevation: 10,
           title: Text('Inicio'),

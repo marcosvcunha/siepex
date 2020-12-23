@@ -45,7 +45,7 @@ class PaginaTabelas extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            color: Colors.grey[100],
+            color: Colors.white,
           ),
           child: FutureBuilder(
             future: _handleData.getModalidades(),

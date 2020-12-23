@@ -282,6 +282,7 @@ class ListaEquipesPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Selecione a equipe ' + equipeId),
       ),
+      // body: Container(),
       body: FutureBuilder(
         future: _handleData.getEquipes(_modalidade.id,_modalidade.fase),
         builder: (context, snapshot) {
