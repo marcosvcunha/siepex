@@ -53,9 +53,10 @@ async function pegarTodasEquipesPorModalidade(idModalidade) {
                 userCpfs = result.rows[i]['dataValues']['participantes_cadastrados'].split(';');
                 userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
                 result.rows[i]['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
-                result.rows[i]['dataValues']['nomes_participantes'] = [];
-                // TODO: Otimizar esta parte. -M
-                result.rows[i]['dataValues']['nomes_participantes'] = await pegarNomes(userCpfs);
+
+                userNomes = result.rows[i]['dataValues']['nomes_participantes'].split(';');
+                userNomes = userNomes.slice(0, userNomes.length - 1); // Coloca os Nomes em uma lista de string
+                result.rows[i]['dataValues']['nomes_participantes'] = userNomes; // adiciona os Nomes ao resultado
             }
             resolve(result);
         })
@@ -79,9 +80,10 @@ async function pegarTodasEquipesPorFase(idModalidade, faseAtual) {
                 userCpfs = result.rows[i]['dataValues']['participantes_cadastrados'].split(';');
                 userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
                 result.rows[i]['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
-                result.rows[i]['dataValues']['nomes_participantes'] = [];
-                // TODO: Otimizar esta parte. -M
-                result.rows[i]['dataValues']['nomes_participantes'] = await pegarNomes(userCpfs);
+           
+                userNomes = result.rows[i]['dataValues']['nomes_participantes'].split(';');
+                userNomes = userNomes.slice(0, userNomes.length - 1); // Coloca os Nomes em uma lista de string
+                result.rows[i]['dataValues']['nomes_participantes'] = userNomes; // adiciona os Nomes ao resultado
             }
             resolve(result);
         })
@@ -117,8 +119,11 @@ async function pegarTodasEquipesPorUsuario(userCpf) {
                     userCpfs = result.rows[i]['dataValues']['participantes_cadastrados'].split(';');
                     userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
                     result.rows[i]['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
-                    result.rows[i]['dataValues']['nomes_participantes'] = [];
-                    result.rows[i]['dataValues']['nomes_participantes'] = await pegarNomes(userCpfs);
+                    
+                    userNomes = result.rows[i]['dataValues']['nomes_participantes'].split(';');
+                    userNomes = userNomes.slice(0, userNomes.length - 1); // Coloca os Nomes em uma lista de string
+                    result.rows[i]['dataValues']['nomes_participantes'] = userNomes; // adiciona os Nomes ao resultado
+               
                 }
                 resolve(result)
             })
@@ -139,6 +144,21 @@ async function pegarNomes(userCpfs) {
         resolve(nomes_participantes);
     })
 }
+
+// async function pegarNomes(userCpfs){
+//     var nomes_participantes = [];
+//     users = (await cadastro_juergs.findAll({
+//         where: {
+//             cpf: userCpfs,
+//         }
+//     }));
+//     console.log(users);
+//     // for(i = 0; i < userCpfs.length; i++){
+//     //     for(j = 0; j < userCpfs.length; j ++){
+//     //         if(users[i][''])
+//     //     }
+//     // }
+// }
 
 function pegarNome(cpf){
     return new Promise(function (resolve, reject){

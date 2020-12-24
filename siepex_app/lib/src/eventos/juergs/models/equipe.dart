@@ -87,8 +87,9 @@ class Equipe extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
       var resposta = jsonDecode((await http.put(baseUrl + 'equipe/entra',
-              body: {'user_cpf': userJuergs.cpf, 'equipe_id': id.toString()}))
+              body: {'user_cpf': userJuergs.cpf, 'equipe_id': id.toString(), 'user_name':userJuergs.nome}))
           .body);
+
       Equipe updatedTeam = Equipe.fromJson(resposta['data']);
       participantesNomes = updatedTeam.participantesNomes;
       participantesCpf = updatedTeam.participantesCpf;
@@ -180,16 +181,19 @@ class Equipe extends ChangeNotifier {
     }
   }
 
-  Future excludeMembers(BuildContext context, List<String> membersCpf) async {
+  Future excludeMembers(BuildContext context, List<String> membersCpf, List<String> membersName) async {
     try {
       // Modalidade modalidade = Provider.of<Modalidade>(context);
       // print(modalidade.nome);
       isLoading = true;
       notifyListeners();
+      print(membersCpf);
+      print(membersName);
       var resposta =
           jsonDecode((await http.put(baseUrl + 'equipe/excludeMembers', body: {
         'equipe_id': id.toString(),
         'members_cpf': json.encode(membersCpf),
+        'members_name': json.encode(membersName),
       }))
               .body);
       if (resposta['status'] == 'erro') {
@@ -199,7 +203,7 @@ class Equipe extends ChangeNotifier {
         print('Membros excluidos da equipe com sucesso');
         for (int i = 0; i < numeroParticipantes; i++) {
           if (membersCpf.contains(participantesCpf[i])) {
-            participantesCpf.elementAt(i);
+            participantesCpf.removeAt(i);
             participantesNomes.removeAt(i);
           }
         }

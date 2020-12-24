@@ -108,12 +108,14 @@ router.put('/entra', async (req, res) => {
     equipeId = parseInt(req.body['equipe_id']);
     //userName = req['userName'];
     userCpf = req.body['user_cpf'];
+    user_name = req.body['user_name'];
     // Colocar o cpf e o nome do usuario na lista de membros da equipe.
     // Aumentar o número de participantes da equipe.
     equipes_juergs.findByPk(equipeId).then((equipe) => {
         equipes_juergs.update({
             numero_participantes: equipe.numero_participantes + 1,
             participantes_cadastrados: equipe.participantes_cadastrados + userCpf + ';',
+            nomes_participantes: equipe.nomes_participantes + user_name + ';',
         }, {
             where: {
                 id: equipeId,
@@ -133,8 +135,12 @@ router.put('/entra', async (req, res) => {
                     userCpfs = updatedEquipe['dataValues']['participantes_cadastrados'].split(';');
                     userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
                     updatedEquipe['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
-                    updatedEquipe['dataValues']['nomes_participantes'] = [];
-                    updatedEquipe['dataValues']['nomes_participantes'] = await pegarNomes(userCpfs);
+                    // console.log("AQUI!!!!!!!");
+                    // console.log(updatedEquipe);
+
+                    userNomes = updatedEquipe['dataValues']['nomes_participantes'].split(';');
+                    userNomes = userNomes.slice(0, userNomes.length - 1); // Coloca os Nomes em uma lista de string
+                    updatedEquipe['dataValues']['nomes_participantes'] = userNomes; // ad
                     res.json({
                         status: 'sucesso',
                         data: updatedEquipe,
@@ -143,6 +149,8 @@ router.put('/entra', async (req, res) => {
             })
         })
     }).catch((err) => {
+        console.log('ERRO!!!');
+        console.log(err)
         res.json({
             status: 'erro',
         })
@@ -251,6 +259,8 @@ router.put('/excludeMembers', async (req, res) => {
     try {
         id = parseInt(req.body['equipe_id']);
         userCpfs = JSON.parse(req.body['members_cpf']);
+        console.log(req.body['members_cpf']);
+        userNames = JSON.parse(req.body['members_name']);
 
         // Apagar Equipe da lista de Equipe dos Membros excluidos.
         await cadastro_juergs.findAll({
@@ -277,14 +287,17 @@ router.put('/excludeMembers', async (req, res) => {
         });
         // Apagar cpf dos membros excluidos da lista de participantes da equipe e mudar número de participantes na equipe.
         await equipes_juergs.findByPk(id, {
-            attributes: ['numero_participantes', 'participantes_cadastrados'],
+            attributes: ['numero_participantes', 'participantes_cadastrados', 'nomes_participantes'],
         }).then(async (equipe) => {
             newMemberList = equipe.participantes_cadastrados;
+            newMemberName = equipe.nomes_participantes;
             for (i = 0; i < userCpfs.length; i++) {
                 newMemberList = newMemberList.replace(userCpfs[i] + ';', '');
+                newMemberName = newMemberName.replace(userNames[i] + ';', '');
             }
             await equipes_juergs.update({
                 'participantes_cadastrados': newMemberList,
+                'nomes_participantes': newMemberName,
                 'numero_participantes': equipe.numero_participantes - userCpfs.length,
             }, {
                 where: {
@@ -352,9 +365,11 @@ async function criarEquipe(req, res) {
             nome_modalidade: req.body['nome_modalidade'],
             maximo_participantes: req.body['maximo_participantes'],
             participantes_cadastrados: req.body['user_cpf'] + ';',
+            nomes_participantes: req.body['user_name'] + ';',
             numero_participantes: 1,
             cpf_capitao: req.body['user_cpf'],
             celular_capitao: req.body['user_cel'],
+            fase_equipe: 0,
         }
     ).then((result) => {
         cadastro_juergs.findByPk(req.body['user_cpf']).then((participante) => {

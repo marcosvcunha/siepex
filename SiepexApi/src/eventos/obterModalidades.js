@@ -429,6 +429,7 @@ async function monta_semi(idEquipes, equipesGrupoNome, idModalidade, faseAtual) 
 async function monta_final(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
     switch (idModalidade) {
         case 1:
+            console.log(equipesGrupoNome);
             if (!equipesGrupoNome[0]) {
                 equipesGrupoNome[0] = 'Sem Equipe';
                 idEquipes[0] = -2;
@@ -451,11 +452,23 @@ async function monta_final(idEquipes, equipesGrupoNome, idModalidade, faseAtual)
             await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
                 encerrado, modalidade, etapa_jogo);
 
-            for (var i = 0; i < 2; i++) {
+            var nome_time_a = equipesGrupoNome[2].replace('[', '').replace(']', '').trim();
+            var nome_time_b = equipesGrupoNome[3].replace('[', '').replace(']', '').trim();
+            var id_time_a = idEquipes[2];
+            var id_time_b = idEquipes[3];
+            var resultado_a = 0;
+            var resultado_b = 0;
+            var encerrado = 0;
+            var modalidade = idModalidade;
+            var etapa_jogo = faseAtual;
+            await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
+                encerrado, modalidade, etapa_jogo);
+
+
+            for (var i = 0; i < 4; i++) {
                 if (!idEquipes[i]) {
-                    return;
-                }
-                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
+                }else
+                    await atualiza_equipes_juergs(idEquipes, i, faseAtual);
             }
             break;
         //todo outros cases para outras modalidades

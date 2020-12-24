@@ -85,7 +85,7 @@ class EquipeCard extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           color:
-                              temEquipe ? Colors.grey[600] : Colors.green[600],
+                              temEquipe ? Colors.grey[500] : Colors.green[600],
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                           boxShadow: [
                             BoxShadow(
@@ -116,7 +116,7 @@ class EquipeCard extends StatelessWidget {
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: temEquipe
-                                      ? Colors.grey[800]
+                                      ? Colors.grey[600]
                                       : Colors.black87),
                             )),
                           ),

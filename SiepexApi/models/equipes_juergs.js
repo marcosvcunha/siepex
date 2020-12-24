@@ -47,6 +47,10 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.STRING(500),
             allowNull: true,
           },
+        nomes_participantes: {
+            type: DataTypes.STRING(500),
+            allowNull: true,
+          },
         data_cadastro:{
             type: DataTypes.DATE(11),
             allowNull: true,

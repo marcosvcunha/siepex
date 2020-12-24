@@ -89,11 +89,14 @@ class _ExcludeMemberPageState extends State<ExcludeMemberPage> {
                   confirmDialog(context, 'Excluir Membros', 'Confirmar exclusão dos seguintes membros: ' + excludedMembers, 
                   () async {
                     List<String> membersCpf = [];
+                    List<String> membersName = [];
                     for(int i = 0; i < part.length; i++){
-                      if(checkBoxValues[i])
+                      if(checkBoxValues[i]){
                         membersCpf.add(partCpf[i]);
+                        membersName.add(part[i]);
+                      }
                     }
-                    await equipe.excludeMembers(context, membersCpf);
+                    await equipe.excludeMembers(context, membersCpf, membersName);
                     Navigator.pop(context);
                     Navigator.pop(context);
                   }, (){
