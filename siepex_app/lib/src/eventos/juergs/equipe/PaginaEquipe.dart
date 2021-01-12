@@ -14,19 +14,11 @@ import 'package:siepex/models/serializeJuergs.dart';
 import 'package:provider/provider.dart';
 // import 'package:animations/animations.dart';
 
-class PaginaEquipe extends StatefulWidget {
-  // final Equipe equipe;
-  // PaginaEquipe({this.equipe});
-  @override
-  _PaginaEquipeState createState() => _PaginaEquipeState();
-}
 
-class _PaginaEquipeState extends State<PaginaEquipe> {
+class PaginaEquipe extends StatelessWidget {
   bool isCap; // Diz se o User é Capitão
   bool isInTeam; // Diz se o User está nesta equipe
   bool temEquipe; // Diz se o User já tem equipe para esta modalidade.
-  bool editName = false;
-  TextEditingController nameController = TextEditingController();
   Equipe equipe;
   Modalidade modalidade;
 
@@ -37,111 +29,63 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
         fontWeight: bold ? FontWeight.w600 : FontWeight.w400);
   }
 
-  Widget selectButton() {
+  Widget selectButton(BuildContext context) {
     if (isCap && isInTeam) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          roundButton('Alterar Capitão', Colors.green[700], Icons.swap_horiz, equipe.numeroParticipantes > 1 ? (){
-            Navigator.of(context).push(MaterialPageRoute<void>(
-              builder: (BuildContext context) => ChangeNotifierProvider.value(value: equipe, child: ChangeCaptain()),
-            ));
-          } : null),
+          roundButton(
+              'Alterar Capitão',
+              Colors.green[700],
+              Icons.swap_horiz,
+              equipe.numeroParticipantes > 1
+                  ? () {
+                      Navigator.of(context).push(MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            ChangeNotifierProvider.value(
+                                value: equipe, child: ChangeCaptain()),
+                      ));
+                    }
+                  : null),
           SizedBox(
             width: 20,
           ),
-          roundButton('Sair da Equipe', Colors.red, Icons.exit_to_app, (){
-            confirmDialog(context, 'Sair da equipe', 'Tem certeza que deseja sair da equipe? A equipe será excluida por ficar sem capitão.', 
-              () async {
-                print('Deletando Equipe');
-                await equipe.deleteTeam(context);
-                modalidade.inscrito = userJuergs.temEquipe(modalidade.nome);
-                Navigator.pop(context);
-                Navigator.pop(context);                
-              }, (){
-                print('Cancelou');
-                Navigator.pop(context);
-              });
+          roundButton('Sair da Equipe', Colors.red, Icons.exit_to_app, () {
+            confirmDialog(context, 'Sair da equipe',
+                'Tem certeza que deseja sair da equipe? A equipe será excluida por ficar sem capitão.',
+                () async {
+              print('Deletando Equipe');
+              await equipe.deleteTeam(context);
+              modalidade.inscrito = userJuergs.temEquipe(modalidade.nome);
+              Navigator.pop(context);
+              Navigator.pop(context);
+            }, () {
+              print('Cancelou');
+              Navigator.pop(context);
+            });
           }),
         ],
       );
     } else if (!temEquipe) {
-      return roundButton('Entrar', Colors.green[700], Icons.arrow_forward, null);
+      return roundButton(
+          'Entrar', Colors.green[700], Icons.arrow_forward, null);
     } else {
       return Container();
     }
   }
 
-  Widget excludePartButton() {
+  Widget excludePartButton(BuildContext context) {
     if (isCap && isInTeam) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: roundButton('Excluir Membro', Colors.red, Icons.arrow_upward, (){
+        child:
+            roundButton('Excluir Membro', Colors.red, Icons.arrow_upward, () {
           Navigator.of(context).push(MaterialPageRoute<void>(
-              builder: (BuildContext context) => ChangeNotifierProvider.value(value: equipe, child: ExcludeMemberPage()),
-            ));
+            builder: (BuildContext context) => ChangeNotifierProvider.value(
+                value: equipe, child: ExcludeMemberPage()),
+          ));
         }),
       );
-    } else {
-      return Container();
-    }
-  }
-
-  Widget nomeEquipe() {
-    if (!editName)
-      return Container(
-        constraints: BoxConstraints(maxWidth: 235),
-        child: Text(equipe.nome,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            style: TextStyle(
-              color: Colors.blue[800],
-              fontSize: 30,
-              fontWeight: FontWeight.w600,
-            )),
-      );
-    else
-      return Container(
-        width: 235,
-        child: TextField(
-          controller: nameController,
-          textCapitalization: TextCapitalization.words,
-          style: TextStyle(color: Colors.blue[800], fontSize: 30),
-          autocorrect: false,
-          enableSuggestions: false,
-          decoration: InputDecoration(),
-        ),
-      );
-  }
-
-  Widget editButton() {
-    if (isCap) {
-      if (!editName) {
-        return IconButton(
-          onPressed: () => setState(() {
-            editName = true;
-          }),
-          icon: Icon(
-            Icons.edit,
-            size: 28,
-            color: Colors.green,
-          ),
-        );
-      } else {
-        return IconButton(
-          onPressed: () async {
-            await equipe.updateName(context, nameController.text);
-            setState(() {
-              editName = false;
-            });
-          },
-          icon: Icon(
-            Icons.done,
-            size: 28,
-            color: Colors.green,
-          ),
-        );
-      }
     } else {
       return Container();
     }
@@ -154,7 +98,6 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
     isCap = equipe.cpfCapitao == userJuergs.cpf;
     isInTeam = userJuergs.isInTeam(equipe.id);
     temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);
-    nameController.text = equipe.nome;
     return Scaffold(
       appBar: AppBar(
         title: Text('Página da Equipe'),
@@ -166,15 +109,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    nomeEquipe(),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    editButton(),
-                  ],
-                ),
+                NomeEquipe(),
                 Padding(
                   padding: const EdgeInsets.only(
                     right: 26.0,
@@ -249,7 +184,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
               ],
             ),
           ),
-          selectButton(),
+          selectButton(context),
           Divider(
             height: 30,
             color: Colors.black87,
@@ -297,7 +232,7 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
               ),
             ),
           ),
-          excludePartButton(),
+          excludePartButton(context),
           Divider(
             height: 30,
             color: Colors.black87,
@@ -319,10 +254,102 @@ class _PaginaEquipeState extends State<PaginaEquipe> {
           ColumnBuilder(
             // TODO: Implementar para pegar os jogos reais!
             itemCount: 6,
-            itemBuilder: (context, index) => jogoCard(new Jogo('time A', 'time B', 0, 0, false, 'nome')),
+            itemBuilder: (context, index) =>
+                jogoCard(new Jogo('time A', 'time B', 0, 0, false, 'nome')),
           ),
         ],
       ),
+    );
+  }
+}
+
+class NomeEquipe extends StatefulWidget {
+  @override
+  _NomeEquipeState createState() => _NomeEquipeState();
+}
+
+class _NomeEquipeState extends State<NomeEquipe> {
+  Equipe equipe;
+
+  bool editName = false;
+
+  TextEditingController nameController = TextEditingController();
+
+  bool isCap;
+
+  Widget nomeEquipe() {
+    if (!editName)
+      return Container(
+        constraints: BoxConstraints(maxWidth: 235),
+        child: Text(equipe.nome,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: TextStyle(
+              color: Colors.blue[800],
+              fontSize: 30,
+              fontWeight: FontWeight.w600,
+            )),
+      );
+    else
+      return Container(
+        width: 235,
+        child: TextField(
+          controller: nameController,
+          textCapitalization: TextCapitalization.words,
+          style: TextStyle(color: Colors.blue[800], fontSize: 30),
+          autocorrect: false,
+          enableSuggestions: false,
+          decoration: InputDecoration(),
+        ),
+      );
+  }
+
+  Widget editButton() {
+    if (isCap) {
+      if (!editName) {
+        return IconButton(
+          onPressed: () => setState(() {
+            editName = true;
+          }),
+          icon: Icon(
+            Icons.edit,
+            size: 28,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        return IconButton(
+          onPressed: () async {
+            await equipe.updateName(context, nameController.text);
+            setState(() {
+              editName = false;
+            });
+          },
+          icon: Icon(
+            Icons.done,
+            size: 28,
+            color: Colors.green,
+          ),
+        );
+      }
+    } else {
+      return Container();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    equipe = Provider.of<Equipe>(context);
+    isCap = equipe.cpfCapitao == userJuergs.cpf;
+    nameController.text = equipe.nome;
+    return Row(
+      children: <Widget>[
+        nomeEquipe(),
+        SizedBox(
+          width: 8,
+        ),
+        editButton(),
+      ],
     );
   }
 }
