@@ -68,7 +68,10 @@ class PaginaEquipe extends StatelessWidget {
       );
     } else if (!temEquipe) {
       return roundButton(
-          'Entrar', Colors.green[700], Icons.arrow_forward, null);
+          'Entrar', Colors.green[700], Icons.arrow_forward, () async {
+            modalidade.notificar();
+            equipe.entrarEquipe(context, modalidade.incricoesAbertas());
+          });
     } else {
       return Container();
     }

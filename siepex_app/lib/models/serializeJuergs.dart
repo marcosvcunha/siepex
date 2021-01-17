@@ -1,5 +1,10 @@
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 
+// TODO:: Transformar instanciar userJuergs na raiz do app, passar para as páginas por provider e transformar 
+// em changenotifier (se possivel).
+
+//TODO: fazer a persistencia do user. (continuar logado após fechar o app)
+
 Estudante userJuergs = new Estudante();
 
 class Estudante {

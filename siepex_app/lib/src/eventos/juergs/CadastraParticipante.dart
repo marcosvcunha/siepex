@@ -36,6 +36,15 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
   bool volei = false;
   bool rustica = false;
 
+  final TextStyle labelStyle = TextStyle(
+    fontSize: 18,
+    color: Colors.black,
+    fontWeight: FontWeight.w500,
+  );
+
+  final TextStyle inputStyle =
+      TextStyle(color: Colors.blue[800], fontWeight: FontWeight.w400, fontSize: 20);
+
   TextEditingController txtNome = TextEditingController();
 
   TextEditingController txtCpf = TextEditingController();
@@ -73,21 +82,24 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       return Padding(
         padding: const EdgeInsets.only(left: 5, right: 5),
         child: TextField(
-          decoration:
-              InputDecoration(labelText: 'Campus', errorText: instError),
+          decoration: InputDecoration(
+              labelText: 'Campus',
+              errorText: instError,
+              labelStyle: labelStyle),
           controller: txtInstituicao,
           textCapitalization: TextCapitalization.words,
           keyboardType: TextInputType.text,
-          style:
-              TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
+          style: inputStyle,
         ),
       );
     } else {
       return Padding(
         padding: const EdgeInsets.only(left: 5, right: 5),
         child: TextField(
-          decoration:
-              InputDecoration(labelText: 'Instituição', errorText: instError),
+          decoration: InputDecoration(
+              labelText: 'Instituição',
+              errorText: instError,
+              labelStyle: labelStyle),
           controller: txtInstituicao,
           textCapitalization: TextCapitalization.words,
           keyboardType: TextInputType.text,
@@ -106,10 +118,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           padding: const EdgeInsets.only(left: 5, right: 5),
           child: Text(
             "Tipo Participante ",
-            style: TextStyle(
-              color: Colors.black54,
-              fontSize: 16.0,
-            ),
+            style: labelStyle,
           ),
         ),
         Listener(
@@ -188,6 +197,9 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
+          SizedBox(
+            width: 15,
+          ),
           Text(
             "Futsal",
             style: TextStyle(color: Colors.lightBlue),
@@ -246,7 +258,10 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
   Future cadastrar(Estudante estudante, BuildContext context) async {
     estudante.cpf = (estudante.cpf.replaceAll(".", "")).replaceAll("-", "");
     if (estudante.celular != null) {
-      estudante.celular = estudante.celular.replaceAll("-", "").replaceAll("(", "").replaceAll(")", "");
+      estudante.celular = estudante.celular
+          .replaceAll("-", "")
+          .replaceAll("(", "")
+          .replaceAll(")", "");
     } else {
       //api nao aceita null aparentemente :(
       estudante.celular = '0';
@@ -257,7 +272,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
       handbol = false;
       rustica = false;
       volei = false;
-    } else{
+    } else {
       String modalidadesJuiz = '';
       if (futbol == true) {
         modalidadesJuiz += 'Futebol, ';
@@ -344,53 +359,93 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
     );
   }
 
+  Widget botaoCadastro() {
+    return Padding(
+      padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+      child: Container(
+        width: 120,
+        height: 40,
+        child: RaisedButton(
+          color: Colors.green,
+          child: Text(
+            'Cadastrar',
+            style: TextStyle(fontSize: 18),
+          ),
+          onPressed: () {
+            Estudante estudante = new Estudante();
+            estudante.nome = txtNome.text;
+            estudante.cpf = cpfMask.getUnmaskedText();
+            if (checkIndUergs) {
+              estudante.campoUergs = txtInstituicao.text;
+              estudante.instituicao = "Uergs";
+            } else {
+              estudante.campoUergs = "";
+              estudante.instituicao = txtInstituicao.text;
+            }
+            if (txtCelular.text.isNotEmpty) {
+              estudante.celular = txtCelular.text;
+            }
+            estudante.email = txtEmail.text;
+            estudante.indNecessidade = checkEhNecessitado.toString();
+            estudante.indUergs = checkIndUergs.toString();
+            estudante.tipoParticipante = comboTipoParticipante;
+            this.cadastrar(estudante, context);
+          },
+        ),
+      ),
+    );
+  }
+
   Widget body() {
     return ListView(
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(left: 5, right: 5),
           child: TextField(
-            decoration:
-                InputDecoration(labelText: 'Nome', errorText: nomeError),
+            decoration: InputDecoration(
+                labelText: 'Nome',
+                errorText: nomeError,
+                labelStyle: labelStyle),
             controller: txtNome,
             textCapitalization: TextCapitalization.words,
             keyboardType: TextInputType.text,
-            style:
-                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
+            style: inputStyle,
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 5, right: 5),
           child: TextField(
-            decoration: InputDecoration(labelText: 'CPF', errorText: cpfError),
+            decoration: InputDecoration(
+                labelText: 'CPF', errorText: cpfError, labelStyle: labelStyle),
             controller: txtCpf,
             inputFormatters: [cpfMask],
             keyboardType: TextInputType.number,
-            style:
-                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
+            style: inputStyle,
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 5, right: 5),
           child: TextField(
-            decoration:
-                InputDecoration(labelText: 'Email', errorText: emailError),
+            decoration: InputDecoration(
+                labelText: 'Email',
+                errorText: emailError,
+                labelStyle: labelStyle),
             controller: txtEmail,
             keyboardType: TextInputType.text,
-            style:
-                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
+            style: inputStyle,
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 5, right: 5),
           child: TextField(
-            decoration:
-                InputDecoration(labelText: 'Telefone', errorText: cpfError),
+            decoration: InputDecoration(
+                labelText: 'Telefone',
+                errorText: cpfError,
+                labelStyle: labelStyle),
             controller: txtCelular,
             inputFormatters: [celularMask],
             keyboardType: TextInputType.number,
-            style:
-                TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.w300),
+            style: inputStyle,
           ),
         ),
         Padding(
@@ -399,11 +454,8 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               new Text(
-                'Estudante UERGS ?',
-                style: new TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16.0,
-                ),
+                'Membro UERGS ?',
+                style: labelStyle,
               ),
               new Radio(
                 value: true,
@@ -415,7 +467,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
               ),
               new Text(
                 'Sim',
-                style: new TextStyle(color: Colors.black54, fontSize: 16.0),
+                style: labelStyle,
               ),
               new Radio(
                 value: false,
@@ -427,10 +479,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
               ),
               new Text(
                 'Não',
-                style: new TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16.0,
-                ),
+                style: labelStyle,
               ),
             ],
           ),
@@ -445,10 +494,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
             children: <Widget>[
               new Text(
                 'Necessidade Especial?',
-                style: new TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16.0,
-                ),
+                style: labelStyle,
               ),
               new Radio(
                 value: true,
@@ -460,7 +506,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
               ),
               new Text(
                 'Sim',
-                style: new TextStyle(color: Colors.black54, fontSize: 16.0),
+                style: labelStyle,
               ),
               new Radio(
                 value: false,
@@ -472,42 +518,12 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
               ),
               new Text(
                 'Não',
-                style: new TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16.0,
-                ),
+                style: labelStyle,
               ),
             ],
           ),
         ),
-        Center(
-          child: Container(
-            width: 120,
-            child: RaisedButton(
-              child: Text('Cadastrar'),
-              onPressed: () {
-                Estudante estudante = new Estudante();
-                estudante.nome = txtNome.text;
-                estudante.cpf = cpfMask.getUnmaskedText();
-                if (checkIndUergs) {
-                  estudante.campoUergs = txtInstituicao.text;
-                  estudante.instituicao = "Uergs";
-                } else {
-                  estudante.campoUergs = "";
-                  estudante.instituicao = txtInstituicao.text;
-                }
-                if (txtCelular.text.isNotEmpty) {
-                  estudante.celular = txtCelular.text;
-                }
-                estudante.email = txtEmail.text;
-                estudante.indNecessidade = checkEhNecessitado.toString();
-                estudante.indUergs = checkIndUergs.toString();
-                estudante.tipoParticipante = comboTipoParticipante;
-                this.cadastrar(estudante, context);
-              },
-            ),
-          ),
-        ),
+        botaoCadastro(),
       ],
     );
   }

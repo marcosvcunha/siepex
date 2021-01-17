@@ -104,6 +104,7 @@ class EquipeCard extends StatelessWidget {
                             onPressed: temEquipe
                                 ? null
                                 : () async {
+                                  modalidade.notificar();
                                     await equipe.entrarEquipe(
                                         context, isActive);
                                     modalidade.inscrito =

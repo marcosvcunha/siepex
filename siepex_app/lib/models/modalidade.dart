@@ -41,6 +41,12 @@ class Modalidade extends ChangeNotifier {
     _inscrito = newVal;
   }
 
+  void notificar(){
+    // Gambiarra
+    notifyListeners();
+    // Utilizado para que a página de Equipes atualize quando o usuário entra numa equipe. 
+  }
+
   Modalidade(int modId, String modNome, int modMaxParticipantes,
       bool modInscrito, DateTime modDataLimite, int fase) {
     id = modId;
@@ -73,5 +79,9 @@ class Modalidade extends ChangeNotifier {
     }else if(resposta['status'] == 'erro'){
       // TODO:: Conferir os possiveis erros
     }
+  }
+
+  bool incricoesAbertas(){
+    return dataLimite.isAfter(DateTime.now());
   }
 }
