@@ -36,9 +36,9 @@ INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
 	VALUES ('Vôlei Misto', '10', '2021-10-22 17:40:00', current_timestamp(), 0);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('Handebol Masculino', '10', '2021-10-12 17:35:59', current_timestamp(), 3);
+	VALUES ('Handebol Masculino', '10', '2021-10-12 17:35:59', current_timestamp(), 0);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('Handebol Feminino', '10', '2021-10-25 14:50:00', current_timestamp(), 4);
+	VALUES ('Handebol Feminino', '10', '2021-10-25 14:50:00', current_timestamp(), 0);
 INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
 	VALUES ('Rústica', '99', '2021-10-25 00:05:09', current_timestamp(), 0);
 
