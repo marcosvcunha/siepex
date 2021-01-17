@@ -6,25 +6,77 @@ const {
     participantes_rustica,
 } = require('../../models');
 
-router.put('/', async (req, res) => {
-    // decide qual função usar com base no parametro passado em req
-    if ('id_modalidade' in req.body) {
+// router.put('/', async (req, res) => {
+//     // decide qual função usar com base no parametro passado em req
+//     if ('id_modalidade' in req.body) {
+//         idModalidade = parseInt(req.body['id_modalidade']);
+//         if('fase_atual' in req.body){
+//             faseAtual = (req.body['fase_atual'] != 'null') ? (parseInt(req.body['fase_atual'])) : '';
+//             equipes = await pegarTodasEquipesPorFase(idModalidade, faseAtual);
+//         }else
+//             equipes = await pegarTodasEquipesPorModalidade(idModalidade);
+//         res.json({
+//             data: equipes.rows,
+//             count: equipes.count,
+//         })
+//     } else if ('user_cpf' in req.body) {
+//         equipes = await pegarTodasEquipesPorUsuario(req.body['user_cpf']);
+//         res.json({
+//             data: equipes.rows,
+//             count: equipes.count,
+//         })
+//     }
+// });
+
+router.put('/porModalidade', async (req, res) => {
+    try{
         idModalidade = parseInt(req.body['id_modalidade']);
-        if('fase_atual' in req.body){
-            faseAtual = (req.body['fase_atual'] != 'null') ? (parseInt(req.body['fase_atual'])) : '';
-            equipes = await pegarTodasEquipesPorFase(idModalidade, faseAtual);
-        }else
-            equipes = await pegarTodasEquipesPorModalidade(idModalidade);
+        equipes = await pegarTodasEquipesPorModalidade(idModalidade);
         res.json({
+            status: "sucesso",
             data: equipes.rows,
             count: equipes.count,
-        })
-    } else if ('user_cpf' in req.body) {
-        equipes = await pegarTodasEquipesPorUsuario(req.body['user_cpf']);
+        });
+    }catch(e){
         res.json({
+            status: "erro",
+        });
+    }
+});
+
+router.put('/porFase', async (req, res) => {
+    try{
+        idModalidade = parseInt(req.body['id_modalidade']);
+        fase = parseInt(req.body['fase_atual']);
+        equipes = await pegarTodasEquipesPorFase(idModalidade, fase);
+        
+        res.json({
+            status: "sucesso",
             data: equipes.rows,
             count: equipes.count,
-        })
+        });
+    }catch(e){
+        res.json({
+            status: "erro",
+        });
+    }
+});
+
+router.put('/porUser', async (req, res) => {
+    try{
+        cpf = req.body['user_cpf'];
+        equipes = await pegarTodasEquipesPorUsuario(cpf);
+        console.log("Equipes encontradas: ")
+        console.log(equipes);
+        res.json({
+            status: "sucesso",
+            data: equipes.rows,
+            count: equipes.count,
+        });
+    }catch(e){
+        res.json({
+            status: "erro",
+        });
     }
 });
 
@@ -95,8 +147,6 @@ async function pegarTodasEquipesPorUsuario(userCpf) {
     console.log('Pegando Equipes por usuario');
     return new Promise(function (resolve, reject) {
         // Pega as IDs das minhas equipes
-        console.log("CPF: ")
-        console.log(userCpf)
         cadastro_juergs.findAll({
             where: {
                 cpf: userCpf,

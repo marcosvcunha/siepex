@@ -284,7 +284,7 @@ class ListaEquipesPage extends StatelessWidget {
       ),
       // body: Container(),
       body: FutureBuilder(
-        future: _handleData.getEquipes(_modalidade.id,_modalidade.fase),
+        future: Equipe.getEquipesPorFase(_modalidade.id,_modalidade.fase),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

@@ -48,23 +48,50 @@ class HandleData {
   }
 
   // Pega as equipes registradas para a modalidade.
-  Future<List<Equipe>> getEquipes(int idModalidade, int faseAtual) async {
+  Future<List<Equipe>> getEquipesPorModalidade(int idModalidade) async {
     try {
-      var resposta = jsonDecode((await http.put(baseUrl + 'obtemEquipes/',
+      var resposta = jsonDecode((await http.put(baseUrl + 'obtemEquipes/porModalidade',
               body: {
             'id_modalidade': idModalidade.toString(),
-            'fase_atual': faseAtual.toString()
           }))
           .body);
-      if (resposta['count'] == 0)
-        return [];
-      else {
+      if (resposta['status'] == 'sucesso'){
         List<Equipe> equipesList = new List<Equipe>();
         for (int i = 0; i < resposta['count']; i++) {
           equipesList.add(Equipe.fromJson(resposta['data'][i]));
           equipesList[i].index = i;
         }
         return equipesList;
+      }
+      else {
+        print('Erro ao pegar Equipes');
+        return [];
+      }
+    } catch (e) {
+      print('Erro ao pegar Equipes ' + e.toString());
+      return [];
+    }
+  }
+
+  Future<List<Equipe>> getEquipesPorFase(int idModalidade, int faseAtual) async {
+    try {
+      var resposta = jsonDecode((await http.put(baseUrl + 'obtemEquipes/porFase',
+              body: {
+            'id_modalidade': idModalidade.toString(),
+            'fase_atual': faseAtual.toString()
+          }))
+          .body);
+     if (resposta['status'] == 'sucesso'){
+        List<Equipe> equipesList = new List<Equipe>();
+        for (int i = 0; i < resposta['count']; i++) {
+          equipesList.add(Equipe.fromJson(resposta['data'][i]));
+          equipesList[i].index = i;
+        }
+        return equipesList;
+      }
+      else {
+        print('Erro ao pegar Equipes');
+        return [];
       }
     } catch (e) {
       print('Erro ao pegar Equipes ' + e.toString());
@@ -75,16 +102,19 @@ class HandleData {
   Future<List<Equipe>> getMyEquipes(String userCpf) async {
     try {
       var resposta = jsonDecode((await http
-              .put(baseUrl + 'obtemEquipes/', body: {'user_cpf': userCpf}))
+              .put(baseUrl + 'obtemEquipes/porUser', body: {'user_cpf': userCpf}))
           .body);
-      if (resposta['count'] == 0)
-        return [];
-      else {
-        List<Equipe> equipesList = [];
+      if (resposta['status'] == 'sucesso'){
+        List<Equipe> equipesList = new List<Equipe>();
         for (int i = 0; i < resposta['count']; i++) {
           equipesList.add(Equipe.fromJson(resposta['data'][i]));
+          equipesList[i].index = i;
         }
         return equipesList;
+      }
+      else {
+        print('Erro ao pegar Equipes');
+        return [];
       }
     } catch (e) {
       print(e);

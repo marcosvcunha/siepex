@@ -101,14 +101,32 @@ class _PaginaTabelaState extends State<PaginaTabela> {
   }
 
   Widget faseDeInscricao(){
-    return Center(
-      child: Text('A competição ainda não começou!', 
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w500,
-        fontSize: 32
-        ),),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: Colors.white
+        ),
+        height: double.infinity,
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 100.0, top: 150),
+              child: Icon(Icons.error_outline_rounded, size: 100, color: Colors.green),
+            ),
+            Text('A competição ainda não começou', 
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.w400,
+          fontSize: 32
+          ),),
+          ],
+        ),
+      ),
     );
   }
 

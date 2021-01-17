@@ -7,7 +7,7 @@ import 'package:siepex/models/serializeJuergs.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:http/http.dart' as http;
 import 'package:siepex/src/config.dart';
-// import 'package:siepex/src/eventos/juergs/models/equipe.dart';
+import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 
 class LoginJuergs extends StatefulWidget {
@@ -70,7 +70,7 @@ class _LoginJuergsState extends State<LoginJuergs> {
             Estudante estudante = new Estudante.fromJson(resposta['data']);
             userJuergs = estudante;// Loga usuario
             userJuergs.minhasEquipes =
-                await HandleData().getMyEquipes(userJuergs.cpf);
+                await Equipe.getMyEquipes(userJuergs.cpf);
             setState(() {
               _isLoading = false;
             });

@@ -43,7 +43,7 @@ dev_dependencies:
   rflutter_alert: ^1.0.2
   material_design_icons_flutter: ^3.2.3595
   flutter_webview_plugin: 0.3.3
-  extended_image: ^0.8.6
+  extended_image: ^0.8.0
   url_launcher: ^5.0.3
   faker: ^1.2.1
   fading_edge_scrollview: ^1.1.1
