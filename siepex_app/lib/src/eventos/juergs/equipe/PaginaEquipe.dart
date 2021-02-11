@@ -98,7 +98,7 @@ class PaginaEquipe extends StatelessWidget {
   Widget build(BuildContext context) {
     equipe = Provider.of<Equipe>(context);
     modalidade = Provider.of<Modalidade>(context);
-    isCap = equipe.cpfCapitao == userJuergs.cpf;
+    isCap = equipe.capitao.cpf == userJuergs.cpf;
     isInTeam = userJuergs.isInTeam(equipe.id);
     temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);
     return Scaffold(
@@ -139,7 +139,7 @@ class PaginaEquipe extends StatelessWidget {
                           fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      equipe.nomeCapitao,
+                      equipe.capitao.nome,
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -154,7 +154,7 @@ class PaginaEquipe extends StatelessWidget {
                   children: <Widget>[
                     Text('Contato: ', style: txtStyle1(true)),
                     Text(
-                      equipe.celCapitaoFormated,
+                      equipe.capitao.celularString,
                       style: txtStyle1(false),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -211,7 +211,7 @@ class PaginaEquipe extends StatelessWidget {
             child: Container(
               width: double.infinity,
               child: ColumnBuilder(
-                itemCount: equipe.numeroParticipantes,
+                itemCount: equipe.participantes.length,
                 itemBuilder: (context, index) => Row(
                   children: <Widget>[
                     Padding(
@@ -226,7 +226,7 @@ class PaginaEquipe extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      equipe.participantesNomes[index],
+                      equipe.participantes[index].nome,
                       style: TextStyle(color: Colors.black, fontSize: 18),
                       overflow: TextOverflow.fade,
                     ),
@@ -343,7 +343,7 @@ class _NomeEquipeState extends State<NomeEquipe> {
   @override
   Widget build(BuildContext context) {
     equipe = Provider.of<Equipe>(context);
-    isCap = equipe.cpfCapitao == userJuergs.cpf;
+    isCap = equipe.capitao.cpf == userJuergs.cpf;
     nameController.text = equipe.nome;
     return Row(
       children: <Widget>[

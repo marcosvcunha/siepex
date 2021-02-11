@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
+const cadastro_equipe = require('./cadastro_equipe');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
@@ -33,5 +34,16 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+
+db.cadastro_juergs.hasMany(db.cadastro_equipe, {foreignKey: 'cadastroJuergsCpf'});
+db.cadastro_equipe.belongsTo(db.cadastro_juergs, {foreignKey: 'cadastroJuergsCpf'});
+db.cadastro_equipe.belongsTo(db.equipes_juergs, {foreignKey: 'equipesJuergsId'});
+db.equipes_juergs.hasMany(db.cadastro_equipe, {foreignKey: 'equipesJuergsId'});
+
+
+
+db.cadastro_juergs.hasMany(db.equipes_juergs, {foreignKey: 'cpf_capitao'});
+db.equipes_juergs.belongsTo(db.cadastro_juergs, {foreignKey: 'cpf_capitao'});
 
 module.exports = db;

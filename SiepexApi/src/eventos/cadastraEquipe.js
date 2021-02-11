@@ -4,36 +4,43 @@ const {
     equipes_juergs,
     cadastro_juergs,
     participantes_rustica,
+    cadastro_equipe,
+    Sequelize,
 } = require('../../models');
+
+const{ Op } = require("sequelize");
+
 const { json } = require('body-parser');
 
 router.put('/cadastra', async (req, res) => {
-    var equipe = await getEquipe(req.body['nome_equipe'], req.body['nome_modalidade']);
+    try {
+        var equipe = await getEquipe(req.body['nome_equipe'], req.body['nome_modalidade']);
 
-    if (equipe.count != 0) {
-        //criarEquipe(req, res);
+        if (equipe.count != 0) {
+            console.log('ERRRO!')
+            res.json({
+                status: 'erro',
+                erro: 'Equipe já existe'
+            })
+            return;
+        }
+
+        //TODO: Pode ser conveniente conferir se o usuário já não possui equipe para a modalidade, entretanto o app deve testar isso.
+        equipe = await criarEquipe(req, res);
+
+        res.json({
+            status: 'sucesso',
+            data: equipe,
+        })
+        return;
+    } catch (e) {
+        console.log('Erro ao criar equipe: ' + e.toString());
         res.json({
             status: 'erro',
-            erro: 'Equipe já existe'
+            erro: 'Erro desconhecido'
         })
         return;
     }
-    var equipesCadastradas = await listar(req.body['id_modalidade']);
-    var lista = equipesCadastradas.rows;
-    for (var i = 0; i != lista.length; i++) {
-        var participantes = lista[i].participantes_cadastrados.split(';');
-        for (var j = 0; j != participantes.length; j++) {
-            if (participantes[j] == req.body['user_cpf']) {
-                res.json({
-                    status: 'erro',
-                    erro: 'ja_cadastrado_na_modalidade'
-                })
-                return;
-            }
-        }
-    }
-    await criarEquipe(req, res);
-    return;
 })
 
 router.put('/cadastraRustica', async (req, res) => {
@@ -105,59 +112,34 @@ router.put('/updateRustica', async (req, res) => {
 });
 
 router.put('/entra', async (req, res) => {
+    try{
     equipeId = parseInt(req.body['equipe_id']);
-    //userName = req['userName'];
     userCpf = req.body['user_cpf'];
-    user_name = req.body['user_name'];
-    // Colocar o cpf e o nome do usuario na lista de membros da equipe.
-    // Aumentar o número de participantes da equipe.
-    equipes_juergs.findByPk(equipeId).then((equipe) => {
-        equipes_juergs.update({
-            numero_participantes: equipe.numero_participantes + 1,
-            participantes_cadastrados: equipe.participantes_cadastrados + userCpf + ';',
-            nomes_participantes: equipe.nomes_participantes + user_name + ';',
-        }, {
-            where: {
-                id: equipeId,
-            }
-        }).then((result) => {
-            cadastro_juergs.findByPk(userCpf).then((user) => {
-                cadastro_juergs.update({
-                    minhas_equipes: user.minhas_equipes + req.body['equipe_id'] + ';',
-                },
-                    {
-                        where: {
-                            cpf: userCpf
-                        }
-                    })
-            }).then((_) => {
-                equipes_juergs.findByPk(equipeId).then(async (updatedEquipe) => {
-                    userCpfs = updatedEquipe['dataValues']['participantes_cadastrados'].split(';');
-                    userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
-                    updatedEquipe['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
-                    // console.log("AQUI!!!!!!!");
-                    // console.log(updatedEquipe);
 
-                    userNomes = updatedEquipe['dataValues']['nomes_participantes'].split(';');
-                    userNomes = userNomes.slice(0, userNomes.length - 1); // Coloca os Nomes em uma lista de string
-                    updatedEquipe['dataValues']['nomes_participantes'] = userNomes; // ad
-                    res.json({
-                        status: 'sucesso',
-                        data: updatedEquipe,
-                    });
-                });
-            })
-        })
-    }).catch((err) => {
-        console.log('ERRO!!!');
-        console.log(err)
+    equipe = (await equipes_juergs.findByPk(equipeId))['dataValues'];
+    updatedEquipe = await equipes_juergs.update({
+        numero_participantes: equipe['numero_participantes'] + 1,
+    }, {
+        where: {
+            id: equipeId,
+        }
+    });
+
+    await cadastro_equipe.create({
+        cadastroJuergsCpf: userCpf,
+        equipesJuergsId: equipeId,
+    });
         res.json({
-            status: 'erro',
-        })
+            status:'successo',
+            data: updatedEquipe,
+        });
+
+    }catch(e){
+        res.json({
+            status:'erro',
+            erro: 'Erro desconhecido',
+        });
     }
-    );
-
-
     //Colocar o id da equipe na lista de equipes do usuario
 })
 
@@ -195,60 +177,47 @@ router.put('/changeName', async (req, res) => {
 router.put('/changeCaptain', async (req, res) => {
     newCapCpf = req.body['newcap_cpf'];
     equipeId = parseInt(req.body['equipe_id']);
-    await cadastro_juergs.findByPk(newCapCpf, {
-        attributes: ['celular']
-    }).then(async (user) => {
-        await equipes_juergs.update({
-            cpf_capitao: newCapCpf,
-            celular_capitao: user['dataValues']['celular']
-        }, { where: { id: equipeId } }).then((result) => {
-            res.json({
-                status: 'sucesso',
-                newCapCel: user['dataValues']['celular']
-            })
-        }).catch((err) => res.json({ status: 'erro' }))
 
-    }).catch((err) => res.json({ status: 'erro' }))
+    try{
+    await equipes_juergs.update({
+        cpf_capitao: newCapCpf,
+    }, {
+        where: {
+            id: equipeId,
+        }
+    });
+    res.json({
+        'status':'sucesso',
+    });
+}catch(e){
+        res.json({
+            'status':'erro',
+            'erro':'erro desconhecido',
+        });
+    }
 
 })
 
 router.put('/remove', async (req, res) => {
     try {
-        id = parseInt(req.body['equipe_id'])
+        equipeId = parseInt(req.body['equipe_id'])
         // Remove a Equipe da lista de Equipes de cada participante.
-        await equipes_juergs.findByPk(id, {
-            attributes: ['participantes_cadastrados'],
-        }).then(async (participantes) => {
-            userCpfs = participantes['dataValues']['participantes_cadastrados'].split(';');
-            userCpfs = userCpfs.slice(0, userCpfs.length - 1);
-            await cadastro_juergs.findAll({
-                where: {
-                    cpf: userCpfs
-                },
-            }, {
-                attributes: ['minhas_equipes'],
-            }).then(async (players) => {
-                for (i = 0; i < players.length; i++) {
-                    await cadastro_juergs.update({
-                        'minhas_equipes': players[i].minhas_equipes.replace(id.toString() + ';', '')
-                    }, {
-                        where: {
-                            cpf: players[i].cpf,
-                        }
-                    })
-                }
-            });
-        }).catch((e) => {
-            res.json({ status: 'erro' })
-        })
-        // Remove a Equipe
-        equipes_juergs.destroy({
+        await cadastro_equipe.destroy({
             where: {
-                id: id,
+                equipesJuergsId: equipeId,
             }
-        }).then((result) => {
-            res.json({ status: 'sucesso' });
-        })
+        });
+
+        await equipes_juergs.destroy({
+            where: {
+                id: equipeId,
+            }
+        });
+
+        res.json({
+            status: 'sucesso',
+        });
+
     } catch (e) {
         res.json({ status: 'erro' });
         return;
@@ -257,54 +226,27 @@ router.put('/remove', async (req, res) => {
 
 router.put('/excludeMembers', async (req, res) => {
     try {
-        id = parseInt(req.body['equipe_id']);
+        equipeId = parseInt(req.body['equipe_id']);
         userCpfs = JSON.parse(req.body['members_cpf']);
-        console.log(req.body['members_cpf']);
-        userNames = JSON.parse(req.body['members_name']);
+        numeroParticipantesExcluidos = userCpfs.length.toString();
 
-        // Apagar Equipe da lista de Equipe dos Membros excluidos.
-        await cadastro_juergs.findAll({
+        await cadastro_equipe.destroy({
             where: {
-                cpf: userCpfs
-            },
-            attributes: ['cpf', 'minhas_equipes']
-        }).then(async (users) => {
-            for (i = 0; i < users.length; i++) {
-                await cadastro_juergs.update({
-                    'minhas_equipes': users[i].minhas_equipes.replace(id + ';', ''),
-                }, {
-                    where: {
-                        cpf: users[i].cpf,
-                    }
-                })
-            }
-
-        }).catch((e) => {
-            res.json({
-                status: 'erro'
-            });
-            return;
-        });
-        // Apagar cpf dos membros excluidos da lista de participantes da equipe e mudar número de participantes na equipe.
-        await equipes_juergs.findByPk(id, {
-            attributes: ['numero_participantes', 'participantes_cadastrados', 'nomes_participantes'],
-        }).then(async (equipe) => {
-            newMemberList = equipe.participantes_cadastrados;
-            newMemberName = equipe.nomes_participantes;
-            for (i = 0; i < userCpfs.length; i++) {
-                newMemberList = newMemberList.replace(userCpfs[i] + ';', '');
-                newMemberName = newMemberName.replace(userNames[i] + ';', '');
-            }
-            await equipes_juergs.update({
-                'participantes_cadastrados': newMemberList,
-                'nomes_participantes': newMemberName,
-                'numero_participantes': equipe.numero_participantes - userCpfs.length,
-            }, {
-                where: {
-                    id: id,
+                equipesJuergsId: equipeId,
+                cadastroJuergsCpf: {
+                    [Op.in]: userCpfs,
                 }
-            })
+            }
+        });
+
+        await equipes_juergs.update({
+            numero_participantes: Sequelize.literal('numero_participantes - ' + numeroParticipantesExcluidos),
+        },{
+            where: {
+                id: equipeId,
+            }
         })
+
         res.json({
             status: 'sucesso',
         });
@@ -317,23 +259,6 @@ router.put('/excludeMembers', async (req, res) => {
         return;
     }
 })
-
-function pegarNomes(userCpfs) {
-    return new Promise(function (resolve, reject) {
-        var nomes_participantes = [];
-        cadastro_juergs.findAll({ // pega os nomes de todos participantes da equipe
-            attributes: ['nome'],
-            where: {
-                cpf: userCpfs,
-            }
-        }).then((result2) => {
-            for (var j = 0; j < result2.length; j++) { // adiciona cada nome ao resultado
-                nomes_participantes.push(result2[j]['dataValues']['nome']);
-            }
-            resolve(nomes_participantes);
-        });
-    })
-}
 
 // Pega o número de participantes da rústica
 async function countRustica() {
@@ -358,50 +283,22 @@ async function getEquipe(equipe, modalidade) {
 }
 
 async function criarEquipe(req, res) {
-    equipes_juergs.create(
+    result = await equipes_juergs.create(
         {
             id_modalidade: parseInt(req.body['id_modalidade']),
             nome_equipe: req.body['nome_equipe'],
             nome_modalidade: req.body['nome_modalidade'],
             maximo_participantes: req.body['maximo_participantes'],
-            participantes_cadastrados: req.body['user_cpf'] + ';',
-            nomes_participantes: req.body['user_name'] + ';',
             numero_participantes: 1,
             cpf_capitao: req.body['user_cpf'],
-            celular_capitao: req.body['user_cel'],
             fase_equipe: 0,
         }
-    ).then((result) => {
-        cadastro_juergs.findByPk(req.body['user_cpf']).then((participante) => {
-            cadastro_juergs.update({
-                // Armazena o id da equipe cadastrada na lista de equipes do participante.
-                minhas_equipes: participante.minhas_equipes + result['dataValues']['id'].toString() + ';'
-            }, {
-                where: {
-                    'cpf': req.body['user_cpf']
-                }
-            })
-
-        }).then((otherResult) => {
-            result['dataValues']['nomes_participantes'] = ['Teste Teste'];
-            userCpfs = result['dataValues']['participantes_cadastrados'].split(';');
-            userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
-            result['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
-            result['dataValues']['cpf_capitao'] = req.body['user_cpf'],
-                res.json({
-                    status: 'sucesso',
-                    data: result['dataValues'],
-                })
-        })
-
-    }).catch((err) => {
-        console.log("Erro na criação de equipe.")
-        console.log(err)
-        res.json({
-            status: 'erro',
-            erro: String(err),
-        })
-    })
+    );
+    await cadastro_equipe.create({
+        cadastroJuergsCpf: req.body['user_cpf'],
+        equipesJuergsId: result['dataValues']['id'],
+    });
+    return result['dataValues'];
 }
 
 async function listar(id) {

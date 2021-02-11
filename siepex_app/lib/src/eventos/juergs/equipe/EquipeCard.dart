@@ -46,7 +46,8 @@ class EquipeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Capitão: ' + equipe.nomeCapitao,
+                      // TODO: arrumar nome do capitao
+                      'Capitão: ' + equipe.capitao.nome,
                       style: TextStyle(
                           color: corCinza,
                           fontSize: 18,
@@ -54,7 +55,7 @@ class EquipeCard extends StatelessWidget {
                     ),
                     SizedBox(height: 2),
                     Text(
-                      'Contato: ' + equipe.celCapitaoFormated,
+                      'Contato: ' + equipe.capitao.celularString,
                       style: TextStyle(
                           color: corCinza,
                           fontSize: 16,
@@ -107,6 +108,7 @@ class EquipeCard extends StatelessWidget {
                                   modalidade.notificar();
                                     await equipe.entrarEquipe(
                                         context, isActive);
+                                    userJuergs.minhasEquipes.add(equipe);
                                     modalidade.inscrito =
                                         userJuergs.temEquipe(modalidade.nome);
                                   },

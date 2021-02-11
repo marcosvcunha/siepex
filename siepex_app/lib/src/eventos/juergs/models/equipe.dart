@@ -19,6 +19,8 @@ class Equipe extends ChangeNotifier {
   String celCapitao;
   List<String> participantesCpf = <String>[];
   List<String> participantesNomes = <String>[];
+  List<Estudante> participantes = <Estudante>[];
+  Estudante capitao;
   bool isLoading = false;
   int index;
 
@@ -50,13 +52,14 @@ class Equipe extends ChangeNotifier {
         .toString()); // Nao entendo porque, mas as vezes a api
     this.numeroParticipantes = int.parse(jsonData['numero_participantes']
         .toString()); // retorna int, outras retorna string. ??
-    this.numero_rustica = jsonData['numero_rustica'];
-    this.cpfCapitao = jsonData['cpf_capitao'];
-    this.celCapitao = jsonData['celular_capitao'];
+    // this.numero_rustica = jsonData['numero_rustica'];
+    // this.cpfCapitao = jsonData['cpf_capitao'];
+    // this.celCapitao = jsonData['celular_capitao'];
+    this.capitao = Estudante.fromJson(jsonData['capitao']);
     try {
-      for (int i = 0; i < jsonData['participantes_cadastrados'].length; i++) {
-        participantesCpf.add(jsonData['participantes_cadastrados'][i]);
-        participantesNomes.add(jsonData['nomes_participantes'][i]);
+      for (var partJson in jsonData['participantes']) {
+        Estudante part = Estudante.fromJson(partJson);
+        participantes.add(part);
       }
     } catch (e) {
       print(e);
@@ -132,21 +135,20 @@ class Equipe extends ChangeNotifier {
     }
   }
 
-  Future changeCaptain(BuildContext context, String newCapCpf) async {
+  Future changeCaptain(BuildContext context, Estudante newCap) async {
     try {
       isLoading = true;
       notifyListeners();
       var resposta =
           jsonDecode((await http.put(baseUrl + 'equipe/changeCaptain', body: {
-        'newcap_cpf': newCapCpf,
+        'newcap_cpf': newCap.cpf,
         'equipe_id': id.toString(),
       }))
               .body);
       if (resposta['status'] == 'erro') {
         errorDialog(context, 'Erro', 'Erro ao alterar o capitão');
       } else {
-        cpfCapitao = newCapCpf;
-        celCapitao = resposta['newCapCel'];
+        capitao = newCap;
       }
       isLoading = false;
       notifyListeners();
@@ -171,6 +173,7 @@ class Equipe extends ChangeNotifier {
         errorDialog(context, 'Erro', 'Erro ao excluir Equipe');
       } else {
         userJuergs.minhasEquipes.removeWhere((element) => element.id == id);
+        print(userJuergs.minhasEquipes.length);
         // modalidade.inscrito = false;
         //userJuergs.minhasEquipes.removeWhere((element) => element.id == id);
       }
@@ -181,19 +184,16 @@ class Equipe extends ChangeNotifier {
     }
   }
 
-  Future excludeMembers(BuildContext context, List<String> membersCpf, List<String> membersName) async {
+  Future excludeMembers(BuildContext context, List<String> membersCpf) async {
     try {
       // Modalidade modalidade = Provider.of<Modalidade>(context);
       // print(modalidade.nome);
       isLoading = true;
       notifyListeners();
-      print(membersCpf);
-      print(membersName);
       var resposta =
           jsonDecode((await http.put(baseUrl + 'equipe/excludeMembers', body: {
         'equipe_id': id.toString(),
         'members_cpf': json.encode(membersCpf),
-        'members_name': json.encode(membersName),
       }))
               .body);
       if (resposta['status'] == 'erro') {
@@ -201,12 +201,9 @@ class Equipe extends ChangeNotifier {
         errorDialog(context, 'Erro', 'Erro ao excluir membros da equipe.');
       } else {
         print('Membros excluidos da equipe com sucesso');
-        for (int i = 0; i < numeroParticipantes; i++) {
-          if (membersCpf.contains(participantesCpf[i])) {
-            participantesCpf.removeAt(i);
-            participantesNomes.removeAt(i);
-          }
-        }
+        
+        participantes.removeWhere((element) => membersCpf.contains(element.cpf));
+
         numeroParticipantes -= membersCpf.length;
       }
       isLoading = false;
@@ -226,7 +223,7 @@ class Equipe extends ChangeNotifier {
           .body);
       if (resposta['status'] == 'sucesso'){
         List<Equipe> equipesList = new List<Equipe>();
-        for (int i = 0; i < resposta['count']; i++) {
+        for (int i = 0; i < resposta['data'].length; i++) {
           equipesList.add(Equipe.fromJson(resposta['data'][i]));
           equipesList[i].index = i;
         }
@@ -275,7 +272,8 @@ class Equipe extends ChangeNotifier {
           .body);
       if (resposta['status'] == 'sucesso'){
         List<Equipe> equipesList = new List<Equipe>();
-        for (int i = 0; i < resposta['count']; i++) {
+
+        for (int i = 0; i < resposta['data'].length; i++) {
           equipesList.add(Equipe.fromJson(resposta['data'][i]));
           equipesList[i].index = i;
         }

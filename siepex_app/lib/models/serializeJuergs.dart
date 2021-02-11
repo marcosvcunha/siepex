@@ -84,6 +84,18 @@ class Estudante {
   }
 
 
+  get celularString{
+      if (celular.isNotEmpty && celular != '0') {
+      if (celular.length == 11) {
+        return "(" + celular.substring(0,2) + ")" + celular.substring(2,7) + "-" + celular.substring(7,11);
+      } else {
+        return celular;
+      }
+    } else {
+      return 'Não Cadastrou';
+    }
+  }
+
   // Recebe o id de uma equipe e o novo nome e atualiza na lista das minhas equipes.
   void updateTeamName(int id, String newName){
     for(Equipe eq in minhasEquipes){

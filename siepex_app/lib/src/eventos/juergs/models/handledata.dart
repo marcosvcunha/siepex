@@ -142,6 +142,7 @@ class HandleData {
         }))
                 .body);
         if (resposta['status'] == 'sucesso') {
+          print(resposta['data']);
           userJuergs.minhasEquipes.add(Equipe.fromJson(resposta['data']));
           errorDialog(context, 'Sucesso', 'Equipe Criada');
           return;

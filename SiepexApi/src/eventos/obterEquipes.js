@@ -4,6 +4,7 @@ const {
     equipes_juergs,
     cadastro_juergs,
     participantes_rustica,
+    cadastro_equipe,
 } = require('../../models');
 
 // router.put('/', async (req, res) => {
@@ -31,13 +32,13 @@ const {
 router.put('/porModalidade', async (req, res) => {
     try{
         idModalidade = parseInt(req.body['id_modalidade']);
-        equipes = await pegarTodasEquipesPorModalidade(idModalidade);
+        equipes = await pegarTodasEquipesPorModalidade2(idModalidade);
         res.json({
             status: "sucesso",
-            data: equipes.rows,
-            count: equipes.count,
+            data: equipes,
         });
     }catch(e){
+        console.log("ERRO: " + e.toString());
         res.json({
             status: "erro",
         });
@@ -65,15 +66,13 @@ router.put('/porFase', async (req, res) => {
 router.put('/porUser', async (req, res) => {
     try{
         cpf = req.body['user_cpf'];
-        equipes = await pegarTodasEquipesPorUsuario(cpf);
-        console.log("Equipes encontradas: ")
-        console.log(equipes);
+        equipes = await pegarTodasEquipesPorUsuario2(cpf);
         res.json({
             status: "sucesso",
-            data: equipes.rows,
-            count: equipes.count,
+            data: equipes,
         });
     }catch(e){
+        console.log(e.toString());
         res.json({
             status: "erro",
         });
@@ -97,6 +96,12 @@ async function pegarTodasEquipesPorModalidade(idModalidade) {
             where: {
                 id_modalidade: idModalidade,
             },
+            include: [{
+                model: cadastro_equipe,
+                include: [{
+                    model: cadastro_juergs,
+                }]
+            }],
             order: [
                 ['data_cadastro', 'asc']
             ],
@@ -113,6 +118,27 @@ async function pegarTodasEquipesPorModalidade(idModalidade) {
             resolve(result);
         })
     })
+}
+
+async function pegarTodasEquipesPorModalidade2(idModalidade) {
+    equipes = await equipes_juergs.findAndCountAll({
+        where: {
+            id_modalidade: idModalidade,
+        },
+        include: [{
+            model: cadastro_equipe,
+            include: [{
+                model: cadastro_juergs,
+            }]
+        },{
+            model: cadastro_juergs,
+        }],
+        order: [
+            ['data_cadastro', 'asc']
+        ],
+    });
+
+    return equipesToJson(equipes);
 }
 
 
@@ -142,73 +168,55 @@ async function pegarTodasEquipesPorFase(idModalidade, faseAtual) {
     })
 }
 
-// Função para pegar todas as equipes de um dado usuario
-async function pegarTodasEquipesPorUsuario(userCpf) {
-    console.log('Pegando Equipes por usuario');
-    return new Promise(function (resolve, reject) {
-        // Pega as IDs das minhas equipes
-        cadastro_juergs.findAll({
-            where: {
-                cpf: userCpf,
-            }
-        }).then((user) => {
-            equipesIds = user[0]['dataValues']['minhas_equipes'].split(';')
-            equipesIds = equipesIds.slice(0, equipesIds.length - 1) // O ultimo elemento é vazio
-            equipesIds = equipesIds.map(Number); // Converte um array de String para um array de Numbers
-            console.log("IDs: ");
-            console.log(equipesIds);
-            equipes_juergs.findAndCountAll({
-                where: {
-                    id: equipesIds, // Passo todas as IDs
-                },
-                order: [
-                    ['data_cadastro', 'asc']
-                ],
-            }).then(async (result) => {
-                for (var i = 0; i < result.rows.length; i++) { // Repete para cada equipe encontrada.
-                    userCpfs = result.rows[i]['dataValues']['participantes_cadastrados'].split(';');
-                    userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
-                    result.rows[i]['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
-                    
-                    userNomes = result.rows[i]['dataValues']['nomes_participantes'].split(';');
-                    userNomes = userNomes.slice(0, userNomes.length - 1); // Coloca os Nomes em uma lista de string
-                    result.rows[i]['dataValues']['nomes_participantes'] = userNomes; // adiciona os Nomes ao resultado
-               
-                }
-                resolve(result)
-            })
-        })
-    })
-}
+async function pegarTodasEquipesPorUsuario2(userCpf) {
+    equipes = await cadastro_equipe.findAndCountAll({
+        where: {
+            cadastroJuergsCpf: userCpf,
+        },
+        include: [{
+            model: equipes_juergs,
+            include: [{
+                model: cadastro_equipe,
+                include: [{
+                    model: cadastro_juergs,
+                }]
+            },{
+                model: cadastro_juergs,
+            }]
+        }]
+    });
 
-async function pegarNomes(userCpfs) {
-    // Faz desta forma (pega um nome por vez) para que os nomes estejam na mesma ordem dos cpfs.
-    //console.log('CPF dos usurarios: ' + userCpfs.toString())
-    var nomes_participantes = [];
-    return new Promise(async function (resolve, reject) {
-        for(var i = 0; i < userCpfs.length; i ++){
-            var nome = await pegarNome(userCpfs[i]);
-            nomes_participantes.push(nome);
+    equipesJson = [];
+
+    equipes.rows.forEach(function(equipe, i){
+        eq = equipe.dataValues.equipes_juerg.dataValues;
+        cadastros = eq.cadastro_equipes;
+
+        capitao = eq.cadastro_juerg.dataValues;
+        equipeJson = {
+            'id': eq.id,
+            'nome_equipe': eq.nome_equipe,
+            'id_modalidade': eq.id_modalidade,
+            'nome_modalidade': eq.nome_modalidade,
+            'maximo_participantes': eq.maximo_participantes,
+            'numero_participantes': eq.numero_participantes,
+            'participantes': [],
+            'capitao': cadastroToJson(capitao),
         }
-        //console.log('Terminando funcao');
-        resolve(nomes_participantes);
-    })
+
+        cadastros.forEach(function(cadastro, i){
+            cad = cadastro.dataValues.cadastro_juerg.dataValues;
+            
+            cadastroJson = cadastroToJson(cad);
+
+            equipeJson['participantes'].push(cadastroJson);
+        })
+
+        equipesJson.push(equipeJson);
+    });
+    return equipesJson;
 }
 
-// async function pegarNomes(userCpfs){
-//     var nomes_participantes = [];
-//     users = (await cadastro_juergs.findAll({
-//         where: {
-//             cpf: userCpfs,
-//         }
-//     }));
-//     console.log(users);
-//     // for(i = 0; i < userCpfs.length; i++){
-//     //     for(j = 0; j < userCpfs.length; j ++){
-//     //         if(users[i][''])
-//     //     }
-//     // }
-// }
 
 function pegarNome(cpf){
     return new Promise(function (resolve, reject){
@@ -217,5 +225,57 @@ function pegarNome(cpf){
         });
     });
 }
+
+function equipesToJson(equipes){
+    // Recebe o que vem do banco da query de equpes com join de cadastro.
+    // Retorna uma lista com as Equipes em Json
+    // Dentro de cada equipes tem uma lista de membros da equipes também em Json
+
+    equipesJson = []
+
+    equipes['rows'].forEach(function(equipe, i){      
+        capitao = equipe.dataValues.cadastro_juerg.dataValues;
+        
+        equipeJson = {
+            'id':equipe['dataValues']['id'],
+            'id_modalidade': equipe['dataValues']['id_modalidade'],
+            'nome_equipe': equipe['dataValues']['nome_equipe'],
+            'nome_modalidade': equipe['dataValues']['nome_modalidade'],
+            'maximo_participantes': equipe['dataValues']['maximo_participantes'],
+            'numero_participantes': equipe['dataValues']['numero_participantes'],
+            // 'numero_rustica': 0,
+            // 'cpf_capitao': equipe['dataValues']['cpf_capitao'],
+            // 'celular_capitao': equipe['dataValues']['celular_capitao'],
+            'participantes': [],
+            'capitao': cadastroToJson(capitao),
+        }
+        
+        cadastros = equipe['dataValues']['cadastro_equipes']
+        
+        cadastros.forEach(function(cadastro, i){
+            user = cadastro['dataValues']['cadastro_juerg'].dataValues
+            userJson = cadastroToJson(user);
+            equipeJson['participantes'].push(userJson);
+        })
+        equipesJson.push(equipeJson);
+    })
+    return equipesJson;
+}
+
+function cadastroToJson(cad){
+    return {
+        'cpf': cad.cpf,
+        'nome': cad.nome,
+        'email': cad.email,
+        'instituicao': cad.instituicao,
+        'ind_uergs': cad.ind_uergs,
+        'campos_uergs': cad.campos_uergs,
+        'tipo_participante': cad.tipo_participante,
+        'ind_necessidades_especiais': cad.ind_necessidades_especiais,
+        'celular': cad.celular,
+        'modalidade_juiz': cad.modalidade_juiz,
+    }
+}
+
 
 module.exports = router;

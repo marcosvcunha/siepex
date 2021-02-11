@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/ColumnBuilder.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/roundButton.dart';
@@ -11,20 +12,9 @@ class ExcludeMemberPage extends StatefulWidget {
 }
 
 class _ExcludeMemberPageState extends State<ExcludeMemberPage> {
-  List<String> part;
-  List<String> partCpf;
+  List<Estudante> participantes = <Estudante> [];
   Equipe equipe;
   List<bool> checkBoxValues = List.generate(30, (index) => false);
-
-  // @override
-  // void initState(){
-  //   super.initState();
-  //   print('Usando Provider em captain');
-  //   part = List<String>.from(equipe.participantesNomes);
-  //   partCpf = List<String>.from(equipe.participantesCpf);
-  //   part.remove(equipe.nomeCapitao);
-  //   partCpf.remove(equipe.cpfCapitao);
-  // }
 
   Widget body(){
     return ListView(
@@ -42,7 +32,7 @@ class _ExcludeMemberPageState extends State<ExcludeMemberPage> {
           ),
           SizedBox(height: 16),
           ColumnBuilder(
-            itemCount: part.length,
+            itemCount: participantes.length,
             itemBuilder: (context, index){
               return Container(
                 height: 45,
@@ -61,7 +51,7 @@ class _ExcludeMemberPageState extends State<ExcludeMemberPage> {
                           });
                         },
                         ),
-                      Text(part[index], style: TextStyle(
+                      Text(participantes[index].nome, style: TextStyle(
                         color: checkBoxValues[index] ? Colors.blue : Colors.black87, fontSize: 22, fontWeight: FontWeight.w400)),
                       ],
                     ),
@@ -75,11 +65,11 @@ class _ExcludeMemberPageState extends State<ExcludeMemberPage> {
               children: <Widget>[
                 roundButton('Confimar', Colors.green, Icons.done, (){
                   String excludedMembers = '';
-                  for(int i = 0; i < part.length; i++){
+                  for(int i = 0; i < participantes.length; i++){
                     if(checkBoxValues[i]){
                       if(excludedMembers.length > 0)
                         excludedMembers += ', ';
-                      excludedMembers += part[i];
+                      excludedMembers += participantes[i].nome;
                     }
                   }
                   if(excludedMembers.length > 0)
@@ -89,14 +79,12 @@ class _ExcludeMemberPageState extends State<ExcludeMemberPage> {
                   confirmDialog(context, 'Excluir Membros', 'Confirmar exclusão dos seguintes membros: ' + excludedMembers, 
                   () async {
                     List<String> membersCpf = [];
-                    List<String> membersName = [];
-                    for(int i = 0; i < part.length; i++){
+                    for(int i = 0; i < participantes.length; i++){
                       if(checkBoxValues[i]){
-                        membersCpf.add(partCpf[i]);
-                        membersName.add(part[i]);
+                        membersCpf.add(participantes[i].cpf);
                       }
                     }
-                    await equipe.excludeMembers(context, membersCpf, membersName);
+                    await equipe.excludeMembers(context, membersCpf);
                     Navigator.pop(context);
                     Navigator.pop(context);
                   }, (){
@@ -113,10 +101,9 @@ class _ExcludeMemberPageState extends State<ExcludeMemberPage> {
   @override
   Widget build(BuildContext context) {
     equipe = Provider.of<Equipe>(context);
-    part = List<String>.from(equipe.participantesNomes);
-    partCpf = List<String>.from(equipe.participantesCpf);
-    part.remove(equipe.nomeCapitao);
-    partCpf.remove(equipe.cpfCapitao);
+    participantes = List<Estudante>.from(equipe.participantes);
+    participantes.removeWhere((element) => element.cpf == equipe.capitao.cpf);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Mudar Capitão'),

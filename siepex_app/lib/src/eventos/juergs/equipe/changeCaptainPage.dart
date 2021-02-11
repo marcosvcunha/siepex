@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siepex/models/serializeJuergs.dart';
 // import 'package:animations/animations.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/ColumnBuilder.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
@@ -14,8 +15,7 @@ class ChangeCaptain extends StatefulWidget {
 
 class _ChangeCaptainState extends State<ChangeCaptain> {
   int selectedButton = 0;
-  List<String> part;
-  List<String> partCpf;
+  List<Estudante> participantes;
   Equipe equipe;
 
   Widget body(){
@@ -34,7 +34,7 @@ class _ChangeCaptainState extends State<ChangeCaptain> {
           ),
           SizedBox(height: 16),
           ColumnBuilder(
-            itemCount: part.length,
+            itemCount: participantes.length,
             itemBuilder: (context, index){
               return Container(
                 height: 45,
@@ -57,7 +57,7 @@ class _ChangeCaptainState extends State<ChangeCaptain> {
                             });
                           },
                         ),
-                      Text(part[index], style: TextStyle(
+                      Text(participantes[index].nome, style: TextStyle(
                         color: selectedButton == index ? Colors.blue : Colors.black87, fontSize: 22, fontWeight: FontWeight.w400)),
                       ],
                     ),
@@ -70,9 +70,9 @@ class _ChangeCaptainState extends State<ChangeCaptain> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 roundButton('Confimar', Colors.green, Icons.done, (){
-                  confirmDialog(context, 'Mudar Capitão', 'Deseja confimar ' + part[selectedButton] + ' como novo capitão?', 
+                  confirmDialog(context, 'Mudar Capitão', 'Deseja confimar ' + participantes[selectedButton].nome + ' como novo capitão?', 
                   () async {
-                    await equipe.changeCaptain(context, partCpf[selectedButton]);
+                    await equipe.changeCaptain(context, participantes[selectedButton]);
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   }, (){
@@ -89,10 +89,8 @@ class _ChangeCaptainState extends State<ChangeCaptain> {
   @override
   Widget build(BuildContext context) {
     equipe = Provider.of<Equipe>(context);
-    part = List<String>.from(equipe.participantesNomes);
-    partCpf = List<String>.from(equipe.participantesCpf);
-    part.remove(equipe.nomeCapitao);
-    partCpf.remove(equipe.cpfCapitao);
+    participantes = List<Estudante>.from(equipe.participantes);
+    participantes.removeWhere((element) => element.cpf == equipe.capitao.cpf);
     return Scaffold(
       appBar: AppBar(
         title: Text('Mudar Capitão'),
