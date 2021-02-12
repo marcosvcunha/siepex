@@ -165,7 +165,7 @@ class CompetitionPage extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 22, top: 4),
           child: Text(
-            'Rua Tanto Faz, número 332',
+            modalidade.local,
             style: TextStyle(
                 color: Colors.black, fontSize: 18, fontWeight: FontWeight.w400),
           ),

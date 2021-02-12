@@ -14,22 +14,22 @@ class TabelaGrupos extends StatefulWidget {
   _TabelaGruposState createState() => _TabelaGruposState();
 }
 
-class TimeFaseGrupo{
+class TimeFaseGrupo {
   String nome;
   int id;
   int vitorias;
   int derrotas;
   int empates;
 
-  get pontos{
+  get pontos {
     return vitorias * 3 + empates;
   }
 
-  get partidas{
+  get partidas {
     return vitorias + empates + derrotas;
   }
 
-  TimeFaseGrupo(String nome_equipe, int id_equipe){
+  TimeFaseGrupo(String nome_equipe, int id_equipe) {
     nome = nome_equipe;
     id = id_equipe;
     vitorias = 0;
@@ -76,10 +76,8 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                   return SizedBox(height: 70);
                 }
                 return GrupoCard(
-                    retJogos.sublist(
-                              (index - 1) * 3, ((index - 1) * 3) + 3),
-                    index - 1
-                  );
+                    retJogos.sublist((index - 1) * 3, ((index - 1) * 3) + 3),
+                    index - 1);
               },
             );
           }
@@ -99,13 +97,13 @@ class _GrupoCardState extends State<GrupoCard> {
   List<String> _groupsFutsal = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   bool showTable;
 
-  void initState(){
+  void initState() {
     super.initState();
 
     showTable = true;
   }
 
-    TableRow tableRow(String time, int partidas, int vitorias, int derrotas,
+  TableRow tableRow(String time, int partidas, int vitorias, int derrotas,
       int empates, int pontos) {
     return TableRow(children: [
       Padding(
@@ -173,8 +171,7 @@ class _GrupoCardState extends State<GrupoCard> {
     ]);
   }
 
-
-   Widget _jogoTile(String timeA, int resultadoA, String timeB, int resultadoB) {
+  Widget _jogoTile(String timeA, int resultadoA, String timeB, int resultadoB) {
     return Container(
       decoration: BoxDecoration(
         border: Border(),
@@ -258,7 +255,7 @@ class _GrupoCardState extends State<GrupoCard> {
     );
   }
 
-      Widget tabela(int index, List<Jogo> retJogos) {
+  Widget tabela(int index, List<Jogo> retJogos) {
     List<TimeFaseGrupo> times = [
       TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
       TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
@@ -281,34 +278,34 @@ class _GrupoCardState extends State<GrupoCard> {
     int empatesTime3 = 0;
 
     if (retJogos[0].resultA > retJogos[0].resultB) {
-      times[0].vitorias ++;
-      times[1].derrotas ++;
+      times[0].vitorias++;
+      times[1].derrotas++;
     } else if (retJogos[0].resultA < retJogos[0].resultB) {
-      times[1].vitorias ++;
-      times[0].derrotas ++;
+      times[1].vitorias++;
+      times[0].derrotas++;
     } else {
-      times[0].empates ++;
-      times[1].empates ++;
+      times[0].empates++;
+      times[1].empates++;
     }
     if (retJogos[1].resultA > retJogos[1].resultB) {
-      times[0].vitorias ++;
-      times[2].derrotas ++;
+      times[0].vitorias++;
+      times[2].derrotas++;
     } else if (retJogos[1].resultA < retJogos[1].resultB) {
-      times[2].vitorias ++;
-      times[0].derrotas ++;
+      times[2].vitorias++;
+      times[0].derrotas++;
     } else {
-      times[0].empates ++;
-      times[2].empates ++;
+      times[0].empates++;
+      times[2].empates++;
     }
     if (retJogos[2].resultA > retJogos[2].resultB) {
-      times[1].vitorias ++;
-      times[2].derrotas ++;
+      times[1].vitorias++;
+      times[2].derrotas++;
     } else if (retJogos[2].resultA < retJogos[2].resultB) {
-      times[1].derrotas ++;
-      times[2].vitorias ++;
+      times[1].derrotas++;
+      times[2].vitorias++;
     } else {
-      times[1].empates ++;
-      times[2].empates ++;
+      times[1].empates++;
+      times[2].empates++;
     }
     times.sort((a, b) => b.pontos.compareTo(a.pontos));
 
@@ -483,7 +480,7 @@ class _GrupoCardState extends State<GrupoCard> {
     );
   }
 
-    Widget jogosCard(int index, List<Jogo> jogosJuers) {
+  Widget jogosCard(int index, List<Jogo> jogosJuers) {
     return Padding(
       key: ValueKey(2),
       padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
@@ -557,15 +554,14 @@ class _GrupoCardState extends State<GrupoCard> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-
-  return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 200),
-  child: showTable ? tabela(widget.index, widget.jogos) : jogosCard(widget.index, widget.jogos),
-  );
+    return AnimatedSwitcher(
+      transitionBuilder: (child, animation) => SizeTransition(child: child, sizeFactor: animation,),
+      duration: Duration(milliseconds: 200),
+      child: showTable
+          ? tabela(widget.index, widget.jogos)
+          : jogosCard(widget.index, widget.jogos),
+    );
   }
 }
-
-

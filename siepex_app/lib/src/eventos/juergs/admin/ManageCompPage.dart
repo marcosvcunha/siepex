@@ -52,7 +52,7 @@ class ManageCompPage extends StatelessWidget {
         title: Text('Gerenciar Competições'),
       ),
       body: FutureBuilder(
-        future: _handleData.getModalidades(),
+        future: Modalidade.getModalidades(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

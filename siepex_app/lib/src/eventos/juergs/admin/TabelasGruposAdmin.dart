@@ -139,7 +139,9 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Row(
+          Flex(
+            direction: Axis.horizontal,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Expanded(
@@ -164,9 +166,7 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
                           color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
                       height: 35,
                       width: 35,
-                      child: Center(
-                          child:
-                              _editTitleTextField(jogo, 'A', index * 2 + 0))),
+                      child: _editTitleTextField(jogo, 'A', index * 2 + 0)),
                 ),
               ),
               // SizedBox(width: 30),
@@ -179,9 +179,7 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
                           color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
                       height: 35,
                       width: 35,
-                      child: Center(
-                          child:
-                              _editTitleTextField(jogo, 'B', index * 2 + 1))),
+                      child: _editTitleTextField(jogo, 'B', index * 2 + 1)),
                 ),
               ),
               Expanded(
@@ -271,17 +269,13 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
 
   Widget _editTitleTextField(
       JogosJuers jogoJuergs, String id, int controllerIndex) {
-    return Center(
-      child: TextField(
-        // maxLength: 2,
-        // maxLengthEnforced: true,
+    return TextField(
+
         enableSuggestions: false,
         textAlign: TextAlign.center,
+        
         controller: controllers[controllerIndex],
         keyboardType: TextInputType.number,
-        inputFormatters: <TextInputFormatter>[
-          WhitelistingTextInputFormatter.digitsOnly
-        ],
         onSubmitted: (value) {
           // if (id == 'A')
           //   controllers[controllerIndex].text =
@@ -290,8 +284,7 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
           //   controllers[controllerIndex].text =
           //       jogoJuergs.resultadoB.toString();
         },
-      ),
-    );
+      );
   }
 
   @override
@@ -321,9 +314,8 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
               }
               jaCarregou = true;
             }
-            return Column(children: [
-              Expanded(
-                  child: ListView.builder(
+            return Stack(children: [
+              ListView.builder(
                 itemCount: 8,
                 itemBuilder: (context, index) {
                   return AnimatedSwitcher(
@@ -331,28 +323,38 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
                     child: jogosCard(index, retJogos),
                   );
                 },
-              )),
-              RaisedButton(
-                  child: Text("Salvar"),
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  splashColor: Colors.grey,
-                  onPressed: () async {
-                    var resultados = new StringBuffer();
-                    for (TextEditingController textEdit in controllers) {
-                      resultados.write(textEdit.text + ',');
-                    }
-                    var resposta = jsonDecode((await http
-                            .put(baseUrl + 'modalidades/lancaResultado', body: {
-                      'idModalidade': globalModalidade.id.toString(),
-                      'etapa': globalModalidade.fase.toString(),
-                      'resultados': resultados.toString(),
-                    }))
-                        .body);
-                  }
-                  // fill in required params
-                  ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: RaisedButton(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 4),
+                        child: Text("Salvar", style: TextStyle(fontSize: 18)),
+                      ),
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                      splashColor: Colors.grey,
+                      onPressed: () async {
+                        var resultados = new StringBuffer();
+                        for (TextEditingController textEdit in controllers) {
+                          resultados.write(textEdit.text + ',');
+                        }
+                        var resposta = jsonDecode((await http.put(
+                                baseUrl + 'modalidades/lancaResultado',
+                                body: {
+                              'idModalidade': globalModalidade.id.toString(),
+                              'etapa': globalModalidade.fase.toString(),
+                              'resultados': resultados.toString(),
+                            }))
+                            .body);
+                      }
+                      // fill in required params
+                      ),
+                ),
+              ),
             ]);
           }
         });

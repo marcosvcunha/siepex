@@ -8,6 +8,10 @@ module.exports = function(sequelize, DataTypes) {
         primaryKey: true,
         autoIncrement: true
       },
+      endereco: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
       nome_modalidade: {
         type: DataTypes.STRING(40),
         allowNull: false,

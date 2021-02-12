@@ -23,24 +23,25 @@ CREATE TABLE modalidades_juergs (
 id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 nome_modalidade VARCHAR(30) NOT NULL,
 maximo_participantes int(2) NOT NULL,
+endereco varchar(100) NOT NULL,
 limit_date TIMESTAMP,
 fase int(2) NOT NULL, # Fase atual da competiÃ§Ã£o: 0 - Fase de inscriÃ§Ã£o, 1 - Fase de Grupos, 2 - Quartas de final
 					  # 3 - Semi Final, 4 - Final e 5 - Encerrado.
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
 
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('Futsal Masculino', '10', '2021-10-10 23:59:59', current_timestamp(), 0);
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('Futsal Feminino', '10', '2021-10-25 17:45:59', current_timestamp(), 0);
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('Vôlei Misto', '10', '2021-10-22 17:40:00', current_timestamp(), 0);
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('Handebol Masculino', '10', '2021-10-12 17:35:59', current_timestamp(), 0);
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('Handebol Feminino', '10', '2021-10-25 14:50:00', current_timestamp(), 0);
-INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase) 
-	VALUES ('Rústica', '99', '2021-10-25 00:05:09', current_timestamp(), 0);
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase, endereco) 
+	VALUES ('Futsal Masculino', '10', '2021-10-10 23:59:59', current_timestamp(), 0, 'Não informado');
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase, endereco) 
+	VALUES ('Futsal Feminino', '10', '2021-10-25 17:45:59', current_timestamp(), 0, 'Não informado');
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase, endereco) 
+	VALUES ('Vôlei Misto', '10', '2021-10-22 17:40:00', current_timestamp(), 0, 'Não informado');
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase, endereco) 
+	VALUES ('Handebol Masculino', '10', '2021-10-12 17:35:59', current_timestamp(), 0, 'Não informado');
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase, endereco) 
+	VALUES ('Handebol Feminino', '10', '2021-10-25 14:50:00', current_timestamp(), 0, 'Não informado');
+INSERT INTO modalidades_juergs(nome_modalidade, maximo_participantes, limit_date, ult_atualizacao, fase, endereco) 
+	VALUES ('Rústica', '99', '2021-10-25 00:05:09', current_timestamp(), 0, 'Não informado');
 
 DROP TABLE IF EXISTS participantes_rustica;
 

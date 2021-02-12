@@ -10,7 +10,7 @@ class ModalidadesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-          future: _handleData.getModalidades(),
+          future: Modalidade.getModalidades(),
           builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Mostra Isso quando os dados estão sendo carregados.

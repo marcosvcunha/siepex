@@ -34,6 +34,7 @@ class Modalidade extends ChangeNotifier {
   IconData icon;
   int fase;
   String faseStr;
+  String local;
 
   get inscrito => _inscrito;
 
@@ -50,18 +51,32 @@ class Modalidade extends ChangeNotifier {
     // Utilizado para que a página de Equipes atualize quando o usuário entra numa equipe. 
   }
 
-  Modalidade(int modId, String modNome, int modMaxParticipantes,
-      bool modInscrito, DateTime modDataLimite, int fase) {
-    id = modId;
-    nome = modNome;
-    maxParticipantes = modMaxParticipantes;
-    _inscrito = modInscrito;
+  // Modalidade(int modId, String modNome, int modMaxParticipantes,
+  //     bool modInscrito, DateTime modDataLimite, int fase) {
+  //   id = modId;
+  //   nome = modNome;
+  //   maxParticipantes = modMaxParticipantes;
+  //   _inscrito = modInscrito;
+  //   icon = icons[nome];
+  //   dataLimite = modDataLimite;
+  //   dataLimiteString =
+  //       '${dataLimite.day.toString()}/${dataLimite.month.toString()} ${dataLimite.hour.toString()}:${dataLimite.minute.toString()}';
+  //   this.fase = fase;
+  //   faseStr = fases[fase];
+  // }
+
+  Modalidade.fromJson(jsonData){
+    id = jsonData['id'];
+    nome = jsonData['nome_modalidade'];
+    local = jsonData['endereco'];
+    maxParticipantes = jsonData['maximo_participantes'];
+    dataLimite = DateTime.parse(jsonData['limit_date']);
+    _inscrito = false;
+    fase = jsonData['fase'];
     icon = icons[nome];
-    dataLimite = modDataLimite;
     dataLimiteString =
         '${dataLimite.day.toString()}/${dataLimite.month.toString()} ${dataLimite.hour.toString()}:${dataLimite.minute.toString()}';
-    this.fase = fase;
-    faseStr = fases[fase];
+  faseStr = fases[fase];
   }
 
   Future<void> nextFase(List<int> idEquipes, List<String> equipesGrupoNome) async {
@@ -86,5 +101,29 @@ class Modalidade extends ChangeNotifier {
 
   bool incricoesAbertas(){
     return dataLimite.isAfter(DateTime.now());
+  }
+
+  static Future<List<Modalidade>> getModalidades() async {
+    try {
+      var resposta = jsonDecode((await http.put(
+        baseUrl + 'modalidades/getAll',
+      ))
+          .body);
+      List<Modalidade> listaModalidade = new List<Modalidade>();
+      if (resposta['status'] != null) {
+        if (resposta['status'] == 'ok') {
+          for (var i = 0; i != resposta['count']; i++) {
+            Modalidade modalidade = new Modalidade.fromJson(resposta['data'][i]);
+            listaModalidade.add(modalidade);
+          }
+        } else if (resposta['status'] == 'nao_achou') {
+          print("nao deu");
+        }
+      }
+      return listaModalidade;
+    } catch (e) {
+      print('Erro');
+      return [];
+    }
   }
 }

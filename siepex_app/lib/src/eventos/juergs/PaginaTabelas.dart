@@ -48,7 +48,7 @@ class PaginaTabelas extends StatelessWidget {
             color: Colors.white,
           ),
           child: FutureBuilder(
-            future: _handleData.getModalidades(),
+            future: Modalidade.getModalidades(),
             builder: (context, snapshot){
               if(snapshot.connectionState == ConnectionState.waiting){
                 return Center(child: CircularProgressIndicator(),);
@@ -64,7 +64,7 @@ class PaginaTabelas extends StatelessWidget {
               );
                     }else{
                       return competicaoButton(context, modalidades[index - 1].icon, modalidades[index - 1].nome, 
-                        modalidades[index - 1].faseStr + ' - Ginásio Local', modalidades[index - 1]);
+                        modalidades[index - 1].faseStr + ' - ' + modalidades[index - 1].local, modalidades[index - 1]);
                     }
                   },);
               }

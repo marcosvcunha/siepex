@@ -15,37 +15,6 @@ import 'package:siepex/src/eventos/juergs/tabelas/TabelaGrupos.dart';
 // HandleData possui metodos que interagem com a API
 class HandleData {
   // Aqui vai pegar os dados do DB e retornar uma lista com as modalidades
-  Future<List<Modalidade>> getModalidades() async {
-    try {
-      var resposta = jsonDecode((await http.put(
-        baseUrl + 'modalidades/getAll',
-      ))
-          .body);
-      List<Modalidade> listaModalidade = new List<Modalidade>();
-      if (resposta['status'] != null) {
-        if (resposta['status'] == 'ok') {
-          for (var i = 0; i != resposta['count']; i++) {
-            DateTime date = DateTime.parse(resposta['data'][i]['limit_date']);
-            Modalidade modalidade = new Modalidade(
-                resposta['data'][i]['id'],
-                resposta['data'][i]['nome_modalidade'],
-                int.tryParse(
-                    resposta['data'][i]['maximo_participantes'].toString()),
-                false,
-                date,
-                resposta['data'][i]['fase']);
-            listaModalidade.add(modalidade);
-          }
-        } else if (resposta['status'] == 'nao_achou') {
-          print("nao deu");
-        }
-      }
-      return listaModalidade;
-    } catch (e) {
-      print('Erro');
-      return [];
-    }
-  }
 
   Future<List<ParticipanteRustica>> getParticipantesRustica() async {
     print('pegando participantes rústica');

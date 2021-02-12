@@ -10,7 +10,7 @@ const {
 router.put('/porModalidade', async (req, res) => {
     try{
         idModalidade = parseInt(req.body['id_modalidade']);
-        equipes = await pegarTodasEquipesPorModalidade2(idModalidade);
+        equipes = await pegarTodasEquipesPorModalidade(idModalidade);
         res.json({
             status: "sucesso",
             data: equipes,
@@ -63,7 +63,7 @@ router.put('/porFase', async (req, res) => {
 router.put('/porUser', async (req, res) => {
     try{
         cpf = req.body['user_cpf'];
-        equipes = await pegarTodasEquipesPorUsuario2(cpf);
+        equipes = await pegarTodasEquipesPorUsuario(cpf);
         res.json({
             status: "sucesso",
             data: equipes,
@@ -87,7 +87,7 @@ router.get('/rustica', async (req, res) => {
     });
 });
 
-async function pegarTodasEquipesPorModalidade2(idModalidade) {
+async function pegarTodasEquipesPorModalidade(idModalidade) {
     equipes = await equipes_juergs.findAndCountAll({
         where: {
             id_modalidade: idModalidade,
@@ -135,7 +135,7 @@ async function pegarTodasEquipesPorFase(idModalidade, faseAtual) {
     })
 }
 
-async function pegarTodasEquipesPorUsuario2(userCpf) {
+async function pegarTodasEquipesPorUsuario(userCpf) {
     equipes = await cadastro_equipe.findAndCountAll({
         where: {
             cadastroJuergsCpf: userCpf,
