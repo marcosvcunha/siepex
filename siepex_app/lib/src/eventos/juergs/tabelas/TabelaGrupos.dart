@@ -47,7 +47,65 @@ class _TabelaGruposState extends State<TabelaGrupos> {
   // Apenas para demonstração
   List<String> _groupsFutsal = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
-  TableRow tableRow(String time, int partidas, int vitorias, int derrotas,
+  @override
+  Widget build(BuildContext context) {
+    Modalidade modalidade = Provider.of<Modalidade>(context);
+    HandleData _handleData = HandleData();
+    return FutureBuilder(
+        future: _handleData.listarJogos(modalidade, 1),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            List<Jogo> retJogos = snapshot.data;
+            if (retJogos.length == 0) {
+              return MaterialApp(
+                home: Scaffold(
+                  appBar: AppBar(
+                    title: Text("Nada para mostrar"),
+                  ),
+                ),
+              );
+            }
+            return ListView.builder(
+              itemCount: _groupsFutsal.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return SizedBox(height: 70);
+                }
+                return GrupoCard(
+                    retJogos.sublist(
+                              (index - 1) * 3, ((index - 1) * 3) + 3),
+                    index - 1
+                  );
+              },
+            );
+          }
+        });
+  }
+}
+
+class GrupoCard extends StatefulWidget {
+  final List<Jogo> jogos;
+  final int index;
+  GrupoCard(this.jogos, this.index);
+  @override
+  _GrupoCardState createState() => _GrupoCardState();
+}
+
+class _GrupoCardState extends State<GrupoCard> {
+  List<String> _groupsFutsal = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  bool showTable;
+
+  void initState(){
+    super.initState();
+
+    showTable = true;
+  }
+
+    TableRow tableRow(String time, int partidas, int vitorias, int derrotas,
       int empates, int pontos) {
     return TableRow(children: [
       Padding(
@@ -115,7 +173,92 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     ]);
   }
 
-  Widget tabela(int index, List<Jogo> retJogos) {
+
+   Widget _jogoTile(String timeA, int resultadoA, String timeB, int resultadoB) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(),
+      ),
+      height: 60,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      timeA,
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )),
+              Expanded(
+                flex: 1,
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
+                    height: 35,
+                    width: 35,
+                    child: Center(
+                        child: Text(
+                      resultadoA.toString(),
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    )),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
+                    height: 35,
+                    width: 35,
+                    child: Center(
+                        child: Text(
+                      resultadoB.toString(),
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    )),
+                  ),
+                ),
+              ),
+              Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: Text(
+                      timeB,
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400),
+                      textAlign: TextAlign.end,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )),
+            ],
+          ),
+          Text(
+            'Ginasio Local, 23/09 17:30',
+            style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+          ),
+        ],
+      ),
+    );
+  }
+
+      Widget tabela(int index, List<Jogo> retJogos) {
     List<TimeFaseGrupo> times = [
       TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
       TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
@@ -312,7 +455,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                     child: MaterialButton(
                       onPressed: () {
                         setState(() {
-                          showTable[index] = false;
+                          showTable = false;
                         });
                       },
                       highlightColor: Colors.transparent,
@@ -340,91 +483,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     );
   }
 
-  Widget _jogoTile(String timeA, int resultadoA, String timeB, int resultadoB) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(),
-      ),
-      height: 60,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Expanded(
-                  flex: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Text(
-                      timeA,
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )),
-              Expanded(
-                flex: 1,
-                child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
-                    height: 35,
-                    width: 35,
-                    child: Center(
-                        child: Text(
-                      resultadoA.toString(),
-                      style: TextStyle(fontSize: 18, color: Colors.black),
-                    )),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
-                    height: 35,
-                    width: 35,
-                    child: Center(
-                        child: Text(
-                      resultadoB.toString(),
-                      style: TextStyle(fontSize: 18, color: Colors.black),
-                    )),
-                  ),
-                ),
-              ),
-              Expanded(
-                  flex: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: Text(
-                      timeB,
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
-                      textAlign: TextAlign.end,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )),
-            ],
-          ),
-          Text(
-            'Ginasio Local, 23/09 17:30',
-            style: TextStyle(fontSize: 14, color: Colors.grey[800]),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget jogosCard(int index, List<Jogo> jogosJuers) {
+    Widget jogosCard(int index, List<Jogo> jogosJuers) {
     return Padding(
       key: ValueKey(2),
       padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
@@ -470,7 +529,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                     child: MaterialButton(
                       onPressed: () {
                         setState(() {
-                          showTable[index] = true;
+                          showTable = true;
                         });
                       },
                       highlightColor: Colors.transparent,
@@ -498,49 +557,15 @@ class _TabelaGruposState extends State<TabelaGrupos> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
-    Modalidade modalidade = Provider.of<Modalidade>(context);
-    HandleData _handleData = HandleData();
-    return FutureBuilder(
-        future: _handleData.listarJogos(modalidade, 1),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            List<Jogo> retJogos = snapshot.data;
-            if (retJogos.length == 0) {
-              return MaterialApp(
-                home: Scaffold(
-                  appBar: AppBar(
-                    title: Text("Nada para mostrar"),
-                  ),
-                ),
-              );
-            }
-            return ListView.builder(
-              itemCount: _groupsFutsal.length + 1,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return SizedBox(height: 70);
-                }
-                return AnimatedSwitcher(
+
+  return AnimatedSwitcher(
                   duration: Duration(milliseconds: 200),
-                  child: showTable[index - 1]
-                      ? tabela(
-                          index - 1,
-                          retJogos.sublist(
-                              (index - 1) * 3, ((index - 1) * 3) + 3))
-                      : jogosCard(
-                          index - 1,
-                          retJogos.sublist(
-                              (index - 1) * 3, ((index - 1) * 3) + 3)),
-                );
-              },
-            );
-          }
-        });
+  child: showTable ? tabela(widget.index, widget.jogos) : jogosCard(widget.index, widget.jogos),
+  );
   }
 }
+
+

@@ -119,52 +119,6 @@ class HandleData {
     }
   }
 
-  Future criarEquipe(BuildContext context, Modalidade modalidade,
-      String nomeEquipe, bool isActive) async {
-    try {
-      if (!(userJuergs.tipoParticipante == "Atleta")) {
-        errorDialog(context, 'Erro', 'Apenas Atletas podem criar equipes!');
-        return;
-      } else if (!isActive) {
-        errorDialog(context, 'Erro', 'Inscrições Encerradas');
-        return;
-      }
-      if (nomeEquipe.isNotEmpty) {
-        var resposta =
-            jsonDecode((await http.put(baseUrl + 'equipe/cadastra', body: {
-          'id_modalidade': modalidade.id.toString(),
-          'nome_equipe': nomeEquipe,
-          'nome_modalidade': modalidade.nome,
-          'maximo_participantes': modalidade.maxParticipantes.toString(),
-          'user_name': userJuergs.nome,
-          'user_cpf': userJuergs.cpf,
-          'user_cel': userJuergs.celular,
-        }))
-                .body);
-        if (resposta['status'] == 'sucesso') {
-          print(resposta['data']);
-          userJuergs.minhasEquipes.add(Equipe.fromJson(resposta['data']));
-          errorDialog(context, 'Sucesso', 'Equipe Criada');
-          return;
-        } else if (resposta['erro'] == 'Equipe já existe') {
-          errorDialog(context, 'Erro ao criar equipe!',
-              'Já existe uma equipe com este nome.');
-          return;
-        } else if (resposta['erro'] == 'ja_cadastrado_na_modalidade') {
-          errorDialog(context, 'Erro ao criar equipe!',
-              'Você ja esta cadastrado nesta modalidade.');
-          return;
-        }
-      } else {
-        errorDialog(context, 'Erro ao criar equipe!',
-            'O nome da equipe é obrigatório.');
-      }
-    } catch (e) {
-      print('Erro ao criar Equipe: ' + e.toString());
-      return;
-    }
-  }
-
   Future<List<Jogo>> listarJogos(Modalidade modalidade, int fase) async {
     var resposta =
         jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {

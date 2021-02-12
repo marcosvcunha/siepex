@@ -25,12 +25,31 @@ router.put('/cadastra', async (req, res) => {
             return;
         }
 
-        //TODO: Pode ser conveniente conferir se o usuário já não possui equipe para a modalidade, entretanto o app deve testar isso.
+        //TODO: Pode ser conveniente conferir se o usuário já não possui equipe para a modalidade, entretanto, o app deve testar isso.
         equipe = await criarEquipe(req, res);
+        
+        newEquipe = (await equipes_juergs.findAll({
+            where: {
+                id: equipe.id,
+            },
+            include: [{
+                model: cadastro_equipe,
+                include: [{
+                    model: cadastro_juergs,
+                }],
+            },{
+                model: cadastro_juergs,
+            }],
+        }));
+    
+        
+        console.log(newEquipe);
+        newEquipeJson = equipesToJson(newEquipe)[0];
+
 
         res.json({
             status: 'sucesso',
-            data: equipe,
+            data: newEquipeJson,
         })
         return;
     } catch (e) {
@@ -117,6 +136,7 @@ router.put('/entra', async (req, res) => {
     userCpf = req.body['user_cpf'];
 
     equipe = (await equipes_juergs.findByPk(equipeId))['dataValues'];
+
     updatedEquipe = await equipes_juergs.update({
         numero_participantes: equipe['numero_participantes'] + 1,
     }, {
@@ -309,6 +329,57 @@ async function listar(id) {
             resolve(result);
         })
     })
+}
+
+function equipesToJson(equipes){
+    // Recebe o que vem do banco da query de equpes com join de cadastro.
+    // Retorna uma lista com as Equipes em Json
+    // Dentro de cada equipes tem uma lista de membros da equipes também em Json
+
+    equipesJson = []
+
+    equipes.forEach(function(equipe, i){      
+        capitao = equipe.dataValues.cadastro_juerg.dataValues;
+        
+        equipeJson = {
+            'id':equipe['dataValues']['id'],
+            'id_modalidade': equipe['dataValues']['id_modalidade'],
+            'nome_equipe': equipe['dataValues']['nome_equipe'],
+            'nome_modalidade': equipe['dataValues']['nome_modalidade'],
+            'maximo_participantes': equipe['dataValues']['maximo_participantes'],
+            'numero_participantes': equipe['dataValues']['numero_participantes'],
+            // 'numero_rustica': 0,
+            // 'cpf_capitao': equipe['dataValues']['cpf_capitao'],
+            // 'celular_capitao': equipe['dataValues']['celular_capitao'],
+            'participantes': [],
+            'capitao': cadastroToJson(capitao),
+        }
+        
+        cadastros = equipe['dataValues']['cadastro_equipes']
+        
+        cadastros.forEach(function(cadastro, i){
+            user = cadastro['dataValues']['cadastro_juerg'].dataValues
+            userJson = cadastroToJson(user);
+            equipeJson['participantes'].push(userJson);
+        })
+        equipesJson.push(equipeJson);
+    })
+    return equipesJson;
+}
+
+function cadastroToJson(cad){
+    return {
+        'cpf': cad.cpf,
+        'nome': cad.nome,
+        'email': cad.email,
+        'instituicao': cad.instituicao,
+        'ind_uergs': cad.ind_uergs,
+        'campos_uergs': cad.campos_uergs,
+        'tipo_participante': cad.tipo_participante,
+        'ind_necessidades_especiais': cad.ind_necessidades_especiais,
+        'celular': cad.celular,
+        'modalidade_juiz': cad.modalidade_juiz,
+    }
 }
 
 module.exports = router;

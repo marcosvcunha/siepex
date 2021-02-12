@@ -51,7 +51,7 @@ class ListaEquipesPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Capitão: ' + equipe.nomeCapitao,
+                      'Capitão: ' + equipe.capitao.nome,
                       style: TextStyle(
                           color: Colors.black87,
                           fontSize: 18,

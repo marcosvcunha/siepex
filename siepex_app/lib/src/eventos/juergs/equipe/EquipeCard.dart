@@ -9,8 +9,9 @@ class EquipeCard extends StatelessWidget {
   final bool isActive;
   EquipeCard({@required this.isActive});
   var corCinza = Colors.grey[900]; // Cor dos itens menores do card
+  Modalidade modalidade;
   Widget body(BuildContext context, Equipe equipe, int index) {
-    Modalidade modalidade = Provider.of<Modalidade>(context);
+    modalidade = Provider.of<Modalidade>(context);
     bool temEquipe = userJuergs.temEquipe(equipe.nomeModalidade);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
@@ -105,7 +106,7 @@ class EquipeCard extends StatelessWidget {
                             onPressed: temEquipe
                                 ? null
                                 : () async {
-                                  modalidade.notificar();
+                                  modalidade.notificar(); // ?? Para dar loading ?? (Ou pode ser excluido ?)
                                     await equipe.entrarEquipe(
                                         context, isActive);
                                     userJuergs.minhasEquipes.add(equipe);
@@ -184,61 +185,25 @@ class EquipeCard extends StatelessWidget {
   }
 
   Text ajustaEquipe(int index, int idModalidade) {
-    if (idModalidade == 1 || idModalidade == 3) {
-      if (index > 15) {
-        return Text(
-          'Equipe: ' + (index + 1).toString() + '/16',
+    int maxTeams;
+
+    if(modalidade.nome == 'Futsal Masculino'){
+      maxTeams = 24;
+    } else if(modalidade.nome == 'Futsal Feminino' || modalidade.nome == 'Vôlei Misto'){
+      maxTeams = 16;
+    } else if(modalidade.nome == 'Handebol Masculino' || modalidade.nome == 'Handebol Feminino'){
+      maxTeams = 12;
+    } else{
+      maxTeams = 12;
+    }
+
+    return Text(
+      'Equipe: ' + (index + 1).toString() + '/' + maxTeams.toString(),
           style: TextStyle(
-              color: Colors.red[900],
+              color: (index < maxTeams) ? corCinza : Colors.red[900],
               fontSize: 16,
               fontWeight: FontWeight.w500),
-        );
-      } else {
-        return Text(
-          'Equipe: ' + (index + 1).toString() + '/16',
-          style: TextStyle(
-              color: corCinza,
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
-        );
-      }
-    } else if (idModalidade == 2) {
-      if (index > 11) {
-        return Text(
-          'Equipe: ' + (index + 1).toString() + '/12',
-          style: TextStyle(
-              color: Colors.red[900],
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
-        );
-      } else {
-        return Text(
-          'Equipe: ' + (index + 1).toString() + '/12',
-          style: TextStyle(
-              color: corCinza,
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
-        );
-      }
-    } else if (idModalidade == 4 || idModalidade == 5) {
-      if (index > 7) {
-        return Text(
-          'Equipe: ' + (index + 1).toString() + '/8',
-          style: TextStyle(
-              color: Colors.red[900],
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
-        );
-      }
-    } else {
-      return Text(
-        'Equipe: ' + (index + 1).toString() + '/8',
-        style: TextStyle(
-            color: corCinza,
-            fontSize: 16,
-            fontWeight: FontWeight.w400),
-      );
-    }
+    );
   }
 
   @override

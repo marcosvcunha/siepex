@@ -7,28 +7,6 @@ const {
     cadastro_equipe,
 } = require('../../models');
 
-// router.put('/', async (req, res) => {
-//     // decide qual função usar com base no parametro passado em req
-//     if ('id_modalidade' in req.body) {
-//         idModalidade = parseInt(req.body['id_modalidade']);
-//         if('fase_atual' in req.body){
-//             faseAtual = (req.body['fase_atual'] != 'null') ? (parseInt(req.body['fase_atual'])) : '';
-//             equipes = await pegarTodasEquipesPorFase(idModalidade, faseAtual);
-//         }else
-//             equipes = await pegarTodasEquipesPorModalidade(idModalidade);
-//         res.json({
-//             data: equipes.rows,
-//             count: equipes.count,
-//         })
-//     } else if ('user_cpf' in req.body) {
-//         equipes = await pegarTodasEquipesPorUsuario(req.body['user_cpf']);
-//         res.json({
-//             data: equipes.rows,
-//             count: equipes.count,
-//         })
-//     }
-// });
-
 router.put('/porModalidade', async (req, res) => {
     try{
         idModalidade = parseInt(req.body['id_modalidade']);
@@ -48,13 +26,32 @@ router.put('/porModalidade', async (req, res) => {
 router.put('/porFase', async (req, res) => {
     try{
         idModalidade = parseInt(req.body['id_modalidade']);
-        fase = parseInt(req.body['fase_atual']);
-        equipes = await pegarTodasEquipesPorFase(idModalidade, fase);
+        fase = parseInt(req.body['fase_atual']);        
+
+        equipes = await equipes_juergs.findAndCountAll({
+            where: {
+                id_modalidade: idModalidade,
+                fase_equipe: fase,
+            },
+            include: [{
+                model: cadastro_equipe,
+                include: [{
+                    model: cadastro_juergs,
+                }]
+            },{
+                model: cadastro_juergs,
+            }],
+            order: [
+                ['data_cadastro', 'asc']
+            ],
+        });
+    
+        equipesJson =  equipesToJson(equipes);
         
         res.json({
             status: "sucesso",
-            data: equipes.rows,
-            count: equipes.count,
+            data: equipesJson,
+            count: equipesJson.length,
         });
     }catch(e){
         res.json({
@@ -89,36 +86,6 @@ router.get('/rustica', async (req, res) => {
         data: participantes,
     });
 });
-
-async function pegarTodasEquipesPorModalidade(idModalidade) {
-    return new Promise(function (resolve, reject) {
-        equipes_juergs.findAndCountAll({
-            where: {
-                id_modalidade: idModalidade,
-            },
-            include: [{
-                model: cadastro_equipe,
-                include: [{
-                    model: cadastro_juergs,
-                }]
-            }],
-            order: [
-                ['data_cadastro', 'asc']
-            ],
-        }).then(async (result) => {
-            for (var i = 0; i < result.rows.length; i++) { // Repete para cada equipe encontrada.
-                userCpfs = result.rows[i]['dataValues']['participantes_cadastrados'].split(';');
-                userCpfs = userCpfs.slice(0, userCpfs.length - 1); // Coloca os cpf em uma lista de string
-                result.rows[i]['dataValues']['participantes_cadastrados'] = userCpfs; // adiciona os cpfs ao resultado
-
-                userNomes = result.rows[i]['dataValues']['nomes_participantes'].split(';');
-                userNomes = userNomes.slice(0, userNomes.length - 1); // Coloca os Nomes em uma lista de string
-                result.rows[i]['dataValues']['nomes_participantes'] = userNomes; // adiciona os Nomes ao resultado
-            }
-            resolve(result);
-        })
-    })
-}
 
 async function pegarTodasEquipesPorModalidade2(idModalidade) {
     equipes = await equipes_juergs.findAndCountAll({
@@ -215,15 +182,6 @@ async function pegarTodasEquipesPorUsuario2(userCpf) {
         equipesJson.push(equipeJson);
     });
     return equipesJson;
-}
-
-
-function pegarNome(cpf){
-    return new Promise(function (resolve, reject){
-        cadastro_juergs.findByPk(cpf).then((result2) => {
-            resolve(result2['dataValues']['nome']);
-        });
-    });
 }
 
 function equipesToJson(equipes){

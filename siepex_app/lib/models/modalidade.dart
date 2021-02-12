@@ -38,7 +38,10 @@ class Modalidade extends ChangeNotifier {
   get inscrito => _inscrito;
 
   set inscrito(bool newVal) {
-    _inscrito = newVal;
+    if(newVal != _inscrito){
+      _inscrito = newVal;
+      notifyListeners();
+    }
   }
 
   void notificar(){

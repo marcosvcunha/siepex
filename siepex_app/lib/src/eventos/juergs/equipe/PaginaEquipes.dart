@@ -127,9 +127,9 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
           highlightColor: Colors.transparent,
           onPressed: () async {
             String nomeEquipe = await textInputDialog(context, modalidade);
-            await HandleData()
-                .criarEquipe(context, modalidade, nomeEquipe, isActive);
-            setState(() {});
+            await Equipe.criarEquipe(context, modalidade, nomeEquipe, isActive);
+            // setState(() {});
+            modalidade.inscrito = userJuergs.temEquipe(modalidade.nome);
           },
           child: Center(
             child: Text(
