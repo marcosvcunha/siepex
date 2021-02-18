@@ -4,6 +4,8 @@ import 'package:siepex/icons/sport_icons.dart';
 import 'package:http/http.dart' as http;
 import 'package:siepex/src/config.dart';
 import 'dart:convert';
+
+import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 // import 'package:siepex/models/serializeJuergs.dart';
 
 Map<String, IconData> icons = {
@@ -69,13 +71,20 @@ class Modalidade extends ChangeNotifier {
   // faseStr = fases[fase];
   }
 
-  Future<void> nextFase(List<int> idEquipes, List<String> equipesGrupoNome) async {
+  Future<void> nextFase(List<Equipe> equipes) async {
 
-    print(equipesGrupoNome);
 
-    idEquipes.removeWhere((item) => item == -2);
-    equipesGrupoNome.removeWhere((item) => item == 'Selecione');
+    // idEquipes.removeWhere((item) => item == -2);
+    // equipesGrupoNome.removeWhere((item) => item == 'Selecione');
 
+    List<int> idEquipes = <int>[];
+    List<String> equipesNome = <String>[];
+    for(Equipe equipe in equipes){
+      idEquipes.add(equipe.id);
+      equipesNome.add(equipe.nome);
+    }
+
+    print(json.encode(equipesNome));
 
 
     var resposta =
@@ -83,7 +92,7 @@ class Modalidade extends ChangeNotifier {
           'id_modalidade': id.toString(),
           'fase_atual': fase.toString(),
           'idEquipes': idEquipes.toString(),
-          'equipesGrupoNome': equipesGrupoNome.toString(),
+          'equipesGrupoNome': json.encode(equipesNome),
         })).body);
     if(resposta['status'] == 'sucesso'){
       // Alterar a fase nesta modalidade e dar NotifyListeners.

@@ -3,6 +3,7 @@ import 'package:siepex/models/modalidade.dart';
 import 'package:provider/provider.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
 import 'package:siepex/src/eventos/juergs/admin/listaEquipes.dart';
+import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import '../Widgets/roundButton.dart';
 import '../Widgets/loadingSnackbar.dart';
 
@@ -18,50 +19,61 @@ class SelectTeamsPage extends StatefulWidget {
 
 class _SelectTeamsPageState extends State<SelectTeamsPage> {
   bool _isLoading = false;
-  List<int> equipesGrupoId = List.generate(24, (index) {
-    return -2;
-  });
-  List<String> equipesGrupoNome = List.generate(24, (index) {
-    return 'Selecione';
-  });
+  List<Equipe> equipesSelecionaveis;
+  List<Equipe> equipesSelecionadas;
+// //   List<String> equipesGrupoNome = List.generate(24, (index) {
+//     return 'Selecione';
+//   });
 
   Modalidade modalidade;
 
   bool allFilled() {
-    for (int id in equipesGrupoId) {
-      if (id == -2) return false;
+    for (Equipe equipe in equipesSelecionadas) {
+      if (equipe.id == -2) return false;
     }
     return true;
   }
 
   Widget gruposSelection() {
     List<String> groups = new List<String>();
+
+    int numGroups;
+    int numTimes;
+
     if (modalidade.faseStr == 'Inscrição') {
-      groups.add('A');
-      groups.add('B');
-      groups.add('C');
-      groups.add('D');
-      groups.add('E');
-      groups.add('F');
-      groups.add('G');
-      groups.add('H');
+    	// Vai para a fase de grupos
+		groups = ['Grupo A', 'Grupo B', 'Grupo C', 'Grupo D', 'Grupo E', 'Grupo F', 'Grupo G', 'Grupo H'];
+    	numGroups = 8;
+    	numTimes = 3;
     } else if (modalidade.faseStr == 'Fase de Grupos') {
-      groups.add('A');
-      groups.add('B');
-      groups.add('C');
-      groups.add('D');
-    }else if(modalidade.faseStr == 'Quartas de Final' || modalidade.faseStr == 'Semi-Final'){
-      groups.add('A');
-      groups.add('B');
-    }
+        // Vai para Quartas
+		groups = ['Quartas 1', 'Quartas 2', 'Quartas 3', 'Quartas 4'];
+		numGroups = 4;
+		numTimes = 2;
+    } else if (modalidade.faseStr == 'Quartas de Final') {
+		// Vai para Semi
+		groups = ['Semi 1', 'Semi 2'];
+		numGroups = 2;
+		numTimes = 2;
+    } else if (modalidade.faseStr == 'Semi-Final') {
+		// Vai para final
+		groups = ['Final', '3º Lugar'];
+		numGroups = 2;
+		numTimes = 2;
+	} else if (modalidade.faseStr == 'Final') {}
     // LISTA COM AS TABELAS
-    return ListView.builder(
-        itemCount: groups.length + 1,
+    
+	equipesSelecionadas = List.generate(numGroups * numTimes, (index) {
+    	return null; // equipesSelecionaveis[index]; // TODO: mudar para null
+  	});
+	
+	return ListView.builder(
+        itemCount: numGroups + 1,
         itemBuilder: (context, index) {
           if (index < groups.length)
             return Column(
               children: <Widget>[
-                grupoTable(context, groups[index], index * 3),
+                tabelaGrupos(context, groups[index], index, numTimes),
                 SizedBox(
                   height: 20,
                 ),
@@ -80,7 +92,7 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                     Navigator.pop(context);
                     Scaffold.of(context).showSnackBar(loadingSnackbar());
                     // TODO: receber resposta e verificar se deu certo.
-                    await modalidade.nextFase(equipesGrupoId,equipesGrupoNome);
+                    await modalidade.nextFase(equipesSelecionadas);
                     Scaffold.of(context).hideCurrentSnackBar();
                     Navigator.pop(context);
                   }, () => Navigator.pop(context));
@@ -95,112 +107,42 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
         });
   }
 
-  Widget grupoTable(BuildContext context, String grupo, int index) {
-    if (modalidade.fase == 0) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 16.0),
-        child: Column(
-          children: <Widget>[
-            Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'Grupo ' + grupo,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500),
-                )),
-            Divider(
-              color: Colors.black,
-              indent: 20,
-              thickness: 0.8,
-              endIndent: 20,
-            ),
-            grupoLinha(context, grupo + '1', index),
-            grupoLinha(context, grupo + '2', index + 1),
-            grupoLinha(context, grupo + '3', index + 2),
-          ],
-        ),
-      );
-    }else if(modalidade.fase == 1){
-      return Padding(
-        padding: const EdgeInsets.only(top: 16.0),
-        child: Column(
-          children: <Widget>[
-            Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'Confronto ' + grupo,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500),
-                )),
-            Divider(
-              color: Colors.black,
-              indent: 20,
-              thickness: 0.8,
-              endIndent: 20,
-            ),
-            grupoLinha(context, grupo + '1', index),
-            grupoLinha(context, grupo + '2', index + 1),
-          ],
-        ),
-      );
-    }else if(modalidade.fase == 2){
-      return Padding(
-        padding: const EdgeInsets.only(top: 16.0),
-        child: Column(
-          children: <Widget>[
-            Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'Semi ' + grupo,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500),
-                )),
-            Divider(
-              color: Colors.black,
-              indent: 20,
-              thickness: 0.8,
-              endIndent: 20,
-            ),
-            grupoLinha(context, grupo + '1', index),
-            grupoLinha(context, grupo + '2', index + 1),
-          ],
-        ),
-      );
-    }else if(modalidade.fase == 3){
-      return Padding(
-        padding: const EdgeInsets.only(top: 16.0),
-        child: Column(
-          children: <Widget>[
-            Align(
-                alignment: Alignment.center,
-                child: Text(
-                  grupo == 'A' ? 'Final' : '3º lugar',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500),
-                )),
-            Divider(
-              color: Colors.black,
-              indent: 20,
-              thickness: 0.8,
-              endIndent: 20,
-            ),
-            grupoLinha(context, grupo + '1', index),
-            grupoLinha(context, grupo + '2', index + 1),
-          ],
-        ),
-      );
-    }
+  Widget tabelaGrupos(
+      BuildContext context, String nomeCard, int cardIndex, int numTimes) {
+    List<Widget> rows = List.generate(numTimes, (index) {
+      return grupoLinha(
+          context, (index + 1).toString(), cardIndex * numTimes + index);
+    });
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Column(
+        children: <Widget>[
+          Align(
+              alignment: Alignment.center,
+              child: Text(
+                nomeCard,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500),
+              )),
+          Divider(
+            color: Colors.black,
+            indent: 20,
+            thickness: 0.8,
+            endIndent: 20,
+          ),
+          Column(
+            children: rows,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget grupoLinha(BuildContext context, String time, int index) {
+	Equipe equipe = equipesSelecionadas[index];
+	ValueNotifier<String> nomeEquipe = ValueNotifier(equipe == null ? 'Selecionar' : equipe.nome);
     return Column(children: [
       Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16),
@@ -223,7 +165,9 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                       size: 22,
                     ),
                     onPressed: () async {
-                      List resul = await Navigator.push(
+						List<Equipe> equipesNaoSelecionadas = List<Equipe>.from(equipesSelecionaveis);
+						equipesNaoSelecionadas.removeWhere((element) => equipesSelecionadas.contains(element));
+                      Equipe equipeSelecionada = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
@@ -231,21 +175,25 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                                     value: modalidade,
                                     child: ListaEquipesPage(
                                         equipeId: time,
-                                        equipesSelecionadas: equipesGrupoId),
+                                        equipesSelecionaveis: equipesNaoSelecionadas),
                                   )));
-                      if (resul != null) {
-                        equipesGrupoId[index] = resul[0];
-                        equipesGrupoNome[index] = resul[1];
-                        setState(() {});
-                      }
+                    equipesSelecionadas[index] = equipeSelecionada;
+					nomeEquipe.value = equipeSelecionada == null ? 'Selecionar' : equipeSelecionada.nome; 
+                    // setState(() {});
                     }),
-                Text(
-                  equipesGrupoNome[index],
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400),
-                  overflow: TextOverflow.ellipsis,
+                ValueListenableBuilder(
+					valueListenable: nomeEquipe,
+                 	builder: (BuildContext context, String teamName, Widget child){
+
+					  return Text(
+                    teamName,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400),
+                    overflow: TextOverflow.ellipsis,
+                  );
+				  },
                 ),
               ],
             )
@@ -298,8 +246,45 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
         appBar: AppBar(
           title: Text('Selecione as Equipes'),
         ),
-        body: gruposSelection(),
+        body: FutureBuilder(
+			future: Equipe.getEquipesPorFase(modalidade.id, modalidade.fase),
+			builder: (context, snapshot) {
+				if(snapshot.connectionState == ConnectionState.waiting){
+					return Center(child: CircularProgressIndicator());
+				}else{
+					if(snapshot.hasData){
+						equipesSelecionaveis = snapshot.data;
+						return gruposSelection();
+					}else{
+						return Center(child: Text('Ocorreu um problema'));
+					}
+				}
+			},
+		),
       ),
     );
   }
 }
+
+
+class NomeTime{
+	String _nomeTime;
+
+
+}
+
+// class TimeRow extends StatefulWidget {
+//   final
+
+//   @override
+//   _TimeRowState createState() => _TimeRowState();
+// }
+
+// class _TimeRowState extends State<TimeRow> {
+//   @override
+//   Widget build(BuildContext context) {
+// 	return Container(
+	  
+// 	);
+//   }
+// }

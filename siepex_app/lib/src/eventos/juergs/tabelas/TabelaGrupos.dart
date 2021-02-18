@@ -61,13 +61,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
           } else {
             List<Jogo> retJogos = snapshot.data;
             if (retJogos.length == 0) {
-              return MaterialApp(
-                home: Scaffold(
-                  appBar: AppBar(
-                    title: Text("Nada para mostrar"),
-                  ),
-                ),
-              );
+              return Center(child: Text('Nada para mostrar'));
             }
             return ListView.builder(
               itemCount: _groupsFutsal.length + 1,

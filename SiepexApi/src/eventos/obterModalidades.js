@@ -6,7 +6,7 @@ const {
     equipes_juergs,
 } = require('../../models');
 
-const{ Op } = require("sequelize");
+const { Op } = require("sequelize");
 
 const grupos = ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3', 'D1', 'D2', 'D3', 'E1',
     'E2', 'E3', 'F1', 'F2', 'F3', 'G1', 'G2', 'G3', 'H1', 'H2', 'H3',];
@@ -46,9 +46,11 @@ router.put('/listaTabela', async (req, res) => {
 router.put('/nextFase', async (req, res) => {
     try {
         idEquipes = JSON.parse(req.body['idEquipes']); // Lista com id das equipes
-        equipesGrupoNome = req.body['equipesGrupoNome'].split(',');
+        equipesGrupoNome = JSON.parse(req.body['equipesGrupoNome'])
         id = parseInt(req.body['id_modalidade']); // Id da modalidade
-        faseAtual = parseInt(req.body['fase_atual']); // fase atual da modalidade
+        const faseAtual = parseInt(req.body['fase_atual']); // fase atual da modalidade
+        console.info('Fase atual 1: ' + faseAtual.toString());
+
 
         modalidade = (await modalidades_juergs.findByPk(id))['dataValues'];
 
@@ -58,20 +60,23 @@ router.put('/nextFase', async (req, res) => {
             // TODO:: Avançar a competição de fase e criar os respectivos jogos.
             switch (faseAtual) {
                 case 0:
-                    await monta_tabela(idEquipes, equipesGrupoNome, id, faseAtual);
-                    proxima_fase(id, faseAtual);
+                    console.info('Fase atual 2: ' + faseAtual.toString());
+                    await monta_tabela_grupos(idEquipes, equipesGrupoNome, id);
+                    console.info('Fase atual 3: ' + faseAtual.toString());
+                    await proxima_fase(id, faseAtual);
+                    console.info('Fase atual 4: ' + faseAtual.toString());
                     break;
                 case 1:
-                    await monta_quartas(idEquipes, equipesGrupoNome, id, faseAtual);
-                    proxima_fase(id, faseAtual);
+                    await monta_quartas(idEquipes, equipesGrupoNome, id);
+                    await proxima_fase(id, faseAtual);
                     break;
                 case 2:
-                    monta_semi(idEquipes, equipesGrupoNome, id, faseAtual);
-                    proxima_fase(id, faseAtual);
+                    await monta_semi(idEquipes, equipesGrupoNome, id);
+                    await proxima_fase(id, faseAtual);
                     break;
                 case 3:
-                    monta_final(idEquipes, equipesGrupoNome, id, faseAtual);
-                    proxima_fase(id, faseAtual);
+                    await monta_final(idEquipes, equipesGrupoNome, id);
+                    await proxima_fase(id, faseAtual);
                     break;
                 case 4:
                     // TODO: Encerra a competição.
@@ -97,6 +102,7 @@ router.put('/nextFase', async (req, res) => {
         }
     }
     catch (e) {
+        console.error('Erro ao avançar de Fase: ' + e.toString())
         res.json({
             status: 'erro',
         });
@@ -170,14 +176,14 @@ router.put('/atualizaJogos', async (req, res) => {
 });
 
 router.put('/pegarJogos/porTime', async (req, res) => {
-    try{
+    try {
         idEquipe = req.body['id_equipe'];
-        
+
         jogos = await jogos_juergs.findAll({
             where: {
                 [Op.or]: [
-                    {id_time_a: idEquipe},
-                    {id_time_b: idEquipe},
+                    { id_time_a: idEquipe },
+                    { id_time_b: idEquipe },
                 ],
             },
             order: [
@@ -185,322 +191,106 @@ router.put('/pegarJogos/porTime', async (req, res) => {
             ]
         });
         res.json({
-            status:'sucesso',
+            status: 'sucesso',
             data: jogos,
         });
-    }catch(e){
+    } catch (e) {
         res.json({
-            status:'erro'
+            status: 'erro'
         });
     }
 });
 
-async function monta_tabela(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
 
-    switch (idModalidade) {
-        case 1:
-            for (var i = 0; i < 8; i++) {
-                if (!equipesGrupoNome[(i * 3)]) {
-                    equipesGrupoNome[(i * 3)] = 'Sem Equipe';
-                    idEquipes[(i * 3)] = -2;
-                }
-                if (!equipesGrupoNome[(i * 3) + 1]) {
-                    equipesGrupoNome[(i * 3) + 1] = 'Sem Equipe';
-                    idEquipes[(i * 3) + 1] = -2;
-                }
-                if (!equipesGrupoNome[(i * 3) + 2]) {
-                    equipesGrupoNome[(i * 3) + 2] = 'Sem Equipe';
-                    idEquipes[(i * 3) + 2] = -2;
-                }
+async function monta_tabela_grupos(idEquipes, nomeEquipes, idModalidade) {
+    // Monta tabela Para:
+    // 8 Grupos
+    // 3 Times
+    const faseAtual = 1
+    await insere_jogos_juergs(nomeEquipes[0], nomeEquipes[1], idEquipes[0], idEquipes[1], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[2], nomeEquipes[0], idEquipes[2], idEquipes[0], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[1], nomeEquipes[2], idEquipes[1], idEquipes[2], 0, 0, false, idModalidade, faseAtual);
 
-                var nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
-                var nome_time_b = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
-                var id_time_a = idEquipes[(i * 3)];
-                var id_time_b = idEquipes[(i * 3) + 1];
-                var resultado_a = 0;
-                var resultado_b = 0;
-                var encerrado = 0;
-                var modalidade = idModalidade;
-                var etapa_jogo = faseAtual;
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 3) + 2].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 3)];
-                id_time_b = idEquipes[(i * 3) + 2];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
+    await insere_jogos_juergs(nomeEquipes[3], nomeEquipes[4], idEquipes[3], idEquipes[4], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[5], nomeEquipes[3], idEquipes[5], idEquipes[3], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[4], nomeEquipes[5], idEquipes[4], idEquipes[5], 0, 0, false, idModalidade, faseAtual);
 
-                nome_time_a = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 3) + 2].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 3) + 1];
-                id_time_b = idEquipes[(i * 3) + 2];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-            }
-            for (var i = 0; i != 24; i++) {
-                if (!idEquipes[i]) {
-                    return;
-                }
-                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
-            }
-            break;
-        case 2:
-            for (var i = 0; i < 4; i++) {
-                var nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
-                var nome_time_b = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
-                var id_time_a = idEquipes[(i * 3)];
-                var id_time_b = idEquipes[(i * 3) + 1];
-                var resultado_a = 0;
-                var resultado_b = 0;
-                var encerrado = 0;
-                var modalidade = idModalidade;
-                var etapa_jogo = faseAtual;
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 3) + 2].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 3)];
-                id_time_b = idEquipes[(i * 3) + 2];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 3) + 2].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 3) + 1];
-                id_time_b = idEquipes[(i * 3) + 2];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-            }
-            for (var i = 0; i != 12; i++) {
-                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
-            }
-            break;
-        case 3:
-            for (var i = 0; i < 4; i++) {
-                var nome_time_a = equipesGrupoNome[(i * 4)].replace('[', '').replace(']', '').trim();
-                var nome_time_b = equipesGrupoNome[(i * 4) + 1].replace('[', '').replace(']', '').trim();
-                var id_time_a = idEquipes[(i * 4)];
-                var id_time_b = idEquipes[(i * 4) + 1];
-                var resultado_a = 0;
-                var resultado_b = 0;
-                var encerrado = 0;
-                var modalidade = idModalidade;
-                var etapa_jogo = faseAtual;
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 4)].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 4) + 2].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 4)];
-                id_time_b = idEquipes[(i * 4) + 2];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 4)].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 4) + 3].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 4)];
-                id_time_b = idEquipes[(i * 4) + 3];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 4) + 1].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 4) + 2].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 4) + 1];
-                id_time_b = idEquipes[(i * 4) + 2];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 4) + 1].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 4) + 3].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 4) + 1];
-                id_time_b = idEquipes[(i * 4) + 3];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 4) + 2].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 4) + 3].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 4) + 2];
-                id_time_b = idEquipes[(i * 4) + 3];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-            }
-            for (var i = 0; i != 16; i++) {
-                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
-            }
-            break;
-        case 4:
-        case 5:
-            for (var i = 0; i < 2; i++) {
-                var nome_time_a = equipesGrupoNome[(i * 4)].replace('[', '').replace(']', '').trim();
-                var nome_time_b = equipesGrupoNome[(i * 4) + 1].replace('[', '').replace(']', '').trim();
-                var id_time_a = idEquipes[(i * 4)];
-                var id_time_b = idEquipes[(i * 4) + 1];
-                var resultado_a = 0;
-                var resultado_b = 0;
-                var encerrado = 0;
-                var modalidade = idModalidade;
-                var etapa_jogo = faseAtual;
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 4)].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 4) + 2].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 4)];
-                id_time_b = idEquipes[(i * 4) + 2];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 4)].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 4) + 3].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 4)];
-                id_time_b = idEquipes[(i * 4) + 3];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 4) + 1].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 4) + 2].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 4) + 1];
-                id_time_b = idEquipes[(i * 4) + 2];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 4) + 1].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 4) + 3].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 4) + 1];
-                id_time_b = idEquipes[(i * 4) + 3];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-                nome_time_a = equipesGrupoNome[(i * 4) + 2].replace('[', '').replace(']', '').trim();
-                nome_time_b = equipesGrupoNome[(i * 4) + 3].replace('[', '').replace(']', '').trim();
-                id_time_a = idEquipes[(i * 4) + 2];
-                id_time_b = idEquipes[(i * 4) + 3];
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-            }
-            console.log('ID EQUIPES:');
-            console.log(idEquipes);
-            for (var i = 0; i != 8; i++) {
-                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
-            }
-            break;
-    }
+    await insere_jogos_juergs(nomeEquipes[6], nomeEquipes[7], idEquipes[6], idEquipes[7], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[8], nomeEquipes[6], idEquipes[8], idEquipes[6], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[7], nomeEquipes[8], idEquipes[7], idEquipes[8], 0, 0, false, idModalidade, faseAtual);
+
+    await insere_jogos_juergs(nomeEquipes[9], nomeEquipes[10], idEquipes[9], idEquipes[10], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[11], nomeEquipes[9], idEquipes[11], idEquipes[9], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[10], nomeEquipes[11], idEquipes[10], idEquipes[11], 0, 0, false, idModalidade, faseAtual);
+
+    await insere_jogos_juergs(nomeEquipes[12], nomeEquipes[13], idEquipes[12], idEquipes[13], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[14], nomeEquipes[12], idEquipes[14], idEquipes[12], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[13], nomeEquipes[14], idEquipes[13], idEquipes[14], 0, 0, false, idModalidade, faseAtual);
+
+    await insere_jogos_juergs(nomeEquipes[15], nomeEquipes[16], idEquipes[15], idEquipes[16], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[17], nomeEquipes[15], idEquipes[17], idEquipes[15], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[16], nomeEquipes[17], idEquipes[16], idEquipes[17], 0, 0, false, idModalidade, faseAtual);
+
+    await insere_jogos_juergs(nomeEquipes[18], nomeEquipes[19], idEquipes[18], idEquipes[19], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[20], nomeEquipes[18], idEquipes[20], idEquipes[18], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[19], nomeEquipes[20], idEquipes[19], idEquipes[20], 0, 0, false, idModalidade, faseAtual);
+
+    await insere_jogos_juergs(nomeEquipes[21], nomeEquipes[22], idEquipes[21], idEquipes[22], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[23], nomeEquipes[21], idEquipes[23], idEquipes[21], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[22], nomeEquipes[23], idEquipes[22], idEquipes[23], 0, 0, false, idModalidade, faseAtual);
+
+    await equipes_juergs.update({
+        fase_equipe: faseAtual,
+    }, {
+        where: {
+            id: idEquipes,
+        }
+    })
+}
+
+async function monta_quartas(idEquipes, nomeEquipes, idModalidade) {
+    const faseAtual = 2
+    await insere_jogos_juergs(nomeEquipes[0], nomeEquipes[1], idEquipes[0], idEquipes[1], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[2], nomeEquipes[3], idEquipes[2], idEquipes[3], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[4], nomeEquipes[5], idEquipes[4], idEquipes[5], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[6], nomeEquipes[7], idEquipes[6], idEquipes[7], 0, 0, false, idModalidade, faseAtual);
+
+    await equipes_juergs.update({
+        fase_equipe: faseAtual,
+    }, {
+        where: {
+            id: idEquipes,
+        }
+    })
 
 }
 
-async function monta_quartas(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
-    switch (idModalidade) {
-        case 1:
-            for (var i = 0; i < 4; i++) {
-                if (!equipesGrupoNome[(i * 3)]) {
-                    equipesGrupoNome[(i * 3)] = 'Sem Equipe';
-                    idEquipes[(i * 3)] = -2;
-                }
-                if (!equipesGrupoNome[(i * 3) + 1]) {
-                    equipesGrupoNome[(i * 3) + 1] = 'Sem Equipe';
-                    idEquipes[(i * 3) + 1] = -2;
-                }
-                var nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
-                var nome_time_b = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
-                var id_time_a = idEquipes[(i * 3)];
-                var id_time_b = idEquipes[(i * 3) + 1];
-                var resultado_a = 0;
-                var resultado_b = 0;
-                var encerrado = 0;
-                var modalidade = idModalidade;
-                var etapa_jogo = faseAtual;
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-            }
-            for (var i = 0; i < 8; i++) {
-                if (!idEquipes[i]) {
-                    return;
-                }
-                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
-            }
-            break;
-        case 2:
-            break;
-        case 3:
-            break;
-        case 4:
-        case 5:
-            break;
-    }
+async function monta_semi(idEquipes, nomeEquipes, idModalidade) {
+    const faseAtual = 3
+    await insere_jogos_juergs(nomeEquipes[0], nomeEquipes[1], idEquipes[0], idEquipes[1], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[2], nomeEquipes[3], idEquipes[2], idEquipes[3], 0, 0, false, idModalidade, faseAtual);
+
+    await equipes_juergs.update({
+        fase_equipe: faseAtual,
+    }, {
+        where: {
+            id: idEquipes,
+        }
+    })
 }
 
-async function monta_semi(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
-    switch (idModalidade) {
-        case 1:
-            for (var i = 0; i < 2; i++) {
-                if (!equipesGrupoNome[(i * 3)]) {
-                    equipesGrupoNome[(i * 3)] = 'Sem Equipe';
-                    idEquipes[(i * 3)] = -2;
-                }
-                if (!equipesGrupoNome[(i * 3) + 1]) {
-                    equipesGrupoNome[(i * 3) + 1] = 'Sem Equipe';
-                    idEquipes[(i * 3) + 1] = -2;
-                }
-                var nome_time_a = equipesGrupoNome[(i * 3)].replace('[', '').replace(']', '').trim();
-                var nome_time_b = equipesGrupoNome[(i * 3) + 1].replace('[', '').replace(']', '').trim();
-                var id_time_a = idEquipes[(i * 3)];
-                var id_time_b = idEquipes[(i * 3) + 1];
-                var resultado_a = 0;
-                var resultado_b = 0;
-                var encerrado = 0;
-                var modalidade = idModalidade;
-                var etapa_jogo = faseAtual;
-                await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                    encerrado, modalidade, etapa_jogo);
-            }
-            for (var i = 0; i < 4; i++) {
-                if (!idEquipes[i]) {
-                    return;
-                }
-                await atualiza_equipes_juergs(idEquipes, i, faseAtual);
-            }
-            break;
-        //todo outros cases para outras modalidades
-    }
-}
+async function monta_final(idEquipes, nomeEquipes, idModalidade) {
+    const faseAtual = 4
+    await insere_jogos_juergs(nomeEquipes[0], nomeEquipes[1], idEquipes[0], idEquipes[1], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[2], nomeEquipes[3], idEquipes[2], idEquipes[3], 0, 0, false, idModalidade, faseAtual);
 
-async function monta_final(idEquipes, equipesGrupoNome, idModalidade, faseAtual) {
-    switch (idModalidade) {
-        case 1:
-            console.log(equipesGrupoNome);
-            if (!equipesGrupoNome[0]) {
-                equipesGrupoNome[0] = 'Sem Equipe';
-                idEquipes[0] = -2;
-            }
-
-            if (!equipesGrupoNome[1]) {
-                equipesGrupoNome[1] = 'Sem Equipe';
-                idEquipes[1] = -2;
-            }
-
-            var nome_time_a = equipesGrupoNome[0].replace('[', '').replace(']', '').trim();
-            var nome_time_b = equipesGrupoNome[1].replace('[', '').replace(']', '').trim();
-            var id_time_a = idEquipes[0];
-            var id_time_b = idEquipes[1];
-            var resultado_a = 0;
-            var resultado_b = 0;
-            var encerrado = 0;
-            var modalidade = idModalidade;
-            var etapa_jogo = faseAtual;
-            await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                encerrado, modalidade, etapa_jogo);
-
-            var nome_time_a = equipesGrupoNome[2].replace('[', '').replace(']', '').trim();
-            var nome_time_b = equipesGrupoNome[3].replace('[', '').replace(']', '').trim();
-            var id_time_a = idEquipes[2];
-            var id_time_b = idEquipes[3];
-            var resultado_a = 0;
-            var resultado_b = 0;
-            var encerrado = 0;
-            var modalidade = idModalidade;
-            var etapa_jogo = faseAtual;
-            await insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-                encerrado, modalidade, etapa_jogo);
-
-
-            for (var i = 0; i < 4; i++) {
-                if (!idEquipes[i]) {
-                }else
-                    await atualiza_equipes_juergs(idEquipes, i, faseAtual);
-            }
-            break;
-        //todo outros cases para outras modalidades
-    }
+    await equipes_juergs.update({
+        fase_equipe: faseAtual,
+    }, {
+        where: {
+            id: idEquipes,
+        }
+    })
 }
 
 async function insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
@@ -515,51 +305,25 @@ async function insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_
             resultado_b: resultado_b,
             encerrado: encerrado,
             modalidade: modalidade,
-            etapa_jogo: etapa_jogo + 1,
+            etapa_jogo: etapa_jogo,
         }
     ).then((result) => {
         return result;
 
     }).catch((Exception) => {
         console.log(Exception)
-    })
+    });
 }
 
-async function atualiza_equipes_juergs(id_time, i, faseAtual) {
-    if (id_time[i] == -2) {
-        return;
-    }
-    await equipes_juergs.findByPk(id_time[i]).then((equipe) => {
-        equipes_juergs.update({
-            grupo: grupos[i],
-            fase_equipe: faseAtual + 1,
-        }, {
-            where: {
-                id: id_time[i],
-            }
-        })
-    }).catch((err) => {
-        console.log(err);
-    }
-    );
-}
-
-function proxima_fase(id_modalidade, faseAtual) {
-    modalidades_juergs.findByPk(id_modalidade).then((modalidade_atual) => {
-        modalidades_juergs.update({
-            fase: modalidade_atual.fase + 1,
-        }, {
-            where: {
-                id: id_modalidade,
-            }
-        })
-    }).catch((err) => {
-        console.log(err);
-        res.json({
-            status: 'erro',
-        })
-    }
-    );
+async function proxima_fase(id_modalidade, faseAtual) {
+    console.info('Fase atual: ' + faseAtual.toString());
+    await modalidades_juergs.update({
+        fase: faseAtual + 1,
+    }, {
+        where: {
+            id: id_modalidade,
+        }
+    });
 }
 
 async function listar(estudanteCpf) {

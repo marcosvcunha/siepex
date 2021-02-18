@@ -1,0 +1,3 @@
+myString = "['Equipe Teste 1', 'Equipe Teste 2', 'Equipe Teste 3', 'Equipe Teste 4', 'Equipe Teste 5', 'Equipe Teste 6', 'Equipe Teste 7', 'Equipe Teste 8', 'Equipe Teste 9', 'Equipe Teste 10', 'Equipe Teste 11', 'Equipe Teste 12', 'Equipe Teste 13', 'Equipe Teste 14', 'Equipe Teste 15', 'Equipe Teste 16', 'Equipe Teste 17', 'Equipe Teste 18', 'Equipe Teste 19', 'Equipe Teste 20', 'Equipe Teste 21', 'Equipe Teste 22', 'Equipe Teste 23', 'Equipe Teste 24']"
+
+equipes = JSON.parse("[" + myString + "]")

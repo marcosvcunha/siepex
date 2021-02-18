@@ -7,10 +7,10 @@ import 'package:provider/provider.dart';
 class ListaEquipesPage extends StatelessWidget {
   final String equipeId;
   // Equipes que não devem ser disponibilizadas para seleção.
-  final List<int> equipesSelecionadas;
+  final List<Equipe> equipesSelecionaveis;
 
   ListaEquipesPage(
-      {@required this.equipeId, @required this.equipesSelecionadas});
+      {@required this.equipeId, @required this.equipesSelecionaveis});
 
   Widget _equipeCard(BuildContext context, Equipe equipe) {
     return Padding(
@@ -94,7 +94,7 @@ class ListaEquipesPage extends StatelessWidget {
                   child: FlatButton(
                     onPressed: () {
                       // Retorna o id e nome da equipe selecionada
-                      Navigator.pop(context, [equipe.id, equipe.nome]);
+                      Navigator.pop(context, equipe);
                     },
                     child: Center(
                         child: Padding(
@@ -180,7 +180,7 @@ class ListaEquipesPage extends StatelessWidget {
                   child: FlatButton(
                     onPressed: () {
                       // Retorna o id e nome da equipe selecionada
-                      Navigator.pop(context, [-1, 'Equipe em Branco']);
+                      Navigator.pop(context, null);
                     },
                     child: Center(
                         child: Padding(
@@ -276,42 +276,20 @@ class ListaEquipesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Modalidade _modalidade = Provider.of<Modalidade>(context);
-    HandleData _handleData = HandleData();
+    // Modalidade _modalidade = Provider.of<Modalidade>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Selecione a equipe ' + equipeId),
       ),
       // body: Container(),
-      body: FutureBuilder(
-        future: Equipe.getEquipesPorFase(_modalidade.id,_modalidade.fase),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            if (snapshot.hasData) {
-              List<Equipe> equipes = snapshot.data;
-              // print(equipesSelecionadas);
-              equipes.retainWhere(
-                  (equipe) => !equipesSelecionadas.contains(equipe.id));
-              return ListView.builder(
-                  itemCount: equipes.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index < equipes.length)
-                      return _equipeCard(context, equipes[index]);
-                    else
-                      return _blankCard(context);
-                  });
-            } else {
-              return Center(
-                child: Text('Nenhuma equipe a Exibir'),
-              );
-            }
-          }
-        },
-      ),
+      body: ListView.builder(
+          itemCount: equipesSelecionaveis.length + 1,
+          itemBuilder: (context, index) {
+            if (index < equipesSelecionaveis.length)
+              return _equipeCard(context, equipesSelecionaveis[index]);
+            else
+              return _blankCard(context);
+          }),
     );
   }
 }
