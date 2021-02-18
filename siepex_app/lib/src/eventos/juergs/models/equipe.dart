@@ -160,7 +160,6 @@ class Equipe extends ChangeNotifier {
         errorDialog(context, 'Erro', 'Erro ao excluir Equipe');
       } else {
         userJuergs.minhasEquipes.removeWhere((element) => element.id == id);
-        print(userJuergs.minhasEquipes.length);
         // modalidade.inscrito = false;
         //userJuergs.minhasEquipes.removeWhere((element) => element.id == id);
       }
@@ -299,7 +298,6 @@ class Equipe extends ChangeNotifier {
         }))
                 .body);
         if (resposta['status'] == 'sucesso') {
-          print(resposta['data']);
           userJuergs.minhasEquipes.add(Equipe.fromJson(resposta['data']));
           errorDialog(context, 'Sucesso', 'Equipe Criada');
           return;

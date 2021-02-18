@@ -50,7 +50,7 @@ class PaginaEquipe extends StatelessWidget {
           SizedBox(
             width: 20,
           ),
-          roundButton('Sair da Equipe', Colors.red, Icons.exit_to_app, () {
+          roundButton('Sair da Equipe', Color(0xFFE23B43), Icons.exit_to_app, () {
             confirmDialog(context, 'Sair da equipe',
                 'Tem certeza que deseja sair da equipe? A equipe será excluida por ficar sem capitão.',
                 () async {
@@ -82,7 +82,7 @@ class PaginaEquipe extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child:
-            roundButton('Excluir Membro', Colors.red, Icons.arrow_upward, () {
+            roundButton('Excluir Membro',  Color(0xFFE23B43), Icons.arrow_upward, () {
           Navigator.of(context).push(MaterialPageRoute<void>(
             builder: (BuildContext context) => ChangeNotifierProvider.value(
                 value: equipe, child: ExcludeMemberPage()),
@@ -254,12 +254,47 @@ class PaginaEquipe extends StatelessWidget {
               ),
             ),
           ),
-          ColumnBuilder(
-            // TODO: Implementar para pegar os jogos reais!
-            itemCount: 6,
-            itemBuilder: (context, index) =>
-                jogoCard(new Jogo('time A', 'time B', 0, 0, false, 'nome')),
-          ),
+          FutureBuilder(
+            future: Jogo.pegarJogosPorEquipe(context, equipe.id),
+            builder: (context, snapshot){
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return Padding(
+                  padding: EdgeInsets.only(top: 30, bottom: 30),
+                  child: CircularProgressIndicator(),
+                );
+              }else{
+                if(snapshot.hasData){
+                  List<Jogo> jogos = snapshot.data;
+                  if(jogos.length == 0){
+                    return Padding(
+                    padding: EdgeInsets.only(top: 30),
+                    child: Center(
+                      child: Text('Nenhum jogo a mostrar', style: TextStyle(fontSize: 16, color: Color(0xFF808080)),),
+                    ),
+                    );
+                  }else{
+                    return ColumnBuilder(
+                      itemCount: jogos.length,
+                      itemBuilder: (context, index){
+                        return jogoCard(jogos[index]);
+                      }
+                      );
+                  
+                  }
+                }else{
+                  return Padding(
+                    padding: EdgeInsets.only(top: 30, bottom: 30),
+                    child: Text('Nada a mostrar', style: TextStyle(fontSize: 16, color: Color(0xFF808080)),),
+                  );
+                }
+              }
+          }),
+          // ColumnBuilder(
+          //   // TODO: Implementar para pegar os jogos reais!
+          //   itemCount: 6,
+          //   itemBuilder: (context, index) =>
+          //       jogoCard(new Jogo('time A', 'time B', 0, 0, false, 'nome')),
+          // ),
         ],
       ),
     );

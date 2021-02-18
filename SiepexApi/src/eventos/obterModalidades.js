@@ -6,6 +6,8 @@ const {
     equipes_juergs,
 } = require('../../models');
 
+const{ Op } = require("sequelize");
+
 const grupos = ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3', 'D1', 'D2', 'D3', 'E1',
     'E2', 'E3', 'F1', 'F2', 'F3', 'G1', 'G2', 'G3', 'H1', 'H2', 'H3',];
 
@@ -164,6 +166,32 @@ router.put('/atualizaJogos', async (req, res) => {
             status: 'erro',
         });
         return;
+    }
+});
+
+router.put('/pegarJogos/porTime', async (req, res) => {
+    try{
+        idEquipe = req.body['id_equipe'];
+        
+        jogos = await jogos_juergs.findAll({
+            where: {
+                [Op.or]: [
+                    {id_time_a: idEquipe},
+                    {id_time_b: idEquipe},
+                ],
+            },
+            order: [
+                ['id', 'desc'],
+            ]
+        });
+        res.json({
+            status:'sucesso',
+            data: jogos,
+        });
+    }catch(e){
+        res.json({
+            status:'erro'
+        });
     }
 });
 

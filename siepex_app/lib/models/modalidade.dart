@@ -21,7 +21,7 @@ List<String> fases = [
   'Quartas de Final',
   'Semi-Final',
   'Final',
-  'Finalisada',
+  'Finalizada',
 ];
 
 class Modalidade extends ChangeNotifier {
@@ -33,8 +33,12 @@ class Modalidade extends ChangeNotifier {
   bool _inscrito; // O usuario é inscrito nesta modalidade?
   IconData icon;
   int fase;
-  String faseStr;
+  // String faseStr;
   String local;
+
+  String get faseStr{
+    return fases[fase];
+  }
 
   get inscrito => _inscrito;
 
@@ -51,20 +55,6 @@ class Modalidade extends ChangeNotifier {
     // Utilizado para que a página de Equipes atualize quando o usuário entra numa equipe. 
   }
 
-  // Modalidade(int modId, String modNome, int modMaxParticipantes,
-  //     bool modInscrito, DateTime modDataLimite, int fase) {
-  //   id = modId;
-  //   nome = modNome;
-  //   maxParticipantes = modMaxParticipantes;
-  //   _inscrito = modInscrito;
-  //   icon = icons[nome];
-  //   dataLimite = modDataLimite;
-  //   dataLimiteString =
-  //       '${dataLimite.day.toString()}/${dataLimite.month.toString()} ${dataLimite.hour.toString()}:${dataLimite.minute.toString()}';
-  //   this.fase = fase;
-  //   faseStr = fases[fase];
-  // }
-
   Modalidade.fromJson(jsonData){
     id = jsonData['id'];
     nome = jsonData['nome_modalidade'];
@@ -76,12 +66,18 @@ class Modalidade extends ChangeNotifier {
     icon = icons[nome];
     dataLimiteString =
         '${dataLimite.day.toString()}/${dataLimite.month.toString()} ${dataLimite.hour.toString()}:${dataLimite.minute.toString()}';
-  faseStr = fases[fase];
+  // faseStr = fases[fase];
   }
 
   Future<void> nextFase(List<int> idEquipes, List<String> equipesGrupoNome) async {
+
+    print(equipesGrupoNome);
+
     idEquipes.removeWhere((item) => item == -2);
     equipesGrupoNome.removeWhere((item) => item == 'Selecione');
+
+
+
     var resposta =
             jsonDecode((await http.put(baseUrl + 'modalidades/nextFase', body: {
           'id_modalidade': id.toString(),
@@ -91,9 +87,12 @@ class Modalidade extends ChangeNotifier {
         })).body);
     if(resposta['status'] == 'sucesso'){
       // Alterar a fase nesta modalidade e dar NotifyListeners.
-      this.fase += 1;
+      print(fase);
+      print(faseStr);
+      this.fase ++;
       notifyListeners();
-      print('Sucesso');
+      print(fase);
+      print(faseStr);
     }else if(resposta['status'] == 'erro'){
       // TODO:: Conferir os possiveis erros
     }

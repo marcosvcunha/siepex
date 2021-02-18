@@ -19,7 +19,7 @@ class EquipeCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           gradient:
-              LinearGradient(colors: [Color(0xFF3498B7), Color(0xFF7db0a2)]),
+              LinearGradient(colors: [Color(0xFF6BA8BB), Color(0xFF58AAC4)]),
           boxShadow: [
             BoxShadow(
                 blurRadius: 2,
@@ -114,8 +114,7 @@ class EquipeCard extends StatelessWidget {
                                         userJuergs.temEquipe(modalidade.nome);
                                   },
                             child: Center(
-                                child: Text(
-                              temEquipe ? 'Já Possui Equipe' : 'Entrar',
+                                child: Text('Entrar',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
@@ -163,7 +162,7 @@ class EquipeCard extends StatelessWidget {
                                             value: modalidade),
                                       ], child: PaginaEquipe()))),
                           child: Text(
-                            'Mais Informações',
+                            'Saber Mais',
                             style: TextStyle(
                                 color: Colors.black87,
                                 fontWeight: FontWeight.w600),

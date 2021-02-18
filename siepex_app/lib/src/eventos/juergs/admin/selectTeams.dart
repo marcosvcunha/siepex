@@ -36,7 +36,7 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
 
   Widget gruposSelection() {
     List<String> groups = new List<String>();
-    if (modalidade.fase == 0) {
+    if (modalidade.faseStr == 'Inscrição') {
       groups.add('A');
       groups.add('B');
       groups.add('C');
@@ -45,12 +45,12 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
       groups.add('F');
       groups.add('G');
       groups.add('H');
-    } else if (modalidade.fase == 1) {
+    } else if (modalidade.faseStr == 'Fase de Grupos') {
       groups.add('A');
       groups.add('B');
       groups.add('C');
       groups.add('D');
-    }else if(modalidade.fase == 2 || modalidade.fase == 3){
+    }else if(modalidade.faseStr == 'Quartas de Final' || modalidade.faseStr == 'Semi-Final'){
       groups.add('A');
       groups.add('B');
     }
@@ -71,7 +71,7 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
             //  BOTÃO PARA CONFIMAR O ENVIO DOS TIMES
             return Padding(
               padding: const EdgeInsets.only(bottom: 12.0),
-              child: roundButton('Confimar', Colors.blue, Icons.thumb_up,
+              child: roundButton('Confirmar', Colors.blue, Icons.thumb_up,
                   () async {
                 if (true) {
                   confirmDialog(
@@ -236,7 +236,6 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                       if (resul != null) {
                         equipesGrupoId[index] = resul[0];
                         equipesGrupoNome[index] = resul[1];
-                        print(index);
                         setState(() {});
                       }
                     }),
