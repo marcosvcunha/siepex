@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:provider/provider.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
 import 'package:siepex/src/eventos/juergs/admin/LancaResultGrupos.dart';
 import 'package:siepex/src/eventos/juergs/admin/LancarResultados.dart';
 import 'package:siepex/src/eventos/juergs/admin/ResultadosRustica.dart';
@@ -16,6 +17,9 @@ import 'package:siepex/src/eventos/juergs/admin/selectTeams.dart';
   - ? Alterar data limite de inscrição ?
  */
 class CompetitionPage extends StatelessWidget {
+  final ValueNotifier<bool> editandoLocal = ValueNotifier(false);
+  final TextEditingController novoLocalController = TextEditingController();
+  
   Widget nextFaseButton(BuildContext context, Modalidade modalidade) {
     if (modalidade.fase < 4) {
       return Align(
@@ -70,30 +74,31 @@ class CompetitionPage extends StatelessWidget {
         alignment: Alignment.center,
         child: FlatButton(
           onPressed: () {
-            if (modalidade.nome != 'Rústica'){
-              if(modalidade.fase == 1) // FAse de grupos
+            if (modalidade.nome != 'Rústica') {
+              if (modalidade.fase == 1) // FAse de grupos
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChangeNotifierProvider.value(
+                              value: modalidade,
+                              child: LancaResultadosGruposPage(),
+                            )));
+              else if (modalidade.fase > 1) // Fazes eliminatórias
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChangeNotifierProvider.value(
+                              value: modalidade,
+                              child: LancarResultadosPage(),
+                            )));
+            } else
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => ChangeNotifierProvider.value(
                             value: modalidade,
-                            child: LancaResultadosGruposPage(),
+                            child: ResultadosRustica(),
                           )));
-              else if(modalidade.fase > 1) // Fazes eliminatórias
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChangeNotifierProvider.value(
-                            value: modalidade,
-                            child: LancarResultadosPage(),
-                          )));
-            }
-            else
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) => ChangeNotifierProvider.value(
-                  value: modalidade, 
-                  child: ResultadosRustica(),
-                  )));
           },
           highlightColor: Colors.transparent,
           focusColor: Colors.transparent,
@@ -120,7 +125,6 @@ class CompetitionPage extends StatelessWidget {
                   fontSize: 18,
                   color: Colors.black,
                 ),
-                
               ),
             ),
           ),
@@ -162,13 +166,89 @@ class CompetitionPage extends StatelessWidget {
                 color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(left: 22, top: 4),
-          child: Text(
-            modalidade.local,
-            style: TextStyle(
-                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w400),
-          ),
+        ValueListenableBuilder(
+          valueListenable: editandoLocal,
+          builder: (context, newValue, child) {
+            if (!editandoLocal.value) {
+              return Padding(
+                padding: EdgeInsets.only(left: 22, top: 4),
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        modalidade.local,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                    FlatButton(
+                        minWidth: 100,
+                        padding: EdgeInsets.zero,
+                        height: 0,
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onPressed: () {
+                          editandoLocal.value = true;
+                        },
+                        child: Text(
+                          'editar',
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ))
+                  ],
+                ),
+              );
+            } else {
+              return Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 22.0, right: 16),
+                    child: Container(
+                      width: 300,
+                      child: TextField(
+                        controller: novoLocalController,
+                        decoration: InputDecoration(
+                          labelText: 'Novo Local'
+                        ),
+                      ),
+                      ),
+                  ),
+                  FlatButton(
+                        padding: EdgeInsets.zero,
+                        height: 0,
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onPressed: () async {
+                          // print(novoLocalController.value);
+                          bool confirm = await confirmDialogWithReturn(context, 'Confirmar', 
+                          'Tem certeza que deseja mudar o local da competição de "${modalidade.local}" para "${novoLocalController.value.text}"');
+                          if(confirm){
+                            editandoLocal.value = false;
+                            await modalidade.changeLocal(context, novoLocalController.value.text);
+                          }else{
+                            editandoLocal.value = false;
+                          }
+                          
+                        },
+                        child: Text(
+                          'pronto',
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ))
+                ],
+              );
+            }
+          },
         ),
         Padding(
           padding: EdgeInsets.only(left: 22, top: 12),

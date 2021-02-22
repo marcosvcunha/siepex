@@ -3,6 +3,7 @@ import 'package:siepex/icons/my_flutter_app_icons.dart';
 import 'package:siepex/icons/sport_icons.dart';
 import 'package:http/http.dart' as http;
 import 'package:siepex/src/config.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 import 'dart:convert';
 
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
@@ -36,7 +37,9 @@ class Modalidade extends ChangeNotifier {
   IconData icon;
   int fase;
   // String faseStr;
-  String local;
+  String _local;
+
+
 
   String get faseStr{
     return fases[fase];
@@ -50,6 +53,15 @@ class Modalidade extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  set local(String novoLocal){
+    if(novoLocal != _local){
+      _local = novoLocal;
+      notifyListeners();
+    }
+  }
+
+  get local{return _local;}
 
   void notificar(){
     // Gambiarra
@@ -111,6 +123,28 @@ class Modalidade extends ChangeNotifier {
     return dataLimite.isAfter(DateTime.now());
   }
 
+  Future changeLocal(BuildContext context, String novoLocal) async {
+    try{ 
+      var resposta = jsonDecode((await http.put(
+        baseUrl + 'modalidades/changeLocal',
+        body: {
+          'id_modalidade': id.toString(),
+          'novo_local': novoLocal
+        }
+      )).body);
+
+      if(resposta['status'] == 'sucesso'){
+        local = novoLocal;
+      }else{
+        errorDialog(context, 'Erro!', 'Um problema ocorreu ao tentar alterar o local da competição.');
+      }
+
+    }catch(e){
+      print(e);
+      errorDialog(context, 'Erro!', 'Um problema ocorreu ao tentar alterar o local da competição.');
+    }
+  }
+
   static Future<List<Modalidade>> getModalidades() async {
     try {
       var resposta = jsonDecode((await http.put(
@@ -134,4 +168,5 @@ class Modalidade extends ChangeNotifier {
       return [];
     }
   }
+
 }
