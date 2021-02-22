@@ -175,6 +175,31 @@ router.put('/atualizaJogos', async (req, res) => {
     }
 });
 
+router.put('/changeLocal', async (req, res) => {
+    try{
+        idModalidade = JSON.parse(req.body['id_modalidade']);
+
+        novoLocal = req.body['novo_local'];
+
+        await modalidades_juergs.update({
+            endereco: novoLocal,
+        },{
+            where: {
+                id: idModalidade,
+            }
+        });
+
+        res.json({
+            status: 'sucesso'
+        });
+    }catch(e){
+        console.log(e);
+        res.json({
+            status: 'erro'
+        });
+    }
+})
+
 router.put('/pegarJogos/porTime', async (req, res) => {
     try {
         idEquipe = req.body['id_equipe'];
@@ -200,6 +225,8 @@ router.put('/pegarJogos/porTime', async (req, res) => {
         });
     }
 });
+
+
 
 
 async function monta_tabela_grupos(idEquipes, nomeEquipes, idModalidade) {
