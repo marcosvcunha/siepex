@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
-import '../../../models/modalidade.dart';
+import '../../../../models/modalidade.dart';
 import 'package:provider/provider.dart';
 
-import 'Widgets/modalidadeCard.dart';
+import '../Widgets/modalidadeCard.dart';
 
 class ModalidadesPage extends StatelessWidget {
   final HandleData _handleData = HandleData();

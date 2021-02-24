@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:siepex/src/eventos/juergs/Home/HomePage.dart';
 // import 'package:siepex/icons/my_flutter_app_icons.dart';
 // import 'package:siepex/models/modalidade.dart';
 // import 'package:siepex/src/areaParticipante/homeParticipante.dart';
-import 'package:siepex/src/eventos/juergs/PaginaTabelas.dart';
+import 'package:siepex/src/eventos/juergs/Home/PaginaTabelas.dart';
 // import 'package:siepex/src/inicio/itemButton.dart';
 // import 'package:siepex/mdi.dart';
-import '../../../icons/sport_icons.dart';
-import './ModalidadesPage.dart';
-import './Widgets/Drawer.dart';
+import '../../../../icons/sport_icons.dart';
+import 'ModalidadesPage.dart';
+import '../Widgets/Drawer.dart';
 
 class InicioJuergs extends StatelessWidget {
   final Widget child;
@@ -25,12 +26,12 @@ class InicioJuergs extends StatelessWidget {
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
           elevation: 10,
-          title: Text('Inicio'),
+          title: Text('Juergs'),
         ),
         drawer: JuergsDrawer(),
         body: TabBarView(
           children: <Widget>[
-            Container(child: Center(child: Text('Meus Jogos',style: TextStyle(color: Colors.black),))),
+            HomePage(),
             ModalidadesPage(),
             PaginaTabelas(),
           ],
