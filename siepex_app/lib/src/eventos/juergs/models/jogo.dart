@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/config.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
+import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 
 
 class Jogo {
@@ -70,6 +72,35 @@ class Jogo {
       'resultB': resultB,
       'encerrado': encerrado,
     };
+  }
+
+  static Future<List<Jogo>> pegarJogosUser(BuildContext context) async {
+    try{
+      List<int> idEquipes = List.generate(userJuergs.minhasEquipes.length, (index){
+        return userJuergs.minhasEquipes[index].id;
+        });
+      
+      var resposta = jsonDecode((await http.put(baseUrl + 'modalidades/pegarJogos/porEquipes', 
+      body: {
+        'id_equipes': json.encode(idEquipes),
+      })).body);
+
+      if(resposta['status'] == 'sucesso'){
+        List<Jogo> jogos = <Jogo>[];
+        for(int i = 0; i < resposta['data'].length; i++){
+          jogos.add(Jogo.fromJson(resposta['data'][i]));
+        }
+        return jogos;
+      }else{
+        errorDialog(context, 'Erro!', 'Erro ao pegar os Jogos do usuário');
+        return [];
+      }
+
+    }catch(e){
+      print('Erro: ' + e.toString());
+      errorDialog(context, 'Erro!', 'Erro ao pegar os Jogos do usuário');
+      return [];
+    }
   }
 
   static Future<List<Jogo>> pegarJogosPorEquipe(BuildContext context, int idEquipe) async {

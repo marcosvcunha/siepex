@@ -226,6 +226,32 @@ router.put('/pegarJogos/porTime', async (req, res) => {
     }
 });
 
+router.put('/pegarJogos/porEquipes', async (req, res) => {
+    try {
+        idEquipes = JSON.parse(req.body['id_equipes']);
+
+        jogos = await jogos_juergs.findAll({
+            where: {
+                [Op.or]: [
+                    { id_time_a: idEquipes },
+                    { id_time_b: idEquipes },
+                ],
+            },
+            order: [
+                ['id', 'desc'],
+            ]
+        });
+        res.json({
+            status: 'sucesso',
+            data: jogos,
+        });
+    } catch (e) {
+        console.error('Erro ao obter Jogos por Equipes');
+        res.json({
+            status: 'erro'
+        });
+    }
+});
 
 
 

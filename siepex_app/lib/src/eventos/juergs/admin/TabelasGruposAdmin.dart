@@ -17,7 +17,7 @@ class TabelaGruposAdmin extends StatefulWidget {
   _TabelaGruposAdminState createState() => _TabelaGruposAdminState();
 }
 
-class JogosJuers {
+class JogosJuergs {
   String timeA;
   String timeB;
   int idTimeA;
@@ -31,7 +31,7 @@ class JogosJuers {
   // cricao de variaveis q ira salvar na base
 
   // fim da criacao de variaveis
-  JogosJuers.retornaLinhaJuergs(Map<String, dynamic> json) {
+  JogosJuergs.retornaLinhaJuergs(Map<String, dynamic> json) {
     this.timeA = json['time_a'];
     this.timeB = json['time_b'];
     this.idTimeA = json['id_time_a'];
@@ -122,7 +122,7 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
     ]);
   }
 
-  Widget _jogoTile(JogosJuers jogo, int index) {
+  Widget _jogoTile(JogosJuergs jogo, int index) {
     // _jogoTile(jogosJuers[1].timeA, jogosJuers[1].resultadoA,
     //         jogosJuers[1].timeB, jogosJuers[1].resultadoB, jogosJuers),
     String timeA = jogo.timeA;
@@ -207,7 +207,7 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
     );
   }
 
-  Widget jogosCard(int index, List<JogosJuers> jogosJuers) {
+  Widget jogosCard(int index, List<JogosJuergs> jogosJuers) {
     return Padding(
       key: ValueKey(2),
       padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
@@ -246,20 +246,20 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
     );
   }
 
-  Future<List<JogosJuers>> listarJogos() async {
+  Future<List<JogosJuergs>> listarJogos() async {
     var resposta =
         jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', body: {
       'idModalidade': globalModalidade.id.toString(),
       'etapa': globalModalidade.fase.toString()
     }))
             .body);
-    List<JogosJuers> listaJogos = new List<JogosJuers>();
+    List<JogosJuergs> listaJogos = new List<JogosJuergs>();
 
     if (resposta['status'] != null) {
       if (resposta['status'] == 'ok') {
         for (int i = 0; i != resposta['count']; i++) {
-          JogosJuers jogosJuergs =
-              new JogosJuers.retornaLinhaJuergs(resposta['data'][i]);
+          JogosJuergs jogosJuergs =
+              new JogosJuergs.retornaLinhaJuergs(resposta['data'][i]);
           listaJogos.add(jogosJuergs);
         }
         return listaJogos;
@@ -268,7 +268,7 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
   }
 
   Widget _editTitleTextField(
-      JogosJuers jogoJuergs, String id, int controllerIndex) {
+      JogosJuergs jogoJuergs, String id, int controllerIndex) {
     return TextField(
 
         enableSuggestions: false,
@@ -297,7 +297,7 @@ class _TabelaGruposAdminState extends State<TabelaGruposAdmin> {
               child: CircularProgressIndicator(),
             );
           } else {
-            List<JogosJuers> retJogos = snapshot.data;
+            List<JogosJuergs> retJogos = snapshot.data;
             if (retJogos.length == 0) {
               return MaterialApp(
                 home: Scaffold(
