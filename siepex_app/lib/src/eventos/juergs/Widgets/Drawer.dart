@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/icons/sport_icons.dart';
 import 'package:siepex/models/serializeJuergs.dart';
+import 'package:siepex/src/eventos/juergs/JogosPage.dart';
+import 'package:siepex/src/eventos/juergs/MinhasEquipesPage.dart';
 import '../admin/ManageCompPage.dart';
 
 class JuergsDrawer extends StatelessWidget {
@@ -53,6 +55,10 @@ class JuergsDrawer extends StatelessWidget {
           ),
           listItem(context, 'Meu Perfil', Icons.person,
               () => Navigator.popAndPushNamed(context, "perfilParticipante")),
+          listItem(context, 'Minhas Equipes', Sport.soccer_ball,
+              () => Navigator.push(context, MaterialPageRoute(builder: (context) => MinhasEquipesPage()))),
+          listItem(context, 'Meus Jogos', Sport.volleyball_ball,
+              () => Navigator.push(context, MaterialPageRoute(builder: (context) => JogosPage()))),
           listItem(context, 'Regulamento', Icons.short_text,
               () => Navigator.popAndPushNamed(context, "regulamentoPage")),
           listItem(context, 'Hoteis', Icons.local_hotel,
