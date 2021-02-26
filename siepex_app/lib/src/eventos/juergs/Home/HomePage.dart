@@ -1,24 +1,17 @@
 // import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/JogosPage.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/CardJogo.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/ColumnBuilder.dart';
+import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipe.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
-import 'package:siepex/icons/my_flutter_app_icons.dart';
-import 'package:siepex/icons/sport_icons.dart';
 import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 import '../../../../models/serializeJuergs.dart';
-
-Map<String, IconData> icons = {
-  'Futsal Masculino': MyFlutterApp.soccerBall,
-  'Futsal Feminino': MyFlutterApp.soccerBall,
-  'Rústica': Sport.runner,
-  'Vôlei Misto': Sport.volleyball_ball,
-  'Handebol Masculino': Sport.shot_putter,
-  'Handebol Feminino': Sport.shot_putter,
-};
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-
   final TabController tabController;
 
   HomePage({this.tabController});
@@ -67,7 +60,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget equipeMiniCard(Equipe equipe) {
+  Widget equipeMiniCard(BuildContext context, Equipe equipe) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Container(
@@ -78,114 +71,42 @@ class HomePage extends StatelessWidget {
           borderRadius: BorderRadius.circular(5),
           color: Colors.white,
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    equipe.nome,
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                  ),
-                  iconeParticipantes(equipe.participantes.length),
-                ],
-              ),
-              Text(
-                equipe.nomeModalidade,
-                style: TextStyle(fontSize: 16),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget cardJogo(Jogo jogo) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Container(
-        height: 80,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Flex(
-          direction: Axis.horizontal,
-          children: [
-            Flexible(
-              flex: 7,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 12.0, bottom: 12, left: 12, right: 20),
-                child: Container(
-                  height: 80,
-                  // color: Colors.red,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  jogo.timeA,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              Text(
-                                jogo.resultA.toString(),
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w500),
-                              )
-                            ]),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  jogo.timeB,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              Text(
-                                jogo.resultB.toString(),
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w500),
-                              )
-                            ]),
-                      ]),
-                ),
-              ),
-            ),
-            Flexible(
-              flex: 3,
-              child: Container(
-                height: 80,
-                // color: Colors.blue,
-                decoration: BoxDecoration(
-                  border: Border(
-                    left: BorderSide(
-                      width: 3,
-                      color: Color(0xFFDBDBDB),
+        child: FlatButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MultiProvider(providers: [
+                          ChangeNotifierProvider.value(
+                            value: equipe,
+                          ),
+                          ChangeNotifierProvider(
+                              create: (context) => Modalidade()),
+                        ], child: PaginaEquipe())));
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      equipe.nome,
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
                     ),
-                  ),
+                    iconeParticipantes(equipe.participantes.length),
+                  ],
                 ),
-                child: Center(
-                  child: Icon(icons['Futsal Masculino'],
-                      size: 36, color: Color(0xff372554)),
-                ),
-              ),
+                Text(
+                  equipe.nomeModalidade,
+                  style: TextStyle(fontSize: 16),
+                )
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -210,63 +131,70 @@ class HomePage extends StatelessWidget {
                     end: Alignment.bottomCenter,
                     colors: [
                       Color(0x00EEEEEE),
-                      Color(0xB6EEEEEE),
+                      Color(0xFFEEEEEE),
                     ]),
               ),
             ),
           ),
         ],
       );
-    }else{
+    } else {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Você não participa de nenhuma equipe', style: TextStyle(fontSize: 16),),
-            SizedBox(height: 8,),
-            FlatButton(onPressed: (){
-              tabController.index = 1;
-            },
-            focusColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            child: Text('Junte-se a uma', style: TextStyle(color: Colors.blue, fontSize: 20),))
+            Text(
+              'Você não participa de nenhuma equipe',
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            FlatButton(
+                onPressed: () {
+                  tabController.index = 1;
+                },
+                focusColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                child: Text(
+                  'Junte-se a uma',
+                  style: TextStyle(color: Colors.blue, fontSize: 20),
+                ))
           ],
         ),
-        );
+      );
     }
   }
 
-  Widget corpoMeusJogos(List<Jogo> jogos){
-    if(jogos.length > 0){
+  Widget corpoMeusJogos(List<Jogo> jogos) {
+    if (jogos.length > 0) {
       return Stack(
-                      children: [
-                        WrapBuilder(
-                          itemBuilder: (context, index) =>
-                              cardJogo(jogos[index]),
-                          itemCount: 5,
-                        ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            height: 40,
-                            width: double.infinity,
-                            // color: Colors.red,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Color(0x00EEEEEE),
-                                    Color(0xB6EEEEEE),
-                                  ]),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-    }else{
+        children: [
+          WrapBuilder(
+              itemBuilder: (context, index) => CardJogo(jogo: jogos[index]),
+              itemCount: jogos.length),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 40,
+              width: double.infinity,
+              // color: Colors.red,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0x00EEEEEE),
+                      Color(0xFFEEEEEE),
+                    ]),
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
       return Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -274,15 +202,15 @@ class HomePage extends StatelessWidget {
             'Você ainda não tem nenhum jogo marcado. Junte-se a uma equipe ou crie uma e aguarde a criação dos jogos.',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16),
-            ),
+          ),
         ),
-          );
+      );
     }
   }
 
-  Widget corpo(List<Equipe> equipes, List<Jogo> jogos) {
+  Widget corpo(BuildContext context, List<Equipe> equipes, List<Jogo> jogos) {
     List<Widget> cards = List.generate(equipes.length, (index) {
-      return equipeMiniCard(equipes[index]);
+      return equipeMiniCard(context, equipes[index]);
     });
     return Flex(
       direction: Axis.vertical,
@@ -305,9 +233,18 @@ class HomePage extends StatelessWidget {
                           'Minhas Equipes',
                           style: headerSyle,
                         ),
-                        Text(
-                          'Ver Mais',
-                          style: TextStyle(color: Color(0xFF2C7AAD)),
+                        FlatButton(
+                          padding: EdgeInsets.zero,
+	                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          hoverColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onPressed: (){
+                          },
+                          child: Text(
+                            'Ver Mais',
+                            style: TextStyle(color: Color(0xFF2C7AAD)),
+                          ),
                         )
                       ],
                     ),
@@ -340,10 +277,22 @@ class HomePage extends StatelessWidget {
                         'Meus Jogos',
                         style: headerSyle,
                       ),
-                      Text(
-                        'Ver Mais',
-                        style: TextStyle(color: Color(0xFF2C7AAD)),
-                      )
+                      FlatButton(
+                          padding: EdgeInsets.zero,
+	                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          hoverColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onPressed: (){
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => JogosPage(),
+                              ));
+                          },
+                          child: Text(
+                            'Ver Mais',
+                            style: TextStyle(color: Color(0xFF2C7AAD)),
+                          ),
+                        )
                     ],
                   ),
                   SizedBox(
@@ -379,7 +328,7 @@ class HomePage extends StatelessWidget {
           } else {
             List<Equipe> equipes = snapshot.data['equipes'];
             List<Jogo> jogos = snapshot.data['jogos'];
-            return corpo(equipes, jogos);
+            return corpo(context, equipes, jogos);
           }
         });
   }
