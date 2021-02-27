@@ -3,6 +3,8 @@ import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 import 'package:provider/provider.dart';
 
 class GameCard extends StatefulWidget {
+  final String nomeJogo;
+  GameCard({this.nomeJogo});
   @override
   _GameCardState createState() => _GameCardState();
 }
@@ -77,7 +79,7 @@ class _GameCardState extends State<GameCard> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                jogo.nome,
+                widget.nomeJogo != null ? widget.nomeJogo : jogo.nome,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
               SizedBox(

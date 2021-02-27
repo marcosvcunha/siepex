@@ -50,9 +50,8 @@ class _TabelaGruposState extends State<TabelaGrupos> {
   @override
   Widget build(BuildContext context) {
     Modalidade modalidade = Provider.of<Modalidade>(context);
-    HandleData _handleData = HandleData();
     return FutureBuilder(
-        future: _handleData.listarJogos(modalidade, 1),
+        future: Jogo.pegaJogoPorFase(context, modalidade),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -165,7 +164,11 @@ class _GrupoCardState extends State<GrupoCard> {
     ]);
   }
 
-  Widget _jogoTile(String timeA, int resultadoA, String timeB, int resultadoB) {
+  Widget _jogoTile(Jogo jogo) {
+    String timeA = jogo.timeA;
+    String resultadoA = jogo.encerrado ? jogo.resultA.toString() : '-';
+    String timeB = jogo.timeB;
+    String resultadoB = jogo.encerrado ? jogo.resultB.toString() : '-';
     return Container(
       decoration: BoxDecoration(
         border: Border(),
@@ -201,7 +204,7 @@ class _GrupoCardState extends State<GrupoCard> {
                     width: 35,
                     child: Center(
                         child: Text(
-                      resultadoA.toString(),
+                      resultadoA,
                       style: TextStyle(fontSize: 18, color: Colors.black),
                     )),
                   ),
@@ -218,7 +221,7 @@ class _GrupoCardState extends State<GrupoCard> {
                     width: 35,
                     child: Center(
                         child: Text(
-                      resultadoB.toString(),
+                      resultadoB,
                       style: TextStyle(fontSize: 18, color: Colors.black),
                     )),
                   ),
@@ -241,7 +244,7 @@ class _GrupoCardState extends State<GrupoCard> {
             ],
           ),
           Text(
-            'Ginasio Local, 23/09 17:30',
+            jogo.encerrado ? 'Encerrado' : 'Não Iniciou',
             style: TextStyle(fontSize: 14, color: Colors.grey[800]),
           ),
         ],
@@ -271,35 +274,42 @@ class _GrupoCardState extends State<GrupoCard> {
     int derrotasTime3 = 0;
     int empatesTime3 = 0;
 
-    if (retJogos[0].resultA > retJogos[0].resultB) {
-      times[0].vitorias++;
-      times[1].derrotas++;
-    } else if (retJogos[0].resultA < retJogos[0].resultB) {
-      times[1].vitorias++;
-      times[0].derrotas++;
-    } else {
-      times[0].empates++;
-      times[1].empates++;
+    if (retJogos[0].encerrado) {
+      if (retJogos[0].resultA > retJogos[0].resultB) {
+        times[0].vitorias++;
+        times[1].derrotas++;
+      } else if (retJogos[0].resultA < retJogos[0].resultB) {
+        times[1].vitorias++;
+        times[0].derrotas++;
+      } else {
+        times[0].empates++;
+        times[1].empates++;
+      }
     }
-    if (retJogos[1].resultA > retJogos[1].resultB) {
-      times[0].vitorias++;
-      times[2].derrotas++;
-    } else if (retJogos[1].resultA < retJogos[1].resultB) {
-      times[2].vitorias++;
-      times[0].derrotas++;
-    } else {
-      times[0].empates++;
-      times[2].empates++;
+
+    if (retJogos[1].encerrado) {
+      if (retJogos[1].resultA > retJogos[1].resultB) {
+        times[0].vitorias++;
+        times[2].derrotas++;
+      } else if (retJogos[1].resultA < retJogos[1].resultB) {
+        times[2].vitorias++;
+        times[0].derrotas++;
+      } else {
+        times[0].empates++;
+        times[2].empates++;
+      }
     }
-    if (retJogos[2].resultA > retJogos[2].resultB) {
-      times[1].vitorias++;
-      times[2].derrotas++;
-    } else if (retJogos[2].resultA < retJogos[2].resultB) {
-      times[1].derrotas++;
-      times[2].vitorias++;
-    } else {
-      times[1].empates++;
-      times[2].empates++;
+    if (retJogos[2].encerrado) {
+      if (retJogos[2].resultA > retJogos[2].resultB) {
+        times[1].vitorias++;
+        times[2].derrotas++;
+      } else if (retJogos[2].resultA < retJogos[2].resultB) {
+        times[1].derrotas++;
+        times[2].vitorias++;
+      } else {
+        times[1].empates++;
+        times[2].empates++;
+      }
     }
     times.sort((a, b) => b.pontos.compareTo(a.pontos));
 
@@ -503,12 +513,9 @@ class _GrupoCardState extends State<GrupoCard> {
                       fontSize: 22,
                       fontWeight: FontWeight.w500)),
             ),
-            _jogoTile(jogosJuers[0].timeA, jogosJuers[0].resultA,
-                jogosJuers[0].timeB, jogosJuers[0].resultB),
-            _jogoTile(jogosJuers[1].timeA, jogosJuers[1].resultA,
-                jogosJuers[1].timeB, jogosJuers[1].resultB),
-            _jogoTile(jogosJuers[2].timeA, jogosJuers[2].resultA,
-                jogosJuers[2].timeB, jogosJuers[2].resultB),
+            _jogoTile(jogosJuers[0]),
+            _jogoTile(jogosJuers[1]),
+            _jogoTile(jogosJuers[2]),
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
@@ -551,7 +558,10 @@ class _GrupoCardState extends State<GrupoCard> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      transitionBuilder: (child, animation) => SizeTransition(child: child, sizeFactor: animation,),
+      transitionBuilder: (child, animation) => SizeTransition(
+        child: child,
+        sizeFactor: animation,
+      ),
       duration: Duration(milliseconds: 200),
       child: showTable
           ? tabela(widget.index, widget.jogos)

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/models/serializeJuergs.dart';
 import 'package:siepex/src/config.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
@@ -37,6 +38,10 @@ class Jogo {
       return resultB.toString();
     else
       return '-';
+  }
+
+  get fase{
+    
   }
 
   Jogo.fromJson(Map<String, dynamic> json) {
@@ -129,6 +134,64 @@ class Jogo {
       print(e.toString());
       errorDialog(context, 'Erro', 'Aconteceu um problema ao pegar os jogos.');
       return [];
+    }
+  }
+
+  static Future<List<Jogo>> pegaJogoPorFase(BuildContext context, Modalidade modalidade) async {
+    try{
+      var resposta = jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', 
+      body: {
+        'idModalidade': modalidade.id.toString(),
+        'etapa':modalidade.fase.toString(),
+      })).body);
+      
+      if(resposta['status'] != null){
+        if(resposta['status'] == 'sucesso'){
+          List<Jogo> jogos = [];
+          for(int i = 0; i < resposta['count']; i++){
+            jogos.add(Jogo.fromJson(resposta['data'][i]));
+          }
+          return jogos;
+        }
+      }
+
+      errorDialog(context, 'Erro!', 'Ocorreu um erro ao pegar os jogos');
+      return [];
+    }catch(e){
+      errorDialog(context, 'Erro!', 'Ocorreu um erro ao pegar os jogos');
+      return []; 
+    }
+  }
+
+  static Future<void> atualizaJogos(List<Jogo> jogos, BuildContext context) async {
+    // Recebe uma lista de jogos de qualquer tamanho e envia os que foram editados (edited == true) ...
+    // ... para a API atualizar os resultados
+
+    List<Map<String, dynamic>> jogosJson = [];
+
+    // await Future.delayed(Duration(seconds: 2));
+
+    for (Jogo jogo in jogos) {
+      if (jogo.edited) jogosJson.add(jogo.toJson());
+    }
+    if (jogosJson.length > 0) {
+      try {
+        var resposta =
+          jsonDecode((await http.put(baseUrl + 'modalidades/atualizaJogos', body: {
+        'jogos': json.encode(jogosJson),
+      }))
+              .body);
+        if(resposta['status'] == 'sucesso'){
+          Navigator.pop(context);
+        }else{
+          errorDialog(
+            context, 'Erro!', 'Ocorreu um problema ao atualizar os jogos.');
+        }
+      } catch (e) {
+        print('Um erro aconteceu ao atualizar os jogos: ' + e.toString());
+        errorDialog(
+            context, 'Erro!', 'Ocorreu um problema ao atualizar os jogos.');
+      }
     }
   }
 }

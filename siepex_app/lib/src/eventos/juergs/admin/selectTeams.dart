@@ -64,7 +64,7 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
     // LISTA COM AS TABELAS
     
 	equipesSelecionadas = List.generate(numGroups * numTimes, (index) {
-    	return null; // equipesSelecionaveis[index]; // TODO: mudar para null
+    	return equipesSelecionaveis[index]; // TODO: mudar para null
   	});
 	
 	return ListView.builder(

@@ -19,7 +19,7 @@ class EquipeCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           gradient:
-              LinearGradient(colors: [Color(0xFF6BA8BB), Color(0xFF58AAC4)]),
+              LinearGradient(colors: [Color(0xFF7DB4C5), Color(0xFF55AEC9)]),
           boxShadow: [
             BoxShadow(
                 blurRadius: 2,

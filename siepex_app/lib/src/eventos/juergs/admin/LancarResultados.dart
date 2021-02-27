@@ -20,7 +20,6 @@ class _LancarResultadosPageState extends State<LancarResultadosPage> {
 
   @override
   Widget build(BuildContext context) {
-    HandleData _handleData = HandleData();
     Modalidade modalidade = Provider.of<Modalidade>(context);
     return Scaffold(
       floatingActionButton: Builder(
@@ -41,7 +40,7 @@ class _LancarResultadosPageState extends State<LancarResultadosPage> {
                   if(confirm){
                     final snackbar = SnackBar(content: Text('Carregando'));
                     Scaffold.of(context).showSnackBar(snackbar);
-                    await _handleData.atualizaJogos(jogos, context);
+                    await Jogo.atualizaJogos(jogos, context);
                     Scaffold.of(context).hideCurrentSnackBar();
                   }
                 }
@@ -58,7 +57,7 @@ class _LancarResultadosPageState extends State<LancarResultadosPage> {
       ),
       body: _loading ? Center(child: CircularProgressIndicator(),) :
       FutureBuilder(
-          future: _handleData.listarJogos(modalidade, modalidade.fase),
+          future: Jogo.pegaJogoPorFase(context, modalidade),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());

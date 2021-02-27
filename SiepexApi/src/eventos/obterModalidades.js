@@ -31,14 +31,14 @@ router.put('/listaTabela', async (req, res) => {
     retorno = await listarTabela(req.body['idModalidade'], req.body['etapa']);
     if (retorno) {
         res.json({
-            status: 'ok',
+            status: 'sucesso',
             data: retorno.rows,
             count: retorno.count,
         })
     }
     else {
         res.json({
-            status: 'nao_achou',
+            status: 'erro',
         })
     }
 });
