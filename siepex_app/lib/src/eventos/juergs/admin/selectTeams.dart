@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:provider/provider.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 import 'package:siepex/src/eventos/juergs/admin/listaEquipes.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import '../Widgets/roundButton.dart';
@@ -28,10 +29,7 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
   Modalidade modalidade;
 
   bool allFilled() {
-    for (Equipe equipe in equipesSelecionadas) {
-      if (equipe.id == -2) return false;
-    }
-    return true;
+    return !equipesSelecionadas.contains(null);
   }
 
   Widget gruposSelection() {
@@ -88,7 +86,7 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
               padding: const EdgeInsets.only(bottom: 12.0),
               child: roundButton('Confirmar', Colors.blue, Icons.thumb_up,
                   () async {
-                if (true) {
+                if (allFilled()) {
                   confirmDialog(
                       context, 'Finalizar', 'Confimar envio das equipes?',
                       () async {
@@ -99,13 +97,10 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                     Scaffold.of(context).hideCurrentSnackBar();
                     Navigator.pop(context);
                   }, () => Navigator.pop(context));
-                } else
-                // TODO:: conferir se todas equipes foram selecionadas
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                      'Preencha todas as equipes!',
-                    ),
-                  ));
+                } else{
+                  print('AQUI!');
+                  errorDialog(context, 'Atenção!', 'Você deve preencher todos jogos/grupos com equipes');
+                }
               }),
             );
         });
