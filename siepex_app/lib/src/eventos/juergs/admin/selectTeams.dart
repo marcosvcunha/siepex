@@ -60,7 +60,10 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
 		groups = ['Final', '3º Lugar'];
 		numGroups = 2;
 		numTimes = 2;
-	} else if (modalidade.faseStr == 'Final') {}
+	} else if (modalidade.faseStr == 'Final') {
+    numGroups = 0;
+    numTimes = 0;
+  }
     // LISTA COM AS TABELAS
     
 	equipesSelecionadas = List.generate(numGroups * numTimes, (index) {
