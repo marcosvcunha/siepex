@@ -51,42 +51,60 @@ router.put('/nextFase', async (req, res) => {
         const faseAtual = parseInt(req.body['fase_atual']); // fase atual da modalidade
         console.info('Fase atual 1: ' + faseAtual.toString());
 
-
         modalidade = (await modalidades_juergs.findByPk(id))['dataValues'];
 
         // Este if confere se a fase atual no app do usuario é a mesma no DB
         // Pode ser que outro ADM já tenha avançado a competição de fase.
         if (modalidade['fase'] == faseAtual) {
-            // TODO:: Avançar a competição de fase e criar os respectivos jogos.
-            switch (faseAtual) {
-                case 0:
-                    console.info('Fase atual 2: ' + faseAtual.toString());
-                    await monta_tabela_grupos(idEquipes, equipesGrupoNome, id);
-                    console.info('Fase atual 3: ' + faseAtual.toString());
-                    await proxima_fase(id, faseAtual);
-                    console.info('Fase atual 4: ' + faseAtual.toString());
-                    break;
-                case 1:
-                    await monta_quartas(idEquipes, equipesGrupoNome, id);
-                    await proxima_fase(id, faseAtual);
-                    break;
-                case 2:
-                    await monta_semi(idEquipes, equipesGrupoNome, id);
-                    await proxima_fase(id, faseAtual);
-                    break;
-                case 3:
-                    await monta_final(idEquipes, equipesGrupoNome, id);
-                    await proxima_fase(id, faseAtual);
-                    break;
-                case 4:
-                    // TODO: Encerra a competição.
-                    break;
-                default:
-                    res.json({
-                        status: 'erro',
-                        erro: 'A competição já encerrou',
-                    })
-                    break;
+
+            jogos_nao_encerrados = await jogos_juergs.findAndCountAll({
+                where: {
+                    modalidade: idModalidade,
+                    etapa_jogo: faseAtual,
+                    encerrado: false,
+                }
+            });
+
+            // Confere se existem jogos nesta fase que não tiveram resultados lançados ainda
+            // TODO: mudar para: jogos_nao_encerrados.count > 0
+            if (jogos_nao_encerrados.count > 1000) {
+                res.json({
+                    status: 'erro',
+                    erro: 'jogos nao encerrados'
+                });
+                return;
+            } else {
+
+                switch (faseAtual) {
+                    case 0:
+                        console.info('Fase atual 2: ' + faseAtual.toString());
+                        await monta_tabela_grupos(idEquipes, equipesGrupoNome, id);
+                        console.info('Fase atual 3: ' + faseAtual.toString());
+                        await proxima_fase(id, faseAtual);
+                        console.info('Fase atual 4: ' + faseAtual.toString());
+                        break;
+                    case 1:
+                        await monta_quartas(idEquipes, equipesGrupoNome, id);
+                        await proxima_fase(id, faseAtual);
+                        break;
+                    case 2:
+                        await monta_semi(idEquipes, equipesGrupoNome, id);
+                        await proxima_fase(id, faseAtual);
+                        break;
+                    case 3:
+                        await monta_final(idEquipes, equipesGrupoNome, id);
+                        await proxima_fase(id, faseAtual);
+                        break;
+                    case 4:
+                        // TODO: Encerra a competição.
+                        break;
+                    default:
+                        res.json({
+                            status: 'erro',
+                            erro: 'A competição já encerrou',
+                        })
+                        break;
+                }
             }
 
             res.json({
@@ -176,14 +194,14 @@ router.put('/atualizaJogos', async (req, res) => {
 });
 
 router.put('/changeLocal', async (req, res) => {
-    try{
+    try {
         idModalidade = JSON.parse(req.body['id_modalidade']);
 
         novoLocal = req.body['novo_local'];
 
         await modalidades_juergs.update({
             endereco: novoLocal,
-        },{
+        }, {
             where: {
                 id: idModalidade,
             }
@@ -192,7 +210,7 @@ router.put('/changeLocal', async (req, res) => {
         res.json({
             status: 'sucesso'
         });
-    }catch(e){
+    } catch (e) {
         console.log(e);
         res.json({
             status: 'erro'
@@ -249,6 +267,46 @@ router.put('/pegarJogos/porEquipes', async (req, res) => {
         console.error('Erro ao obter Jogos por Equipes');
         res.json({
             status: 'erro'
+        });
+    }
+});
+
+router.put('/alterarFormato', async (req, res) => {
+    try{
+        idModalidade = req.body['id_modalidade'];
+        novoFormato = req.body['novo_formato'];
+
+        modalidade = await modalidades_juergs.findAll({
+            where: {
+                id: idModalidade,
+            }
+        });
+
+        faseAtual = modalidade[0].dataValues.fase;
+        if(faseAtual == 0){
+            await modalidades_juergs.update({
+                formatoCompeticao: novoFormato,
+            },{
+                where: {
+                    id: idModalidade,
+                }
+            });
+            res.json({
+                status: 'sucesso',
+            });
+            return;
+        }else{
+            res.json({
+                status: 'erro',
+                erro: 'nao esta na fase de inscricao'
+            });
+            return;
+        }
+
+    }catch(e){
+        res.json({
+            status: 'erro',
+            erro: 'erro desconhecido'
         });
     }
 });

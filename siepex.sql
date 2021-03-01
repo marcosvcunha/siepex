@@ -27,6 +27,12 @@ endereco varchar(100) NOT NULL,
 limit_date TIMESTAMP,
 fase int(2) NOT NULL, # Fase atual da competiÃ§Ã£o: 0 - Fase de inscriÃ§Ã£o, 1 - Fase de Grupos, 2 - Quartas de final
 					  # 3 - Semi Final, 4 - Final e 5 - Encerrado.
+formatoCompeticao int(2) NOT NULL default 2,
+# Formatos:
+# 1 - 32 times (8 grupos de 4) -> oitavas -> quartas -> semi -> final
+# 2 - 24 times (8 grupos de 3) -> oitavas -> quartas -> semi -> final
+# 3 - 16 times (4 grupos de 4) -> quartas -> semi -> final
+# 4 - 12 times (4 grupos de 3) -> semi -> final 
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
 );
 

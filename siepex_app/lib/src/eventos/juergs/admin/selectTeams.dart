@@ -98,7 +98,6 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                     Navigator.pop(context);
                   }, () => Navigator.pop(context));
                 } else{
-                  print('AQUI!');
                   errorDialog(context, 'Atenção!', 'Você deve preencher todos jogos/grupos com equipes');
                 }
               }),

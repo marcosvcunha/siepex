@@ -21,6 +21,27 @@ class Modalidade extends ChangeNotifier {
   // String faseStr;
   String _local;
 
+  int _formatoCompeticao;
+  // Formatos:
+  // 1 - 32 times (8 grupos de 4) -> oitavas -> quartas -> semi -> final
+  // 2 - 24 times (8 grupos de 3) -> quartas -> semi -> final
+  // 3 - 16 times (4 grupos de 4) -> quartas -> semi -> final
+  // 4 - 12 times (4 grupos de 3) -> semi -> final
+
+  static Map<int, String> formatoDescricaoMap = {
+    1: 'Fase de grupos com 32 times (8 grupos de 4 times). Dois de cada grupo passam às oitavas de final.',
+    2: 'Fase de grupos com 24 times (8 grupos de 3 times). Um de cada grupo passa às quartas de final.',
+    3: 'Fase de grupos com 16 times (4 grupos de 4 times). Dois de cada grupo passam às quartas de final.',
+    4: 'Fase de grupos com 12 times (4 grupos de 3 times). Um de cada grupo passa à semi-final.'
+  };
+
+  static Map<int, int> formatoNumTimes = {
+    1: 32,
+    2: 24,
+    3: 16,
+    4: 12,
+  };
+
   static Map<String, IconData> icons = {
     'Futsal Masculino': MyFlutterApp.soccerBall,
     'Futsal Feminino': MyFlutterApp.soccerBall,
@@ -40,13 +61,21 @@ class Modalidade extends ChangeNotifier {
   ];
 
   static Map<String, int> fasesMap = {
-    'Inscrição': 0, 
+    'Inscrição': 0,
     'Fase de Grupos': 1,
     'Quartas de Final': 2,
     'Semi-Final': 3,
     'Final': 4,
     'Finalizada': 5,
   };
+
+  int get formatoCompeticao {
+    return formatoNumTimes[_formatoCompeticao];
+  }
+
+  String get formatoDescricao {
+    return formatoDescricaoMap[_formatoCompeticao];
+  }
 
   String get faseStr {
     return fases[fase];
@@ -91,43 +120,43 @@ class Modalidade extends ChangeNotifier {
     icon = icons[nome];
     dataLimiteString =
         '${dataLimite.day.toString()}/${dataLimite.month.toString()} ${dataLimite.hour.toString()}:${dataLimite.minute.toString()}';
-    // faseStr = fases[fase];
+    _formatoCompeticao = jsonData['formatoCompeticao'];
   }
 
   Future<void> nextFase(BuildContext context, List<Equipe> equipes) async {
     // idEquipes.removeWhere((item) => item == -2);
     // equipesGrupoNome.removeWhere((item) => item == 'Selecione');
-    try{
-    List<int> idEquipes = <int>[];
-    List<String> equipesNome = <String>[];
-    for (Equipe equipe in equipes) {
-      idEquipes.add(equipe.id);
-      equipesNome.add(equipe.nome);
-    }
-
-
-    var resposta =
-        jsonDecode((await http.put(baseUrl + 'modalidades/nextFase', body: {
-      'id_modalidade': id.toString(),
-      'fase_atual': fase.toString(),
-      'idEquipes': idEquipes.toString(),
-      'equipesGrupoNome': json.encode(equipesNome),
-    }))
-            .body);
-    if (resposta['status'] == 'sucesso') {
-      // Alterar a fase nesta modalidade e dar NotifyListeners.
-      this.fase++;
-      notifyListeners();
-    } else if (resposta['status'] == 'erro') {
-      // TODO:: Conferir os possiveis erros
-      if(resposta['erro'] == 'jogos nao encerrados'){
-      print('AQUI!');
-        await errorDialog(context, 'Erro!', 'Alguns dos jogos ainda não foram encerrados ou não tiveram seus resultados lançados');
+    try {
+      List<int> idEquipes = <int>[];
+      List<String> equipesNome = <String>[];
+      for (Equipe equipe in equipes) {
+        idEquipes.add(equipe.id);
+        equipesNome.add(equipe.nome);
       }
-    }else{
-      errorDialog(context, 'Erro!', 'Ocorreu um problema desconhecido.');
-    }
-    }catch(e){
+
+      var resposta =
+          jsonDecode((await http.put(baseUrl + 'modalidades/nextFase', body: {
+        'id_modalidade': id.toString(),
+        'fase_atual': fase.toString(),
+        'idEquipes': idEquipes.toString(),
+        'equipesGrupoNome': json.encode(equipesNome),
+      }))
+              .body);
+      if (resposta['status'] == 'sucesso') {
+        // Alterar a fase nesta modalidade e dar NotifyListeners.
+        this.fase++;
+        notifyListeners();
+      } else if (resposta['status'] == 'erro') {
+        // TODO:: Conferir os possiveis erros
+        if (resposta['erro'] == 'jogos nao encerrados') {
+          print('AQUI!');
+          errorDialog(context, 'Erro!',
+              'Alguns dos jogos ainda não foram encerrados ou não tiveram seus resultados lançados');
+        }
+      } else {
+        errorDialog(context, 'Erro!', 'Ocorreu um problema desconhecido.');
+      }
+    } catch (e) {
       errorDialog(context, 'Erro!', 'Ocorreu um problema desconhecido.');
     }
   }
@@ -178,6 +207,31 @@ class Modalidade extends ChangeNotifier {
     } catch (e) {
       print('Erro');
       return [];
+    }
+  }
+
+  Future<bool> alterarFormato(int novoFormato) async {
+    try {
+      if (novoFormato != _formatoCompeticao) {
+        var resposta = jsonDecode(
+            (await http.put(baseUrl + 'modalidades/alterarFormato', body: {
+          'id_modalidade': id.toString(),
+          'novo_formato': novoFormato.toString(),
+        }))
+                .body);
+
+        if (resposta['status'] == 'sucesso') {
+          _formatoCompeticao = novoFormato;
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    } catch (e) {
+      print(e.toString());
+      return false;
     }
   }
 }
