@@ -51,7 +51,7 @@ class _TabelaGruposState extends State<TabelaGrupos> {
   Widget build(BuildContext context) {
     Modalidade modalidade = Provider.of<Modalidade>(context);
     return FutureBuilder(
-        future: Jogo.pegaJogoPorFase(context, modalidade),
+        future: Jogo.pegaJogoPorFase(context, modalidade, Modalidade.fasesMap['Fase de Grupos']),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -258,21 +258,21 @@ class _GrupoCardState extends State<GrupoCard> {
       TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
       TimeFaseGrupo(retJogos[1].timeB, retJogos[1].idTimeB),
     ];
-    int partidasTime1 = 0;
-    int ptsTime1 = 0;
-    int vitoriasTime1 = 0;
-    int derrotasTime1 = 0;
-    int empatesTime1 = 0;
-    int partidasTime2 = 0;
-    int ptsTime2 = 0;
-    int vitoriasTime2 = 0;
-    int derrotasTime2 = 0;
-    int empatesTime2 = 0;
-    int partidasTime3 = 0;
-    int ptsTime3 = 0;
-    int vitoriasTime3 = 0;
-    int derrotasTime3 = 0;
-    int empatesTime3 = 0;
+    // int partidasTime1 = 0;
+    // int ptsTime1 = 0;
+    // int vitoriasTime1 = 0;
+    // int derrotasTime1 = 0;
+    // int empatesTime1 = 0;
+    // int partidasTime2 = 0;
+    // int ptsTime2 = 0;
+    // int vitoriasTime2 = 0;
+    // int derrotasTime2 = 0;
+    // int empatesTime2 = 0;
+    // int partidasTime3 = 0;
+    // int ptsTime3 = 0;
+    // int vitoriasTime3 = 0;
+    // int derrotasTime3 = 0;
+    // int empatesTime3 = 0;
 
     if (retJogos[0].encerrado) {
       if (retJogos[0].resultA > retJogos[0].resultB) {

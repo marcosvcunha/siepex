@@ -137,12 +137,12 @@ class Jogo {
     }
   }
 
-  static Future<List<Jogo>> pegaJogoPorFase(BuildContext context, Modalidade modalidade) async {
+  static Future<List<Jogo>> pegaJogoPorFase(BuildContext context, Modalidade modalidade, int fase) async {
     try{
       var resposta = jsonDecode((await http.put(baseUrl + 'modalidades/listaTabela', 
       body: {
         'idModalidade': modalidade.id.toString(),
-        'etapa':modalidade.fase.toString(),
+        'etapa':fase.toString(),
       })).body);
       
       if(resposta['status'] != null){

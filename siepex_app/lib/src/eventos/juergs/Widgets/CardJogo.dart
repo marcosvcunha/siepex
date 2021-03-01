@@ -23,7 +23,7 @@ class CardJogo extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Container(
-        height: 80,
+        // height: 80,
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -36,9 +36,9 @@ class CardJogo extends StatelessWidget {
               flex: 7,
               child: Padding(
                 padding: const EdgeInsets.only(
-                    top: 12.0, bottom: 12, left: 12, right: 20),
+                    top: 12.0, bottom: 6, left: 12, right: 20),
                 child: Container(
-                  height: 80,
+                  // height: 100,
                   // color: Colors.red,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -55,11 +55,12 @@ class CardJogo extends StatelessWidget {
                               ),
                               SizedBox(width: 16),
                               Text(
-                                jogo.resultA.toString(),
+                                jogo.encerrado ? jogo.resultA.toString() : '-',
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.w500),
-                              )
+                              ),
                             ]),
+                        SizedBox(height: 8,),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -72,11 +73,13 @@ class CardJogo extends StatelessWidget {
                               ),
                               SizedBox(width: 16),
                               Text(
-                                jogo.resultB.toString(),
+                                jogo.encerrado ? jogo.resultB.toString() : '-',
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.w500),
                               )
                             ]),
+                        SizedBox(height: 6,),
+                            Text(jogo.encerrado ? 'Encerrado' : 'Não iniciou', style: TextStyle(color: Colors.grey[600]),)
                       ]),
                 ),
               ),

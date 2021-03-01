@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:provider/provider.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/GameCard.dart';
-import 'package:siepex/src/eventos/juergs/admin/TabelasGruposAdmin.dart';
+// import 'package:siepex/src/eventos/juergs/admin/TabelasGruposAdmin.dart';
 import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 import '../Widgets/errorDialog.dart';
 import '../Widgets/confirmDialog.dart';
@@ -18,7 +18,7 @@ class LancaResultadosGruposPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Modalidade modalidade = Provider.of<Modalidade>(context);
     return FutureBuilder(
-      future: Jogo.pegaJogoPorFase(context, modalidade),
+      future: Jogo.pegaJogoPorFase(context, modalidade, modalidade.fase),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(

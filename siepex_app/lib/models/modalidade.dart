@@ -39,6 +39,15 @@ class Modalidade extends ChangeNotifier {
     'Finalizada',
   ];
 
+  static Map<String, int> fasesMap = {
+    'Inscrição': 0, 
+    'Fase de Grupos': 1,
+    'Quartas de Final': 2,
+    'Semi-Final': 3,
+    'Final': 4,
+    'Finalizada': 5,
+  };
+
   String get faseStr {
     return fases[fase];
   }
@@ -85,10 +94,10 @@ class Modalidade extends ChangeNotifier {
     // faseStr = fases[fase];
   }
 
-  Future<void> nextFase(List<Equipe> equipes) async {
+  Future<void> nextFase(BuildContext context, List<Equipe> equipes) async {
     // idEquipes.removeWhere((item) => item == -2);
     // equipesGrupoNome.removeWhere((item) => item == 'Selecione');
-
+    try{
     List<int> idEquipes = <int>[];
     List<String> equipesNome = <String>[];
     for (Equipe equipe in equipes) {
@@ -96,7 +105,6 @@ class Modalidade extends ChangeNotifier {
       equipesNome.add(equipe.nome);
     }
 
-    print(json.encode(equipesNome));
 
     var resposta =
         jsonDecode((await http.put(baseUrl + 'modalidades/nextFase', body: {
@@ -108,14 +116,19 @@ class Modalidade extends ChangeNotifier {
             .body);
     if (resposta['status'] == 'sucesso') {
       // Alterar a fase nesta modalidade e dar NotifyListeners.
-      print(fase);
-      print(faseStr);
       this.fase++;
       notifyListeners();
-      print(fase);
-      print(faseStr);
     } else if (resposta['status'] == 'erro') {
       // TODO:: Conferir os possiveis erros
+      if(resposta['erro'] == 'jogos nao encerrados'){
+      print('AQUI!');
+        await errorDialog(context, 'Erro!', 'Alguns dos jogos ainda não foram encerrados ou não tiveram seus resultados lançados');
+      }
+    }else{
+      errorDialog(context, 'Erro!', 'Ocorreu um problema desconhecido.');
+    }
+    }catch(e){
+      errorDialog(context, 'Erro!', 'Ocorreu um problema desconhecido.');
     }
   }
 

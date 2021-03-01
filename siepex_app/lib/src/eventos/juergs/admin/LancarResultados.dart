@@ -57,7 +57,7 @@ class _LancarResultadosPageState extends State<LancarResultadosPage> {
       ),
       body: _loading ? Center(child: CircularProgressIndicator(),) :
       FutureBuilder(
-          future: Jogo.pegaJogoPorFase(context, modalidade),
+          future: Jogo.pegaJogoPorFase(context, modalidade, modalidade.fase),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());

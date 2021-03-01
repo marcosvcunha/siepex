@@ -18,7 +18,7 @@ class SelectTeamsPage extends StatefulWidget {
 }
 
 class _SelectTeamsPageState extends State<SelectTeamsPage> {
-  bool _isLoading = false;
+  // bool _isLoading = false;
   List<Equipe> equipesSelecionaveis;
   List<Equipe> equipesSelecionadas;
 // //   List<String> equipesGrupoNome = List.generate(24, (index) {
@@ -92,11 +92,12 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                     Navigator.pop(context);
                     Scaffold.of(context).showSnackBar(loadingSnackbar());
                     // TODO: receber resposta e verificar se deu certo.
-                    await modalidade.nextFase(equipesSelecionadas);
+                    await modalidade.nextFase(context, equipesSelecionadas);
                     Scaffold.of(context).hideCurrentSnackBar();
                     Navigator.pop(context);
                   }, () => Navigator.pop(context));
                 } else
+                // TODO:: conferir se todas equipes foram selecionadas
                   Scaffold.of(context).showSnackBar(SnackBar(
                     content: Text(
                       'Preencha todas as equipes!',
@@ -266,25 +267,3 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
   }
 }
 
-
-class NomeTime{
-	String _nomeTime;
-
-
-}
-
-// class TimeRow extends StatefulWidget {
-//   final
-
-//   @override
-//   _TimeRowState createState() => _TimeRowState();
-// }
-
-// class _TimeRowState extends State<TimeRow> {
-//   @override
-//   Widget build(BuildContext context) {
-// 	return Container(
-	  
-// 	);
-//   }
-// }

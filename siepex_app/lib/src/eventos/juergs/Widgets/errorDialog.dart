@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-void errorDialog(BuildContext context, String title, String error){
-  showDialog(
+void errorDialog(BuildContext context, String title, String error) async {
+  await showDialog(
     context: context,
     builder: (context){
       return AlertDialog(
