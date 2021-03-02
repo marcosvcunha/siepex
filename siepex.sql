@@ -30,7 +30,7 @@ fase int(2) NOT NULL, # Fase atual da competiÃ§Ã£o: 0 - Fase de inscriÃ§Ã
 formatoCompeticao int(2) NOT NULL default 2,
 # Formatos:
 # 1 - 32 times (8 grupos de 4) -> oitavas -> quartas -> semi -> final
-# 2 - 24 times (8 grupos de 3) -> oitavas -> quartas -> semi -> final
+# 2 - 24 times (8 grupos de 3) -> quartas -> semi -> final
 # 3 - 16 times (4 grupos de 4) -> quartas -> semi -> final
 # 4 - 12 times (4 grupos de 3) -> semi -> final 
 ult_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update current_timestamp
@@ -143,6 +143,24 @@ INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_p
 	cpf_capitao) VALUES(1, 'Equipe Teste 26', 'Futsal Masculino', 10, 1, '01234567890');
 INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
 	cpf_capitao) VALUES(1, 'Equipe Teste 27', 'Futsal Masculino', 10, 1, '01234567890');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao) VALUES(1, 'Equipe Teste 28', 'Futsal Masculino', 10, 1, '01234567890');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao) VALUES(1, 'Equipe Teste 29', 'Futsal Masculino', 10, 1, '01234567890');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao) VALUES(1, 'Equipe Teste 30', 'Futsal Masculino', 10, 1, '01234567890');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao) VALUES(1, 'Equipe Teste 31', 'Futsal Masculino', 10, 1, '01234567890');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao) VALUES(1, 'Equipe Teste 32', 'Futsal Masculino', 10, 1, '01234567890');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao) VALUES(1, 'Equipe Teste 33', 'Futsal Masculino', 10, 1, '01234567890');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao) VALUES(1, 'Equipe Teste 34', 'Futsal Masculino', 10, 1, '01234567890');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao) VALUES(1, 'Equipe Teste 35', 'Futsal Masculino', 10, 1, '01234567890');
+INSERT INTO equipes_juergs(id_modalidade, nome_equipe, nome_modalidade, maximo_participantes, numero_participantes,
+	cpf_capitao) VALUES(1, 'Equipe Teste 36', 'Futsal Masculino', 10, 1, '01234567890');
         
 DROP TABLE IF EXISTS cadastro_juergs;
 CREATE TABLE cadastro_juergs (

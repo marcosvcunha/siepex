@@ -8,6 +8,22 @@ const {
 
 const { Op } = require("sequelize");
 
+const formatosCompeticao = {
+    TIMES_32: 1,
+    TIMES_24: 2,
+    TIMES_16: 3,
+    TIMES_12: 4 
+};
+
+const fasesCompeticao = {
+    INSCRICAO: 0,
+    GRUPOS: 1,
+    QUARTAS: 2,
+    SEMI: 3,
+    FINAL: 4,
+    ENCERRADO: 5,
+};
+
 const grupos = ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3', 'D1', 'D2', 'D3', 'E1',
     'E2', 'E3', 'F1', 'F2', 'F3', 'G1', 'G2', 'G3', 'H1', 'H2', 'H3',];
 
@@ -49,7 +65,6 @@ router.put('/nextFase', async (req, res) => {
         equipesGrupoNome = JSON.parse(req.body['equipesGrupoNome'])
         id = parseInt(req.body['id_modalidade']); // Id da modalidade
         const faseAtual = parseInt(req.body['fase_atual']); // fase atual da modalidade
-        console.info('Fase atual 1: ' + faseAtual.toString());
 
         modalidade = (await modalidades_juergs.findByPk(id))['dataValues'];
 
@@ -76,26 +91,52 @@ router.put('/nextFase', async (req, res) => {
             } else {
 
                 switch (faseAtual) {
-                    case 0:
-                        console.info('Fase atual 2: ' + faseAtual.toString());
-                        await monta_tabela_grupos(idEquipes, equipesGrupoNome, id);
-                        console.info('Fase atual 3: ' + faseAtual.toString());
-                        await proxima_fase(id, faseAtual);
-                        console.info('Fase atual 4: ' + faseAtual.toString());
+                    case fasesCompeticao.INSCRICAO:
+                        switch(modalidade.formatoCompeticao){
+                            case formatosCompeticao.TIMES_32:
+                                await monta_tabela_grupos_32(idEquipes, equipesGrupoNome, id);
+                                break;
+                            case formatosCompeticao.TIMES_24:
+                                await monta_tabela_grupos_24(idEquipes, equipesGrupoNome, id);
+                                break;
+                            case formatosCompeticao.TIMES_16:
+                                await monta_tabela_grupos_16(idEquipes, equipesGrupoNome, id);
+                                break;
+                            case formatosCompeticao.TIMES_12:
+                                await monta_tabela_grupos_12(idEquipes, equipesGrupoNome, id);
+                                break;
+                        }
+                        await proxima_fase(id, fasesCompeticao.GRUPOS);
                         break;
-                    case 1:
-                        await monta_quartas(idEquipes, equipesGrupoNome, id);
-                        await proxima_fase(id, faseAtual);
+                    case fasesCompeticao.GRUPOS:
+                        switch(modalidade.formatoCompeticao){
+                            case formatosCompeticao.TIMES_32:
+                                await monta_quartas(idEquipes, equipesGrupoNome, id);
+                                await proxima_fase(id, fasesCompeticao.QUARTAS);
+                                break;
+                            case formatosCompeticao.TIMES_24:
+                                await monta_quartas(idEquipes, equipesGrupoNome, id);
+                                await proxima_fase(id, fasesCompeticao.QUARTAS);
+                            break;
+                            case formatosCompeticao.TIMES_16:
+                                await monta_quartas(idEquipes, equipesGrupoNome, id);
+                                await proxima_fase(id, fasesCompeticao.QUARTAS);
+                                break;
+                            case formatosCompeticao.TIMES_12:
+                                await monta_semi(idEquipes, equipesGrupoNome, id);
+                                await proxima_fase(id, fasesCompeticao.SEMI);
+                                break;
+                        }
                         break;
-                    case 2:
+                    case fasesCompeticao.QUARTAS:
                         await monta_semi(idEquipes, equipesGrupoNome, id);
-                        await proxima_fase(id, faseAtual);
+                        await proxima_fase(id, fasesCompeticao.SEMI);
                         break;
-                    case 3:
+                    case fasesCompeticao.SEMI:
                         await monta_final(idEquipes, equipesGrupoNome, id);
-                        await proxima_fase(id, faseAtual);
+                        await proxima_fase(id, fasesCompeticao.FINAL);
                         break;
-                    case 4:
+                    case fasesCompeticao.FINAL:
                         // TODO: Encerra a competição.
                         break;
                     default:
@@ -312,43 +353,27 @@ router.put('/alterarFormato', async (req, res) => {
 });
 
 
-
-async function monta_tabela_grupos(idEquipes, nomeEquipes, idModalidade) {
+async function monta_tabela_grupos_32(idEquipes, nomeEquipes, idModalidade) {
     // Monta tabela Para:
     // 8 Grupos
-    // 3 Times
+    // 4 Times
+
+    // A x B
+    // A x C
+    // A x D
+    // B x C
+    // B x D
+    // C x D
+
     const faseAtual = 1
-    await insere_jogos_juergs(nomeEquipes[0], nomeEquipes[1], idEquipes[0], idEquipes[1], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[2], nomeEquipes[0], idEquipes[2], idEquipes[0], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[1], nomeEquipes[2], idEquipes[1], idEquipes[2], 0, 0, false, idModalidade, faseAtual);
-
-    await insere_jogos_juergs(nomeEquipes[3], nomeEquipes[4], idEquipes[3], idEquipes[4], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[5], nomeEquipes[3], idEquipes[5], idEquipes[3], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[4], nomeEquipes[5], idEquipes[4], idEquipes[5], 0, 0, false, idModalidade, faseAtual);
-
-    await insere_jogos_juergs(nomeEquipes[6], nomeEquipes[7], idEquipes[6], idEquipes[7], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[8], nomeEquipes[6], idEquipes[8], idEquipes[6], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[7], nomeEquipes[8], idEquipes[7], idEquipes[8], 0, 0, false, idModalidade, faseAtual);
-
-    await insere_jogos_juergs(nomeEquipes[9], nomeEquipes[10], idEquipes[9], idEquipes[10], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[11], nomeEquipes[9], idEquipes[11], idEquipes[9], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[10], nomeEquipes[11], idEquipes[10], idEquipes[11], 0, 0, false, idModalidade, faseAtual);
-
-    await insere_jogos_juergs(nomeEquipes[12], nomeEquipes[13], idEquipes[12], idEquipes[13], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[14], nomeEquipes[12], idEquipes[14], idEquipes[12], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[13], nomeEquipes[14], idEquipes[13], idEquipes[14], 0, 0, false, idModalidade, faseAtual);
-
-    await insere_jogos_juergs(nomeEquipes[15], nomeEquipes[16], idEquipes[15], idEquipes[16], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[17], nomeEquipes[15], idEquipes[17], idEquipes[15], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[16], nomeEquipes[17], idEquipes[16], idEquipes[17], 0, 0, false, idModalidade, faseAtual);
-
-    await insere_jogos_juergs(nomeEquipes[18], nomeEquipes[19], idEquipes[18], idEquipes[19], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[20], nomeEquipes[18], idEquipes[20], idEquipes[18], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[19], nomeEquipes[20], idEquipes[19], idEquipes[20], 0, 0, false, idModalidade, faseAtual);
-
-    await insere_jogos_juergs(nomeEquipes[21], nomeEquipes[22], idEquipes[21], idEquipes[22], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[23], nomeEquipes[21], idEquipes[23], idEquipes[21], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[22], nomeEquipes[23], idEquipes[22], idEquipes[23], 0, 0, false, idModalidade, faseAtual);
+    for(var i = 0; i < 8; i ++){
+        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 1], idEquipes[4*i + 0], idEquipes[4*i + 1], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 2], idEquipes[4*i + 0], idEquipes[4*i + 2], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 3], idEquipes[4*i + 0], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[4*i + 1], nomeEquipes[4*i + 2], idEquipes[4*i + 1], idEquipes[4*i + 2], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[4*i + 1], nomeEquipes[4*i + 3], idEquipes[4*i + 1], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[4*i + 2], nomeEquipes[4*i + 3], idEquipes[4*i + 2], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual);
+    }
 
     await equipes_juergs.update({
         fase_equipe: faseAtual,
@@ -358,6 +383,69 @@ async function monta_tabela_grupos(idEquipes, nomeEquipes, idModalidade) {
         }
     })
 }
+
+async function monta_tabela_grupos_24(idEquipes, nomeEquipes, idModalidade) {
+    // Monta tabela Para:
+    // 8 Grupos
+    // 3 Times
+    const faseAtual = 1
+    for(var i = 0; i < 8; i++){
+        await insere_jogos_juergs(nomeEquipes[3*i + 0], nomeEquipes[3*i + 1], idEquipes[3*i + 0], idEquipes[3*i + 1], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[3*i + 2], nomeEquipes[3*i + 0], idEquipes[3*i + 2], idEquipes[3*i + 0], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[3*i + 1], nomeEquipes[3*i + 2], idEquipes[3*i + 1], idEquipes[3*i + 2], 0, 0, false, idModalidade, faseAtual);
+    }
+    await equipes_juergs.update({
+        fase_equipe: faseAtual,
+    }, {
+        where: {
+            id: idEquipes,
+        }
+    })
+}
+
+async function monta_tabela_grupos_16(idEquipes, nomeEquipes, idModalidade) {
+    // Monta tabela Para:
+    // 8 Grupos
+    // 3 Times
+    const faseAtual = 1
+    for(var i = 0; i < 4; i++){
+        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 1], idEquipes[4*i + 0], idEquipes[4*i + 1], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 2], idEquipes[4*i + 0], idEquipes[4*i + 2], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 3], idEquipes[4*i + 0], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[4*i + 1], nomeEquipes[4*i + 2], idEquipes[4*i + 1], idEquipes[4*i + 2], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[4*i + 1], nomeEquipes[4*i + 3], idEquipes[4*i + 1], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[4*i + 2], nomeEquipes[4*i + 3], idEquipes[4*i + 2], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual);
+    }
+    await equipes_juergs.update({
+        fase_equipe: faseAtual,
+    }, {
+        where: {
+            id: idEquipes,
+        }
+    })
+}
+
+async function monta_tabela_grupos_12(idEquipes, nomeEquipes, idModalidade) {
+    // Monta tabela Para:
+    // 8 Grupos
+    // 3 Times
+    const faseAtual = 1
+    for(var i = 0; i < 4; i++){
+        await insere_jogos_juergs(nomeEquipes[3*i + 0], nomeEquipes[3*i + 1], idEquipes[3*i + 0], idEquipes[3*i + 1], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[3*i + 2], nomeEquipes[3*i + 0], idEquipes[3*i + 2], idEquipes[3*i + 0], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[3*i + 1], nomeEquipes[3*i + 2], idEquipes[3*i + 1], idEquipes[3*i + 2], 0, 0, false, idModalidade, faseAtual);
+    }
+    await equipes_juergs.update({
+        fase_equipe: faseAtual,
+    }, {
+        where: {
+            id: idEquipes,
+        }
+    })
+}
+
+
+
 
 async function monta_quartas(idEquipes, nomeEquipes, idModalidade) {
     const faseAtual = 2
@@ -426,10 +514,9 @@ async function insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_
     });
 }
 
-async function proxima_fase(id_modalidade, faseAtual) {
-    console.info('Fase atual: ' + faseAtual.toString());
+async function proxima_fase(id_modalidade, proxima_fase) {
     await modalidades_juergs.update({
-        fase: faseAtual + 1,
+        fase: proxima_fase,
     }, {
         where: {
             id: id_modalidade,

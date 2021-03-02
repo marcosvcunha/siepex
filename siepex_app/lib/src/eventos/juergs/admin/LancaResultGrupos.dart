@@ -12,11 +12,28 @@ Seleciona o resultado das partidas para alterar
 */
 
 class LancaResultadosGruposPage extends StatelessWidget {
-  final List<String> grupos = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
   @override
   Widget build(BuildContext context) {
     Modalidade modalidade = Provider.of<Modalidade>(context);
+    List<String> grupos;
+    int numJogos;
+      print('Aqui');
+    if(modalidade.formatoCompeticao == 32){
+      grupos = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+      numJogos = 6;
+    }else if(modalidade.formatoCompeticao == 24){
+      grupos = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+      numJogos = 3;
+    }else if(modalidade.formatoCompeticao == 16){
+      grupos = ['A', 'B', 'C', 'D'];
+      numJogos = 6;
+    }else if(modalidade.formatoCompeticao== 12){
+      grupos = ['A', 'B', 'C', 'D'];
+      numJogos = 3;
+    }
+
+
     return FutureBuilder(
       future: Jogo.pegaJogoPorFase(context, modalidade, modalidade.fase),
       builder: (context, snapshot) {
@@ -73,6 +90,14 @@ class LancaResultadosGruposPage extends StatelessWidget {
                 body: ListView.builder(
                   itemCount: grupos.length,
                   itemBuilder: (context, index) {
+                    List<Widget> cardJogos = List.generate(numJogos, (indexJogo){
+                      return Provider.value(
+                            value: jogos[index * numJogos + indexJogo],
+                            child: GameCard(
+                              nomeJogo: 'Jogo ' + (indexJogo + 1).toString(),
+                            ),
+                          );
+                    });
                     return Container(
                       width: double.infinity,
                       child: Column(
@@ -86,24 +111,7 @@ class LancaResultadosGruposPage extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.w500),
                           ),
-                          Provider.value(
-                            value: jogos[index * 3],
-                            child: GameCard(
-                              nomeJogo: 'Jogo 1',
-                            ),
-                          ),
-                          Provider.value(
-                            value: jogos[index * 3 + 1],
-                            child: GameCard(nomeJogo: 'Jogo 2'),
-                          ),
-                          Provider.value(
-                            value: jogos[index * 3 + 2],
-                            child: GameCard(nomeJogo: 'Jogo 3'),
-                          ),
-                          SizedBox(
-                            height: 32,
-                          ),
-                        ],
+                        ] + cardJogos + [SizedBox(height: 32)],
                       ),
                     );
                   },

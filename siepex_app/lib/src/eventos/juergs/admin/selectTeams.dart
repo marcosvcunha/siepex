@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:siepex/models/modalidade.dart';
 import 'package:provider/provider.dart';
@@ -39,36 +40,78 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
     int numTimes;
 
     if (modalidade.faseStr == 'Inscrição') {
-    	// Vai para a fase de grupos
-		groups = ['Grupo A', 'Grupo B', 'Grupo C', 'Grupo D', 'Grupo E', 'Grupo F', 'Grupo G', 'Grupo H'];
-    	numGroups = 8;
-    	numTimes = 3;
+      // Vai para a fase de grupos
+      if (modalidade.formatoCompeticao == 32) {
+        groups = [
+          'Grupo A',
+          'Grupo B',
+          'Grupo C',
+          'Grupo D',
+          'Grupo E',
+          'Grupo F',
+          'Grupo G',
+          'Grupo H'
+        ];
+        numGroups = 8;
+        numTimes = 4;
+      } else if (modalidade.formatoCompeticao == 24) {
+        groups = [
+          'Grupo A',
+          'Grupo B',
+          'Grupo C',
+          'Grupo D',
+          'Grupo E',
+          'Grupo F',
+          'Grupo G',
+          'Grupo H'
+        ];
+        numGroups = 8;
+        numTimes = 3;
+      } else if (modalidade.formatoCompeticao == 16) {
+        groups = ['Grupo A', 'Grupo B', 'Grupo C', 'Grupo D'];
+        numGroups = 4;
+        numTimes = 4;
+      } else if (modalidade.formatoCompeticao == 12) {
+        groups = ['Grupo A', 'Grupo B', 'Grupo C', 'Grupo D'];
+        numGroups = 4;
+        numTimes = 3;
+      }
     } else if (modalidade.faseStr == 'Fase de Grupos') {
-        // Vai para Quartas
-		groups = ['Quartas 1', 'Quartas 2', 'Quartas 3', 'Quartas 4'];
-		numGroups = 4;
-		numTimes = 2;
+      // Vai para Quartas
+      if (modalidade.formatoCompeticao != 12) {
+        groups = ['Quartas 1', 'Quartas 2', 'Quartas 3', 'Quartas 4'];
+        numGroups = 4;
+        numTimes = 2;
+      } else {
+        groups = ['Semi 1', 'Semi 2'];
+        numGroups = 2;
+        numTimes = 2;
+      }
     } else if (modalidade.faseStr == 'Quartas de Final') {
-		// Vai para Semi
-		groups = ['Semi 1', 'Semi 2'];
-		numGroups = 2;
-		numTimes = 2;
+      // Vai para Semi
+      groups = ['Semi 1', 'Semi 2'];
+      numGroups = 2;
+      numTimes = 2;
     } else if (modalidade.faseStr == 'Semi-Final') {
-		// Vai para final
-		groups = ['Final', '3º Lugar'];
-		numGroups = 2;
-		numTimes = 2;
-	} else if (modalidade.faseStr == 'Final') {
-    numGroups = 0;
-    numTimes = 0;
-  }
+      // Vai para final
+      groups = ['Final', '3º Lugar'];
+      numGroups = 2;
+      numTimes = 2;
+    } else if (modalidade.faseStr == 'Final') {
+      numGroups = 0;
+      numTimes = 0;
+    }
     // LISTA COM AS TABELAS
-    
-	equipesSelecionadas = List.generate(numGroups * numTimes, (index) {
-    	return equipesSelecionaveis[index]; // TODO: mudar para null
-  	});
-	
-	return ListView.builder(
+
+    equipesSelecionadas = List.generate(numGroups * numTimes, (index) {
+      if(kDebugMode){
+        return equipesSelecionaveis[index]; // TODO: mudar para null
+      }else{
+        return null;
+      }
+    });
+
+    return ListView.builder(
         itemCount: numGroups + 1,
         itemBuilder: (context, index) {
           if (index < groups.length)
@@ -97,8 +140,9 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                     Scaffold.of(context).hideCurrentSnackBar();
                     Navigator.pop(context);
                   }, () => Navigator.pop(context));
-                } else{
-                  errorDialog(context, 'Atenção!', 'Você deve preencher todos jogos/grupos com equipes');
+                } else {
+                  errorDialog(context, 'Atenção!',
+                      'Você deve preencher todos jogos/grupos com equipes');
                 }
               }),
             );
@@ -139,8 +183,9 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
   }
 
   Widget grupoLinha(BuildContext context, String time, int index) {
-	Equipe equipe = equipesSelecionadas[index];
-	ValueNotifier<String> nomeEquipe = ValueNotifier(equipe == null ? 'Selecionar' : equipe.nome);
+    Equipe equipe = equipesSelecionadas[index];
+    ValueNotifier<String> nomeEquipe =
+        ValueNotifier(equipe == null ? 'Selecionar' : equipe.nome);
     return Column(children: [
       Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16),
@@ -163,8 +208,10 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                       size: 22,
                     ),
                     onPressed: () async {
-						List<Equipe> equipesNaoSelecionadas = List<Equipe>.from(equipesSelecionaveis);
-						equipesNaoSelecionadas.removeWhere((element) => equipesSelecionadas.contains(element));
+                      List<Equipe> equipesNaoSelecionadas =
+                          List<Equipe>.from(equipesSelecionaveis);
+                      equipesNaoSelecionadas.removeWhere(
+                          (element) => equipesSelecionadas.contains(element));
                       Equipe equipeSelecionada = await Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -173,25 +220,28 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
                                     value: modalidade,
                                     child: ListaEquipesPage(
                                         equipeId: time,
-                                        equipesSelecionaveis: equipesNaoSelecionadas),
+                                        equipesSelecionaveis:
+                                            equipesNaoSelecionadas),
                                   )));
-                    equipesSelecionadas[index] = equipeSelecionada;
-					nomeEquipe.value = equipeSelecionada == null ? 'Selecionar' : equipeSelecionada.nome; 
-                    // setState(() {});
+                      equipesSelecionadas[index] = equipeSelecionada;
+                      nomeEquipe.value = equipeSelecionada == null
+                          ? 'Selecionar'
+                          : equipeSelecionada.nome;
+                      // setState(() {});
                     }),
                 ValueListenableBuilder(
-					valueListenable: nomeEquipe,
-                 	builder: (BuildContext context, String teamName, Widget child){
-
-					  return Text(
-                    teamName,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400),
-                    overflow: TextOverflow.ellipsis,
-                  );
-				  },
+                  valueListenable: nomeEquipe,
+                  builder:
+                      (BuildContext context, String teamName, Widget child) {
+                    return Text(
+                      teamName,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400),
+                      overflow: TextOverflow.ellipsis,
+                    );
+                  },
                 ),
               ],
             )
@@ -245,22 +295,21 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
           title: Text('Selecione as Equipes'),
         ),
         body: FutureBuilder(
-			future: Equipe.getEquipesPorFase(modalidade.id, modalidade.fase),
-			builder: (context, snapshot) {
-				if(snapshot.connectionState == ConnectionState.waiting){
-					return Center(child: CircularProgressIndicator());
-				}else{
-					if(snapshot.hasData){
-						equipesSelecionaveis = snapshot.data;
-						return gruposSelection();
-					}else{
-						return Center(child: Text('Ocorreu um problema'));
-					}
-				}
-			},
-		),
+          future: Equipe.getEquipesPorFase(modalidade.id, modalidade.fase),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              if (snapshot.hasData) {
+                equipesSelecionaveis = snapshot.data;
+                return gruposSelection();
+              } else {
+                return Center(child: Text('Ocorreu um problema'));
+              }
+            }
+          },
+        ),
       ),
     );
   }
 }
-

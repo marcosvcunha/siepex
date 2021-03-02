@@ -184,24 +184,15 @@ class EquipeCard extends StatelessWidget {
   }
 
   Text ajustaEquipe(int index, int idModalidade) {
-    int maxTeams;
-
-    if(modalidade.nome == 'Futsal Masculino'){
-      maxTeams = 24;
-    } else if(modalidade.nome == 'Futsal Feminino' || modalidade.nome == 'Vôlei Misto'){
-      maxTeams = 16;
-    } else if(modalidade.nome == 'Handebol Masculino' || modalidade.nome == 'Handebol Feminino'){
-      maxTeams = 12;
-    } else{
-      maxTeams = 12;
-    }
+    int maxTeams = modalidade.formatoCompeticao;
+    bool qualificada = (index < maxTeams);
 
     return Text(
       'Equipe: ' + (index + 1).toString() + '/' + maxTeams.toString(),
           style: TextStyle(
-              color: (index < maxTeams) ? corCinza : Colors.red[900],
+              color: qualificada ? corCinza : Colors.red[900],
               fontSize: 16,
-              fontWeight: FontWeight.w500),
+              fontWeight: qualificada ? FontWeight.w400 : FontWeight.w500),
     );
   }
 

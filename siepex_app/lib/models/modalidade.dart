@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:siepex/icons/my_flutter_app_icons.dart';
 import 'package:siepex/icons/sport_icons.dart';
@@ -29,7 +30,7 @@ class Modalidade extends ChangeNotifier {
   // 4 - 12 times (4 grupos de 3) -> semi -> final
 
   static Map<int, String> formatoDescricaoMap = {
-    1: 'Fase de grupos com 32 times (8 grupos de 4 times). Dois de cada grupo passam às oitavas de final.',
+    1: 'Fase de grupos com 32 times (8 grupos de 4 times). Um de cada grupo passam às quartas de final.',
     2: 'Fase de grupos com 24 times (8 grupos de 3 times). Um de cada grupo passa às quartas de final.',
     3: 'Fase de grupos com 16 times (4 grupos de 4 times). Dois de cada grupo passam às quartas de final.',
     4: 'Fase de grupos com 12 times (4 grupos de 3 times). Um de cada grupo passa à semi-final.'
@@ -144,7 +145,11 @@ class Modalidade extends ChangeNotifier {
               .body);
       if (resposta['status'] == 'sucesso') {
         // Alterar a fase nesta modalidade e dar NotifyListeners.
-        this.fase++;
+        if(formatoCompeticao == 12 && faseStr == 'Fase de Grupos'){
+          fase = 3;
+        }else{
+          fase++;
+        }
         notifyListeners();
       } else if (resposta['status'] == 'erro') {
         // TODO:: Conferir os possiveis erros

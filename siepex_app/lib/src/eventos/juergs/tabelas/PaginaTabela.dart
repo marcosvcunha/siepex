@@ -13,6 +13,7 @@ class PaginaTabela extends StatefulWidget {
 }
 
 class _PaginaTabelaState extends State<PaginaTabela> {
+  Modalidade modalidade;
 
   int _currentFase = 1;
   List<String> fases = [
@@ -54,7 +55,12 @@ class _PaginaTabelaState extends State<PaginaTabela> {
                   ),
                   onPressed: _currentFase > 1 ? (){
                     setState(() {
-                      _currentFase --;
+                      // Corrigindo o fato da modalidade não ter quartas de final
+                      if(modalidade.formatoCompeticao == 12 && _currentFase == 3){
+                        _currentFase = 1;
+                      }else{
+                        _currentFase --;
+                      }
                     });
                   }:  null,
                 ),
@@ -77,7 +83,12 @@ class _PaginaTabelaState extends State<PaginaTabela> {
 
                   onPressed: _currentFase < modalidadeFase ? (){
                     setState(() {
-                      _currentFase ++;
+                      // Corrigindo o fato da modalidade não ter Quartas de Final
+                      if(modalidade.formatoCompeticao == 12 && _currentFase == 1){
+                        _currentFase = 3;
+                      }else{
+                        _currentFase ++;
+                      }
                     });
                   }:  null,
                 ),
@@ -91,7 +102,7 @@ class _PaginaTabelaState extends State<PaginaTabela> {
 
   Widget currentPage(Modalidade modalidade){
     if(_currentFase == 1)
-      return TabelaGrupos(modalidade);
+      return TabelaGrupos();
     else if(_currentFase == 2)
       return TabelaQuartas();
     else if(_currentFase == 3)
@@ -133,7 +144,7 @@ class _PaginaTabelaState extends State<PaginaTabela> {
   @override
   Widget build(BuildContext context) {
     // TODO: Arrumar para não calcular os pontos nem os resultados enquanto a partida não tiver terminado.
-    Modalidade modalidade = Provider.of<Modalidade>(context);
+    modalidade = Provider.of<Modalidade>(context);
     return Scaffold(
       backgroundColor: Colors.grey[400],
       // backgroundColor: Colors.white,

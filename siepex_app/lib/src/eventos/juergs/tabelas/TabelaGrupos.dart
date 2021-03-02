@@ -5,14 +5,6 @@ import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 
-class TabelaGrupos extends StatefulWidget {
-  TabelaGrupos(Modalidade modalidade) {
-    globalModalidade = modalidade;
-  }
-
-  @override
-  _TabelaGruposState createState() => _TabelaGruposState();
-}
 
 class TimeFaseGrupo {
   String nome;
@@ -38,18 +30,39 @@ class TimeFaseGrupo {
   }
 }
 
-Modalidade globalModalidade;
+class TabelaGrupos extends StatefulWidget {
+
+  @override
+  _TabelaGruposState createState() => _TabelaGruposState();
+}
 
 class _TabelaGruposState extends State<TabelaGrupos> {
   List<bool> showTable = List.generate(8, (index) {
     return true;
   });
   // Apenas para demonstração
-  List<String> _groupsFutsal = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  // List<String> _groupsFutsal = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
   @override
   Widget build(BuildContext context) {
     Modalidade modalidade = Provider.of<Modalidade>(context);
+    List<String> _groupsFutsal;
+    int numJogos;
+
+    if(modalidade.formatoCompeticao == 32){
+      _groupsFutsal = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+      numJogos = 6;
+    }else if(modalidade.formatoCompeticao == 24){
+      _groupsFutsal = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+      numJogos = 3;      
+    }else if(modalidade.formatoCompeticao == 16){
+      _groupsFutsal = ['A', 'B', 'C', 'D'];
+      numJogos = 6;
+    }else if(modalidade.formatoCompeticao == 12){
+      _groupsFutsal = ['A', 'B', 'C', 'D'];
+      numJogos = 3;
+    }
+
     return FutureBuilder(
         future: Jogo.pegaJogoPorFase(context, modalidade, Modalidade.fasesMap['Fase de Grupos']),
         builder: (context, snapshot) {
@@ -69,8 +82,8 @@ class _TabelaGruposState extends State<TabelaGrupos> {
                   return SizedBox(height: 70);
                 }
                 return GrupoCard(
-                    retJogos.sublist((index - 1) * 3, ((index - 1) * 3) + 3),
-                    index - 1);
+                    jogos: retJogos.sublist((index - 1) * numJogos, ((index - 1) * numJogos) + numJogos),
+                    nomeGrupo: 'Grupo ' + _groupsFutsal[index - 1], modalidade: modalidade,);
               },
             );
           }
@@ -80,8 +93,9 @@ class _TabelaGruposState extends State<TabelaGrupos> {
 
 class GrupoCard extends StatefulWidget {
   final List<Jogo> jogos;
-  final int index;
-  GrupoCard(this.jogos, this.index);
+  final String nomeGrupo;
+  final Modalidade modalidade;
+  GrupoCard({this.jogos, this.nomeGrupo, this.modalidade});
   @override
   _GrupoCardState createState() => _GrupoCardState();
 }
@@ -89,11 +103,75 @@ class GrupoCard extends StatefulWidget {
 class _GrupoCardState extends State<GrupoCard> {
   List<String> _groupsFutsal = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   bool showTable;
+  List<Jogo> retJogos;
+  List<TimeFaseGrupo> times;
+  Modalidade modalidade;
+  List<TableRow> linhasTimes;
+  List<Widget> linhaJogos;
+
+  // [
+  //     TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
+  //     TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
+  //     TimeFaseGrupo(retJogos[1].timeB, retJogos[1].idTimeB),
+  //   ];
 
   void initState() {
     super.initState();
 
     showTable = true;
+    retJogos = widget.jogos;
+    modalidade = widget.modalidade;
+    
+    if(modalidade.formatoCompeticao == 32){
+      times = [
+      TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
+      TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
+      TimeFaseGrupo(retJogos[1].timeB, retJogos[1].idTimeB),
+      TimeFaseGrupo(retJogos[2].timeB, retJogos[2].idTimeB),
+      ];
+    }else if(modalidade.formatoCompeticao == 24){
+      times = [
+        TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
+        TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
+        TimeFaseGrupo(retJogos[1].timeB, retJogos[1].idTimeB),
+      ];
+    }else if(modalidade.formatoCompeticao == 16){
+      times = [
+        TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
+        TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
+        TimeFaseGrupo(retJogos[1].timeB, retJogos[1].idTimeB),
+        TimeFaseGrupo(retJogos[2].timeB, retJogos[2].idTimeB),
+      ];
+    }else if(modalidade.formatoCompeticao == 12){
+      times = [
+        TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
+        TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
+        TimeFaseGrupo(retJogos[1].timeB, retJogos[1].idTimeB),
+      ];
+    }
+
+    // Calcula pontos
+    for(Jogo jogo in retJogos){
+      if(jogo.encerrado){
+      if(jogo.resultA > jogo.resultB){
+        int idVencedor = times.indexWhere((element){return element.nome == jogo.timeA;});
+        int idPerdedor = times.indexWhere((element){return element.nome == jogo.timeB;});
+        times[idVencedor].vitorias++;
+        times[idPerdedor].derrotas++;
+      }else if(jogo.resultA < jogo.resultB){
+        int idVencedor = times.indexWhere((element){return element.nome == jogo.timeB;});
+        int idPerdedor = times.indexWhere((element){return element.nome == jogo.timeA;});
+        times[idVencedor].vitorias++;
+        times[idPerdedor].derrotas++;
+      }else{
+        int idTimeA = times.indexWhere((element){return element.nome == jogo.timeA;});
+        int idTimeB = times.indexWhere((element){return element.nome == jogo.timeB;});
+        times[idTimeA].empates++;
+        times[idTimeB].empates++;
+      }
+      }
+    }
+    times.sort((a, b) => b.pontos.compareTo(a.pontos));
   }
 
   TableRow tableRow(String time, int partidas, int vitorias, int derrotas,
@@ -252,72 +330,12 @@ class _GrupoCardState extends State<GrupoCard> {
     );
   }
 
-  Widget tabela(int index, List<Jogo> retJogos) {
-    List<TimeFaseGrupo> times = [
-      TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
-      TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
-      TimeFaseGrupo(retJogos[1].timeB, retJogos[1].idTimeB),
-    ];
-    // int partidasTime1 = 0;
-    // int ptsTime1 = 0;
-    // int vitoriasTime1 = 0;
-    // int derrotasTime1 = 0;
-    // int empatesTime1 = 0;
-    // int partidasTime2 = 0;
-    // int ptsTime2 = 0;
-    // int vitoriasTime2 = 0;
-    // int derrotasTime2 = 0;
-    // int empatesTime2 = 0;
-    // int partidasTime3 = 0;
-    // int ptsTime3 = 0;
-    // int vitoriasTime3 = 0;
-    // int derrotasTime3 = 0;
-    // int empatesTime3 = 0;
-
-    if (retJogos[0].encerrado) {
-      if (retJogos[0].resultA > retJogos[0].resultB) {
-        times[0].vitorias++;
-        times[1].derrotas++;
-      } else if (retJogos[0].resultA < retJogos[0].resultB) {
-        times[1].vitorias++;
-        times[0].derrotas++;
-      } else {
-        times[0].empates++;
-        times[1].empates++;
-      }
-    }
-
-    if (retJogos[1].encerrado) {
-      if (retJogos[1].resultA > retJogos[1].resultB) {
-        times[0].vitorias++;
-        times[2].derrotas++;
-      } else if (retJogos[1].resultA < retJogos[1].resultB) {
-        times[2].vitorias++;
-        times[0].derrotas++;
-      } else {
-        times[0].empates++;
-        times[2].empates++;
-      }
-    }
-    if (retJogos[2].encerrado) {
-      if (retJogos[2].resultA > retJogos[2].resultB) {
-        times[1].vitorias++;
-        times[2].derrotas++;
-      } else if (retJogos[2].resultA < retJogos[2].resultB) {
-        times[1].derrotas++;
-        times[2].vitorias++;
-      } else {
-        times[1].empates++;
-        times[2].empates++;
-      }
-    }
-    times.sort((a, b) => b.pontos.compareTo(a.pontos));
-
+  Widget tabela() {
     return Padding(
       key: ValueKey(1),
       padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
       child: Container(
-        height: 230,
+        // height: 230,
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -335,7 +353,7 @@ class _GrupoCardState extends State<GrupoCard> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 14.0, bottom: 12),
-              child: Text('Grupo ' + _groupsFutsal[index].toString(),
+              child: Text(widget.nomeGrupo,
                   style: TextStyle(
                       color: Colors.black87,
                       fontSize: 22,
@@ -438,13 +456,7 @@ class _GrupoCardState extends State<GrupoCard> {
                     ),
                   ),
                 ]),
-                tableRow(times[0].nome, times[0].partidas, times[0].vitorias,
-                    times[0].derrotas, times[0].empates, times[0].pontos),
-                tableRow(times[1].nome, times[1].partidas, times[1].vitorias,
-                    times[1].derrotas, times[1].empates, times[1].pontos),
-                tableRow(times[2].nome, times[2].partidas, times[2].vitorias,
-                    times[2].derrotas, times[2].empates, times[2].pontos),
-              ],
+              ] + linhasTimes,
             ),
             Align(
               alignment: Alignment.centerRight,
@@ -484,12 +496,12 @@ class _GrupoCardState extends State<GrupoCard> {
     );
   }
 
-  Widget jogosCard(int index, List<Jogo> jogosJuers) {
+  Widget jogosCard(List<Jogo> jogosJuers) {
     return Padding(
       key: ValueKey(2),
       padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
       child: Container(
-        height: 290,
+        // height: 290,
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -507,15 +519,16 @@ class _GrupoCardState extends State<GrupoCard> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 14.0, bottom: 12),
-              child: Text('Grupo ' + _groupsFutsal[index].toString(),
+              child: Text(widget.nomeGrupo,
                   style: TextStyle(
                       color: Colors.black87,
                       fontSize: 22,
                       fontWeight: FontWeight.w500)),
-            ),
-            _jogoTile(jogosJuers[0]),
-            _jogoTile(jogosJuers[1]),
-            _jogoTile(jogosJuers[2]),
+            ),]
+              +
+              linhaJogos
+              +
+            [
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
@@ -557,6 +570,16 @@ class _GrupoCardState extends State<GrupoCard> {
 
   @override
   Widget build(BuildContext context) {
+    linhasTimes = List.generate(times.length, 
+    (index){
+      return tableRow(times[index].nome, times[index].partidas, times[index].vitorias,
+        times[index].derrotas, times[index].empates, times[index].pontos);
+    });
+    
+    linhaJogos = List.generate(retJogos.length, (index){
+      return _jogoTile(retJogos[index]);
+    });
+
     return AnimatedSwitcher(
       transitionBuilder: (child, animation) => SizeTransition(
         child: child,
@@ -564,8 +587,8 @@ class _GrupoCardState extends State<GrupoCard> {
       ),
       duration: Duration(milliseconds: 200),
       child: showTable
-          ? tabela(widget.index, widget.jogos)
-          : jogosCard(widget.index, widget.jogos),
+          ? tabela()
+          : jogosCard(widget.jogos),
     );
   }
 }
