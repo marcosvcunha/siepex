@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/icons/sport_icons.dart';
-import 'package:siepex/models/serializeJuergs.dart';
+import 'package:siepex/src/eventos/juergs/models/serializeJuergs.dart';
 import 'package:siepex/src/eventos/juergs/JogosPage.dart';
 import 'package:siepex/src/eventos/juergs/MinhasEquipesPage.dart';
 import '../admin/ManageCompPage.dart';

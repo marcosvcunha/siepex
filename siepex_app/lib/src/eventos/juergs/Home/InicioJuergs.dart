@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/src/eventos/juergs/Home/HomePage.dart';
-// import 'package:siepex/icons/my_flutter_app_icons.dart';
-// import 'package:siepex/models/modalidade.dart';
-// import 'package:siepex/src/areaParticipante/homeParticipante.dart';
 import 'package:siepex/src/eventos/juergs/Home/PaginaTabelas.dart';
-// import 'package:siepex/src/inicio/itemButton.dart';
-// import 'package:siepex/mdi.dart';
 import '../../../../icons/sport_icons.dart';
 import 'ModalidadesPage.dart';
 import '../Widgets/Drawer.dart';
@@ -42,7 +37,7 @@ class _InicioJuergsState extends State<InicioJuergs> with SingleTickerProviderSt
 
   Widget corpo(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFE0E0E0),
+      backgroundColor: Color(0xFFF0F0F0),
       appBar: AppBar(
         elevation: 10,
         title: Text('Juergs'),
@@ -72,7 +67,7 @@ class _InicioJuergsState extends State<InicioJuergs> with SingleTickerProviderSt
         height: 60,
         child: TabBar(     
           controller: tabController,
-          indicatorColor: Colors.yellow,
+          indicatorColor: Color(0xFF5B1DC0),
           tabs: [
           Tab(
             icon: Icon(Icons.home, size: 26,),

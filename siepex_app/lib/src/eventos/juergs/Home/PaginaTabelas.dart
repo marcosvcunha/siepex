@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/icons/sport_icons.dart';
-import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/ColumnBuilder.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/PaginaTabela.dart';

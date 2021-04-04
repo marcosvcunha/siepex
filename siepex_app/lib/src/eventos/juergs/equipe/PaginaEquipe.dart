@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 // import 'package:faker/faker.dart';
 import 'package:siepex/icons/sport_icons.dart' as sportIcon;
-import 'package:siepex/models/modalidade.dart';
+// import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/serializeJuergs.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/roundButton.dart';
 import 'package:siepex/src/eventos/juergs/equipe/changeCaptainPage.dart';
@@ -10,7 +12,7 @@ import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 import '../Widgets/ColumnBuilder.dart';
 import '../tabelas/widgets.dart';
 import '../models/equipe.dart';
-import 'package:siepex/models/serializeJuergs.dart';
+// import 'package:siepex/models/serializeJuergs.dart';
 import 'package:provider/provider.dart';
 // import 'package:animations/animations.dart';
 

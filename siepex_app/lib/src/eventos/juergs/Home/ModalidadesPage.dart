@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
-import '../../../../models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:provider/provider.dart';
 
 import '../Widgets/modalidadeCard.dart';

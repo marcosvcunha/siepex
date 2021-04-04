@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/CardJogo.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 import './widgets.dart';
@@ -17,13 +18,16 @@ class TabelaQuartas extends StatelessWidget {
   List<Widget> buildQuartas(List<Jogo> jogos) {
     return [
       _text('Quartas 1'),
-      jogoCard(jogos[0]),
+      Card(child: CardJogo(jogo: jogos[0],), elevation: 3,),
+      // jogoCard(jogos[0]),
       _text('Quartas 2'),
-      jogoCard(jogos[1]),
+      Card(child: CardJogo(jogo: jogos[1],), elevation: 3,),
       _text('Quartas 3'),
-      jogoCard(jogos[2]),
+      Card(child: CardJogo(jogo: jogos[2],), elevation: 3,),
+      // jogoCard(jogos[2]),
       _text('Quartas 4'),
-      jogoCard(jogos[3]),
+      Card(child: CardJogo(jogo: jogos[3],), elevation: 3,),
+      // jogoCard(jogos[3]),
     ];
   }
 
@@ -51,7 +55,7 @@ class TabelaQuartas extends StatelessWidget {
           return Container(
             height: double.infinity,
             width: double.infinity,
-            color: Colors.grey[400],
+            color: Color(0xFFF5F5F5),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: buildQuartas(retJogos),

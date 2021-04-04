@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/models/serializeJuergs.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/ColumnBuilder.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/roundButton.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:provider/provider.dart';
+import 'package:siepex/src/eventos/juergs/models/serializeJuergs.dart';
 
 class ExcludeMemberPage extends StatefulWidget {
   @override
   _ExcludeMemberPageState createState() => _ExcludeMemberPageState();
 }
+
 
 class _ExcludeMemberPageState extends State<ExcludeMemberPage> {
   List<Estudante> participantes = <Estudante> [];

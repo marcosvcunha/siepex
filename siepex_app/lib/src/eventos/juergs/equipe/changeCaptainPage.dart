@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/models/serializeJuergs.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 // import 'package:animations/animations.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/ColumnBuilder.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/roundButton.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:provider/provider.dart';
+import 'package:siepex/src/eventos/juergs/models/serializeJuergs.dart';
 class ChangeCaptain extends StatefulWidget {
   // final Equipe equipe;
   // ChangeCaptain({this.equipe});
   @override
   _ChangeCaptainState createState() => _ChangeCaptainState();
 }
+
 
 class _ChangeCaptainState extends State<ChangeCaptain> {
   int selectedButton = 0;

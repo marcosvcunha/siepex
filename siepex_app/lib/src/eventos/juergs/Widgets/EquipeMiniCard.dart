@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipe.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:provider/provider.dart';

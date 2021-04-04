@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:provider/provider.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
@@ -105,7 +105,9 @@ class _SelectTeamsPageState extends State<SelectTeamsPage> {
 
     equipesSelecionadas = List.generate(numGroups * numTimes, (index) {
       if(kDebugMode){
+        return null;
         return equipesSelecionaveis[index]; // TODO: mudar para null
+        
       }else{
         return null;
       }

@@ -30,7 +30,7 @@ class Modalidade extends ChangeNotifier {
   // 4 - 12 times (4 grupos de 3) -> semi -> final
 
   static Map<int, String> formatoDescricaoMap = {
-    1: 'Fase de grupos com 32 times (8 grupos de 4 times). Um de cada grupo passam às quartas de final.',
+    1: 'Fase de grupos com 32 times (8 grupos de 4 times). Um de cada grupo passa às quartas de final.',
     2: 'Fase de grupos com 24 times (8 grupos de 3 times). Um de cada grupo passa às quartas de final.',
     3: 'Fase de grupos com 16 times (4 grupos de 4 times). Dois de cada grupo passam às quartas de final.',
     4: 'Fase de grupos com 12 times (4 grupos de 3 times). Um de cada grupo passa à semi-final.'

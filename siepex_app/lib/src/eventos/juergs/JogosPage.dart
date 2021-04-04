@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/models/serializeJuergs.dart';
+import 'package:siepex/src/eventos/juergs/models/serializeJuergs.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/CardJogo.dart';
 import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 
@@ -7,7 +7,7 @@ class JogosPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFE0E0E0),
+      backgroundColor: Color(0xFFF0F0F0),
       appBar: AppBar(
         title: Text('Meus Jogos'),
       ),

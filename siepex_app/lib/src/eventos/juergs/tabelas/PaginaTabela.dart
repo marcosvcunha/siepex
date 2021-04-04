@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/TabelaFinal.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/TabelaGrupos.dart';
 import 'package:siepex/src/eventos/juergs/tabelas/TabelaQuartas.dart';
@@ -146,7 +146,7 @@ class _PaginaTabelaState extends State<PaginaTabela> {
     // TODO: Arrumar para não calcular os pontos nem os resultados enquanto a partida não tiver terminado.
     modalidade = Provider.of<Modalidade>(context);
     return Scaffold(
-      backgroundColor: Colors.grey[400],
+      backgroundColor: Color(0xFFF5F5F5),
       // backgroundColor: Colors.white,
       appBar: AppBar(title: Text('Tabela ' + modalidade.nome)),
       body: modalidade.fase == 0 ? faseDeInscricao() : 

@@ -1,7 +1,7 @@
 // import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/JogosPage.dart';
 import 'package:siepex/src/eventos/juergs/MinhasEquipesPage.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/CardJogo.dart';
@@ -10,12 +10,13 @@ import 'package:siepex/src/eventos/juergs/Widgets/EquipeMiniCard.dart';
 import 'package:siepex/src/eventos/juergs/equipe/PaginaEquipe.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
 import 'package:siepex/src/eventos/juergs/models/jogo.dart';
-import '../../../../models/serializeJuergs.dart';
+// import '../../../../models/serializeJuergs.dart';
 import 'package:provider/provider.dart';
+import 'package:siepex/src/eventos/juergs/models/serializeJuergs.dart';
+
 
 class HomePage extends StatelessWidget {
   final TabController tabController;
-
   HomePage({this.tabController});
 
   final TextStyle headerSyle = TextStyle(

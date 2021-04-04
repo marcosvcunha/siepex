@@ -1,7 +1,7 @@
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
-import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 
@@ -133,7 +133,7 @@ class _GrupoCardState extends State<GrupoCard> {
       times = [
         TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
         TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
-        TimeFaseGrupo(retJogos[1].timeB, retJogos[1].idTimeB),
+        TimeFaseGrupo(retJogos[1].timeA, retJogos[1].idTimeA),
       ];
     }else if(modalidade.formatoCompeticao == 16){
       times = [

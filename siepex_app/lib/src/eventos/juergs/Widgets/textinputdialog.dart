@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 // import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 // import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 

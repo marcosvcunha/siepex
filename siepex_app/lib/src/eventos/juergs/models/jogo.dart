@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:siepex/models/modalidade.dart';
-import 'package:siepex/models/serializeJuergs.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/serializeJuergs.dart';
 import 'package:siepex/src/config.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';

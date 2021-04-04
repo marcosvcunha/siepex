@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 import 'package:siepex/icons/my_flutter_app_icons.dart';
 import 'package:siepex/icons/sport_icons.dart';

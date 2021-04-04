@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:siepex/models/modalidade.dart';
-import 'package:siepex/models/serializeJuergs.dart';
+import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
+import 'package:siepex/src/eventos/juergs/models/serializeJuergs.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 import 'package:siepex/src/eventos/juergs/models/ParticipanteRustica.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
