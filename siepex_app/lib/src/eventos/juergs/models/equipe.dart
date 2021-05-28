@@ -83,7 +83,7 @@ class Equipe extends ChangeNotifier {
               body: {'user_cpf': userJuergs.cpf, 'equipe_id': id.toString(), 'user_name':userJuergs.nome}))
           .body);
 
-      Equipe updatedTeam = Equipe.fromJson(resposta['data']);
+      var updatedTeam = Equipe.fromJson(resposta['data']);
       participantes = updatedTeam.participantes;
       numeroParticipantes = updatedTeam.numeroParticipantes;
       userJuergs.minhasEquipes.add(updatedTeam);

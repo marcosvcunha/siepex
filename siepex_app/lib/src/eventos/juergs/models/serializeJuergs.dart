@@ -25,7 +25,7 @@ class Estudante {
     A lista é preenchida quando o usuario faz login, e é atualizada (pelo app) quando o usuario cria
     ou entra em uma equipe.
    */
-  List<Equipe> minhasEquipes = <Equipe>[];
+  List minhasEquipes = [];
 
   Estudante(
       {this.nome,

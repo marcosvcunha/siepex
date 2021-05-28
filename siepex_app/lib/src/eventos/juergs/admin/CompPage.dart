@@ -172,7 +172,7 @@ class CompetitionPage extends StatelessWidget {
                             FlatButton(
                                 // minWidth: 100,
                                 padding: EdgeInsets.zero,
-                                height: 0,
+                                // height: 0,
                                 highlightColor: Colors.transparent,
                                 splashColor: Colors.transparent,
                                 materialTapTargetSize:
@@ -227,7 +227,7 @@ class CompetitionPage extends StatelessWidget {
                             FlatButton(
                                 // minWidth: 100,
                                 padding: EdgeInsets.zero,
-                                height: 0,
+                                // height: 0,
                                 highlightColor: Colors.transparent,
                                 splashColor: Colors.transparent,
                                 materialTapTargetSize:
@@ -372,9 +372,9 @@ class CompetitionPage extends StatelessWidget {
                           ),
                         ),
                         FlatButton(
-                            minWidth: 100,
+                            // minWidth: 100,
                             padding: EdgeInsets.zero,
-                            height: 0,
+                            // height: 0,
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
                             materialTapTargetSize:
@@ -408,7 +408,7 @@ class CompetitionPage extends StatelessWidget {
                       ),
                       FlatButton(
                           padding: EdgeInsets.zero,
-                          height: 0,
+                          // height: 0,
                           highlightColor: Colors.transparent,
                           splashColor: Colors.transparent,
                           materialTapTargetSize:

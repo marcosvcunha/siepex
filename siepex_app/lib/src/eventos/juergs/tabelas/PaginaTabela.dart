@@ -126,7 +126,7 @@ class _PaginaTabelaState extends State<PaginaTabela> {
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 100.0, top: 150),
-              child: Icon(Icons.error_outline_rounded, size: 100, color: Colors.green),
+              child: Icon(Icons.error_outline, size: 100, color: Colors.green),
             ),
             Text('A competição ainda não começou', 
         textAlign: TextAlign.center,

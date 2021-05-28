@@ -117,11 +117,11 @@ class _GrupoCardState extends State<GrupoCard> {
 
   void initState() {
     super.initState();
-
     showTable = true;
     retJogos = widget.jogos;
     modalidade = widget.modalidade;
     
+    print(modalidade.formatoCompeticao);
     if(modalidade.formatoCompeticao == 32){
       times = [
       TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
@@ -146,7 +146,7 @@ class _GrupoCardState extends State<GrupoCard> {
       times = [
         TimeFaseGrupo(retJogos[0].timeA, retJogos[0].idTimeA),
         TimeFaseGrupo(retJogos[0].timeB, retJogos[0].idTimeB),
-        TimeFaseGrupo(retJogos[1].timeB, retJogos[1].idTimeB),
+        TimeFaseGrupo(retJogos[1].timeA, retJogos[1].idTimeA),
       ];
     }
 

@@ -28,7 +28,8 @@ Future<bool> confirmDialogWithReturn(BuildContext context, String title, String 
     return await showDialog(
       barrierDismissible: false,
       context: context,
-      child: AlertDialog(
+
+      builder:(_) => AlertDialog(
         title: Text(title),
         content: Text(
             text),
