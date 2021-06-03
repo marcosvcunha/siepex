@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:faker/faker.dart';
 import 'package:siepex/icons/sport_icons.dart' as sportIcon;
+import 'package:siepex/src/eventos/juergs/Widgets/CardJogo.dart';
 // import 'package:siepex/models/modalidade.dart';
 import 'package:siepex/src/eventos/juergs/models/serializeJuergs.dart';
 import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
@@ -15,7 +16,6 @@ import '../models/equipe.dart';
 // import 'package:siepex/models/serializeJuergs.dart';
 import 'package:provider/provider.dart';
 // import 'package:animations/animations.dart';
-
 
 class PaginaEquipe extends StatelessWidget {
   bool isCap; // Diz se o User é Capitão
@@ -52,7 +52,8 @@ class PaginaEquipe extends StatelessWidget {
           SizedBox(
             width: 20,
           ),
-          roundButton('Sair da Equipe', Color(0xFFE23B43), Icons.exit_to_app, () {
+          roundButton('Sair da Equipe', Color(0xFFE23B43), Icons.exit_to_app,
+              () {
             confirmDialog(context, 'Sair da equipe',
                 'Tem certeza que deseja sair da equipe? A equipe será excluida por ficar sem capitão.',
                 () async {
@@ -69,11 +70,11 @@ class PaginaEquipe extends StatelessWidget {
         ],
       );
     } else if (!temEquipe) {
-      return roundButton(
-          'Entrar', Colors.green[700], Icons.arrow_forward, () async {
-            modalidade.notificar();
-            equipe.entrarEquipe(context, modalidade.incricoesAbertas());
-          });
+      return roundButton('Entrar', Colors.green[700], Icons.arrow_forward,
+          () async {
+        modalidade.notificar();
+        equipe.entrarEquipe(context, modalidade.incricoesAbertas());
+      });
     } else {
       return Container();
     }
@@ -83,8 +84,8 @@ class PaginaEquipe extends StatelessWidget {
     if (isCap && isInTeam) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
-        child:
-            roundButton('Excluir Membro',  Color(0xFFE23B43), Icons.arrow_upward, () {
+        child: roundButton(
+            'Excluir Membro', Color(0xFFE23B43), Icons.arrow_upward, () {
           Navigator.of(context).push(MaterialPageRoute<void>(
             builder: (BuildContext context) => ChangeNotifierProvider.value(
                 value: equipe, child: ExcludeMemberPage()),
@@ -257,40 +258,49 @@ class PaginaEquipe extends StatelessWidget {
             ),
           ),
           FutureBuilder(
-            future: Jogo.pegarJogosPorEquipe(context, equipe.id),
-            builder: (context, snapshot){
-              if(snapshot.connectionState == ConnectionState.waiting){
-                return Padding(
-                  padding: EdgeInsets.only(top: 30, bottom: 30),
-                  child: CircularProgressIndicator(),
-                );
-              }else{
-                if(snapshot.hasData){
-                  List<Jogo> jogos = snapshot.data;
-                  if(jogos.length == 0){
-                    return Padding(
-                    padding: EdgeInsets.only(top: 30),
-                    child: Center(
-                      child: Text('Nenhum jogo a mostrar', style: TextStyle(fontSize: 16, color: Color(0xFF808080)),),
-                    ),
-                    );
-                  }else{
-                    return ColumnBuilder(
-                      itemCount: jogos.length,
-                      itemBuilder: (context, index){
-                        return jogoCard(jogos[index]);
-                      }
-                      );
-                  
-                  }
-                }else{
+              future: Jogo.pegarJogosPorEquipe(context, equipe.id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return Padding(
                     padding: EdgeInsets.only(top: 30, bottom: 30),
-                    child: Text('Nada a mostrar', style: TextStyle(fontSize: 16, color: Color(0xFF808080)),),
+                    child: CircularProgressIndicator(),
                   );
+                } else {
+                  if (snapshot.hasData) {
+                    List<Jogo> jogos = snapshot.data;
+                    if (jogos.length == 0) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 30),
+                        child: Center(
+                          child: Text(
+                            'Nenhum jogo a mostrar',
+                            style: TextStyle(
+                                fontSize: 16, color: Color(0xFF808080)),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: ColumnBuilder(
+                          itemCount: jogos.length,
+                          itemBuilder: (context, index) {
+                            return CardJogo(jogo: jogos[index]);
+                          }),
+                      );
+                    }
+                  } else {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 30, bottom: 30),
+                      child: Text(
+                        'Nada a mostrar',
+                        style:
+                            TextStyle(fontSize: 16, color: Color(0xFF808080)),
+                      ),
+                    );
+                  }
                 }
-              }
-          }),
+              }),
           // ColumnBuilder(
           //   // TODO: Implementar para pegar os jogos reais!
           //   itemCount: 6,

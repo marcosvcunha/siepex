@@ -18,8 +18,7 @@ class EquipeCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
-          gradient:
-              LinearGradient(colors: [Color(0xFF7DB4C5), Color(0xFF55AEC9)]),
+          color: Color(0xFFC8D4E9),
           boxShadow: [
             BoxShadow(
                 blurRadius: 2,
@@ -88,7 +87,7 @@ class EquipeCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color:
                               temEquipe ? Colors.grey[500] : Colors.green[600],
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
                           boxShadow: [
                             BoxShadow(
                                 blurRadius: 1,
@@ -136,7 +135,7 @@ class EquipeCard extends StatelessWidget {
                           //color: Color(0xff4071FE),
                           //color: Color(0xff1C61EA),
                           color: Colors.blue,
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
                           boxShadow: [
                             BoxShadow(
                                 blurRadius: 1,

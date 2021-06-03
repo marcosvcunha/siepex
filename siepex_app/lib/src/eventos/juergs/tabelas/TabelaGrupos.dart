@@ -251,7 +251,7 @@ class _GrupoCardState extends State<GrupoCard> {
       decoration: BoxDecoration(
         border: Border(),
       ),
-      height: 60,
+      // height: 60,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -277,7 +277,7 @@ class _GrupoCardState extends State<GrupoCard> {
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
+                        color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.2)),
                     height: 35,
                     width: 35,
                     child: Center(
@@ -294,7 +294,7 @@ class _GrupoCardState extends State<GrupoCard> {
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.70)),
+                        color: Color.fromRGBO(0x67, 0x44, 0xc7, 0.2)),
                     height: 35,
                     width: 35,
                     child: Center(
@@ -321,10 +321,13 @@ class _GrupoCardState extends State<GrupoCard> {
                   )),
             ],
           ),
-          Text(
-            jogo.encerrado ? 'Encerrado' : 'Não Iniciou',
-            style: TextStyle(fontSize: 14, color: Colors.grey[800]),
-          ),
+          // SizedBox(height: 8,),
+          Text(jogo.local, style: TextStyle(color: Colors.grey[800])),
+          // Text(
+          //   jogo.encerrado ? 'Encerrado' : 'Não Iniciou',
+          //   style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+          // ),
+          SizedBox(height: 16,),
         ],
       ),
     );
@@ -369,8 +372,8 @@ class _GrupoCardState extends State<GrupoCard> {
               },
               border: TableBorder(
                 horizontalInside:
-                    BorderSide(color: Colors.deepPurple, width: 2),
-                verticalInside: BorderSide(color: Colors.deepPurple, width: 2),
+                    BorderSide(color: Colors.deepPurple.withOpacity(0.5), width: 2),
+                verticalInside: BorderSide(color: Colors.deepPurple.withOpacity(0.5), width: 2),
               ),
               children: [
                 TableRow(children: [

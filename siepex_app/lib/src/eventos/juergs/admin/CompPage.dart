@@ -1,6 +1,8 @@
 // import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/CustomButton.dart';
+import 'package:siepex/src/eventos/juergs/admin/AlterarLocalPage.dart';
 import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:provider/provider.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
@@ -9,6 +11,7 @@ import 'package:siepex/src/eventos/juergs/admin/LancaResultGrupos.dart';
 import 'package:siepex/src/eventos/juergs/admin/LancarResultados.dart';
 import 'package:siepex/src/eventos/juergs/admin/ResultadosRustica.dart';
 import 'package:siepex/src/eventos/juergs/admin/selectTeams.dart';
+import 'package:siepex/utils/utils.dart';
 
 /*
   Nessa página o ADM pode:
@@ -25,10 +28,9 @@ class CompetitionPage extends StatelessWidget {
 
   Widget nextFaseButton(BuildContext context, Modalidade modalidade) {
     if (modalidade.fase < 4) {
-      return Align(
-        alignment: Alignment.center,
-        child: FlatButton(
-          onPressed: () {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: CustomButton(text: 'AVANÇAR DE FASE', onTap: () {
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -36,35 +38,7 @@ class CompetitionPage extends StatelessWidget {
                           value: modalidade,
                           child: SelectTeamsPage(),
                         )));
-          },
-          highlightColor: Colors.transparent,
-          focusColor: Colors.transparent,
-          hoverColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          child: Container(
-            height: 45,
-            width: 400,
-            decoration: BoxDecoration(
-              color: Colors.green,
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 2,
-                    color: Colors.white30,
-                    spreadRadius: 1,
-                    offset: Offset(0, 2))
-              ],
-            ),
-            child: Center(
-              child: Text(
-                'Avançar de Fase',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ),
-        ),
+          },),
       );
     } else {
       return Container();
@@ -73,65 +47,35 @@ class CompetitionPage extends StatelessWidget {
 
   Widget lancarResultados(BuildContext context, Modalidade modalidade) {
     if (modalidade.fase < 5) {
-      return Align(
-        alignment: Alignment.center,
-        child: FlatButton(
-          onPressed: () {
-            if (modalidade.nome != 'Rústica') {
-              if (modalidade.faseStr == 'Fase de Grupos') // FAse de grupos
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: CustomButton(text: 'LANÇAR RESULTADOS', onTap: () {
+              if (modalidade.nome != 'Rústica') {
+                if (modalidade.faseStr == 'Fase de Grupos') // FAse de grupos
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider.value(
+                                value: modalidade,
+                                child: LancaResultadosGruposPage(),
+                              )));
+                else // Fazes eliminatórias
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider.value(
+                                value: modalidade,
+                                child: LancarResultadosPage(),
+                              )));
+              } else
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => ChangeNotifierProvider.value(
                               value: modalidade,
-                              child: LancaResultadosGruposPage(),
+                              child: ResultadosRustica(),
                             )));
-              else // Fazes eliminatórias
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ChangeNotifierProvider.value(
-                              value: modalidade,
-                              child: LancarResultadosPage(),
-                            )));
-            } else
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChangeNotifierProvider.value(
-                            value: modalidade,
-                            child: ResultadosRustica(),
-                          )));
-          },
-          highlightColor: Colors.transparent,
-          focusColor: Colors.transparent,
-          hoverColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          child: Container(
-            height: 45,
-            width: 400,
-            decoration: BoxDecoration(
-              color: Colors.green,
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 2,
-                    color: Colors.white30,
-                    spreadRadius: 1,
-                    offset: Offset(0, 2))
-              ],
-            ),
-            child: Center(
-              child: Text(
-                'Lançar Resultados',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-        ),
+            },),
       );
     } else {
       return Container();
@@ -322,6 +266,16 @@ class CompetitionPage extends StatelessWidget {
     return SizedBox(height: 0, width: 0,);
   }
 
+  Widget botaoAlterarLocalJogos(BuildContext context, Modalidade modalidade){
+    if(modalidade.fase == 0) return Container();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: CustomButton(text: 'ALTERAR LOCAL', onTap: (){
+        pushto(context, AlterarLocalPage());
+      },),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Modalidade modalidade = Provider.of<Modalidade>(context);
@@ -394,15 +348,17 @@ class CompetitionPage extends StatelessWidget {
                   );
                 } else {
                   return Row(
+                    // mainAxisSize: MainAxisSize.min,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 22.0, right: 16),
-                        child: Container(
-                          width: 300,
-                          child: TextField(
-                            controller: novoLocalController,
-                            decoration:
-                                InputDecoration(labelText: 'Novo Local'),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 22.0, right: 16),
+                          child: Container(
+                            child: TextField(
+                              controller: novoLocalController,
+                              decoration:
+                                  InputDecoration(labelText: 'Novo Local'),
+                            ),
                           ),
                         ),
                       ),
@@ -487,7 +443,11 @@ class CompetitionPage extends StatelessWidget {
             SizedBox(
               height: 40,
             ),
-            lancarResultados(context, modalidade)
+            lancarResultados(context, modalidade),
+            SizedBox(
+              height: 40,
+            ),
+            botaoAlterarLocalJogos(context, modalidade),
           ]),
     );
   }

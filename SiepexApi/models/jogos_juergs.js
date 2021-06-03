@@ -45,6 +45,10 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.STRING(3),
             allowNull: true,
         },
+        local_jogo:{
+            type: DataTypes.STRING(255),
+            allowNull: true
+        },
         ult_atualizacao:{
             type: DataTypes.DATE(11),
             allowNull: true,

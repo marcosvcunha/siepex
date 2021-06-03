@@ -28,6 +28,14 @@ class CardJogo extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 10,
+              spreadRadius: 1,
+              color: Colors.grey[600].withOpacity(0.5),
+              offset: Offset(0, 2),
+            )
+          ]
         ),
         child: Flex(
           direction: Axis.horizontal,
@@ -79,7 +87,7 @@ class CardJogo extends StatelessWidget {
                               )
                             ]),
                         SizedBox(height: 6,),
-                            Text(jogo.encerrado ? 'Encerrado' : 'Não iniciou', style: TextStyle(color: Colors.grey[600]),)
+                            Text(jogo.local, style: TextStyle(color: Colors.grey[600]), overflow: TextOverflow.ellipsis,)
                       ]),
                 ),
               ),

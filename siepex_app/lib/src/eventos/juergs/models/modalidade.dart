@@ -8,6 +8,7 @@ import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 import 'dart:convert';
 
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
+import 'package:siepex/src/eventos/juergs/models/serializeJuergs.dart';
 // import 'package:siepex/models/serializeJuergs.dart';
 
 class Modalidade extends ChangeNotifier {
@@ -82,7 +83,7 @@ class Modalidade extends ChangeNotifier {
     return fases[fase];
   }
 
-  get inscrito => _inscrito;
+  get inscrito => userJuergs.temEquipe(nome);
 
   set inscrito(bool newVal) {
     if (newVal != _inscrito) {

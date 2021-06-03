@@ -37,11 +37,6 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
         title: Text(modalidade.nome),
       ),
       body: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(
-                    'assets/img/arte_uergs/Background_App_Uergs.png'),
-                fit: BoxFit.fill)),
         child: FutureBuilder(
             future: modalidade.nome != 'Rústica'
                 ? Equipe.getEquipesPorModalidade(modalidade.id)
@@ -89,7 +84,7 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
               }
             }),
       ),
-      floatingActionButton: Container(
+      floatingActionButton: ! modalidade.inscrito ? Container(
         decoration: BoxDecoration(
             //color: Theme.of(context).primaryColor,
             color: Colors.green[600],
@@ -97,11 +92,12 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
         height: 60,
         width: 80,
         child: SizedBox.expand(child: selecionaBotao()),
-      ),
+      ) : Container(),
     );
   }
 
   Widget selecionaBotao() {
+    // print('Está incrito? ' + modalidade.inscrito.toString());
     if (modalidade.nome == 'Rústica') {
       return FlatButton(
           splashColor: Colors.transparent,
@@ -125,12 +121,11 @@ class _PaginaEquipesState extends State<PaginaEquipes> {
           splashColor: Colors.transparent,
           focusColor: Colors.transparent,
           highlightColor: Colors.transparent,
-          onPressed: () async {
-            String nomeEquipe = await textInputDialog(context, modalidade);
+          onPressed: ! modalidade.inscrito ? () async {
+            String nomeEquipe = await textInputDialog(context, 'Digite o nome da equipe:', 'Nome da equipe');
             await Equipe.criarEquipe(context, modalidade, nomeEquipe, isActive);
-            // setState(() {});
             modalidade.inscrito = userJuergs.temEquipe(modalidade.nome);
-          },
+          } : null,
           child: Center(
             child: Text(
               'Criar Equipe',

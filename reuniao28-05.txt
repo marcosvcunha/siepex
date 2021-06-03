@@ -1,0 +1,3 @@
+Local das partidas são padrão, mas editaveis.
+Selecionar árbitros para cada partida
+Fazer videos para explicar a utilização do app

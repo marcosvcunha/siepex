@@ -285,6 +285,27 @@ router.put('/pegarJogos/porTime', async (req, res) => {
     }
 });
 
+router.put('/atualizaLocalJogo/:idJogo/:nomeLocal', async (req, res) => {
+    try{
+        nomeLocal = req.params.nomeLocal;
+        idJogo = req.params.idJogo;
+        result = await jogos_juergs.update({
+            local_jogo: nomeLocal,
+        }, {
+            where: {
+                id: idJogo,
+            }
+        })
+        res.json({
+            status: 'sucesso',
+        })
+    }catch(e){
+        res.status(500).send({
+            status: 'erro'
+        })
+    }
+})
+
 router.put('/pegarJogos/porEquipes', async (req, res) => {
     try {
         idEquipes = JSON.parse(req.body['id_equipes']);
@@ -310,6 +331,30 @@ router.put('/pegarJogos/porEquipes', async (req, res) => {
             status: 'erro'
         });
     }
+});
+
+router.get('/pegarJogos/porModalidade/:idModalidade', async (req, res) => {
+    try {
+        idModalidade = req.params.idModalidade
+        jogos = await jogos_juergs.findAll({
+            where: {
+                modalidade: idModalidade
+            },
+            order: [
+                ['id', 'asc'],
+            ]
+        });
+        res.json({
+            status: 'sucesso',
+            data: jogos,
+        });
+    } catch (e) {
+        console.error('Erro ao obter Jogos por modalidade');
+        res.json({
+            status: 'erro'
+        });
+    }
+
 });
 
 router.put('/alterarFormato', async (req, res) => {
@@ -352,6 +397,17 @@ router.put('/alterarFormato', async (req, res) => {
     }
 });
 
+// router.get('/pegaLocal/:idModalidade', async (req, res) => {
+//     try{
+//         result = await pegarLocalModalidade(req.params.idModalidade);
+//         res.status(200).send(result) 
+//     }catch(e){
+//         res.status(500).send({
+//             status: 'erro',
+//         });
+//     }
+// })
+
 
 async function monta_tabela_grupos_32(idEquipes, nomeEquipes, idModalidade) {
     // Monta tabela Para:
@@ -365,14 +421,16 @@ async function monta_tabela_grupos_32(idEquipes, nomeEquipes, idModalidade) {
     // B x D
     // C x D
 
+    local = await pegarLocalModalidade(idModalidade);
+
     const faseAtual = 1
     for(var i = 0; i < 8; i ++){
-        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 1], idEquipes[4*i + 0], idEquipes[4*i + 1], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 2], idEquipes[4*i + 0], idEquipes[4*i + 2], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 3], idEquipes[4*i + 0], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[4*i + 1], nomeEquipes[4*i + 2], idEquipes[4*i + 1], idEquipes[4*i + 2], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[4*i + 1], nomeEquipes[4*i + 3], idEquipes[4*i + 1], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[4*i + 2], nomeEquipes[4*i + 3], idEquipes[4*i + 2], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 1], idEquipes[4*i + 0], idEquipes[4*i + 1], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 2], idEquipes[4*i + 0], idEquipes[4*i + 2], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 3], idEquipes[4*i + 0], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[4*i + 1], nomeEquipes[4*i + 2], idEquipes[4*i + 1], idEquipes[4*i + 2], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[4*i + 1], nomeEquipes[4*i + 3], idEquipes[4*i + 1], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[4*i + 2], nomeEquipes[4*i + 3], idEquipes[4*i + 2], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual, local);
     }
 
     await equipes_juergs.update({
@@ -389,10 +447,12 @@ async function monta_tabela_grupos_24(idEquipes, nomeEquipes, idModalidade) {
     // 8 Grupos
     // 3 Times
     const faseAtual = 1
+    local = await pegarLocalModalidade(idModalidade);
+
     for(var i = 0; i < 8; i++){
-        await insere_jogos_juergs(nomeEquipes[3*i + 0], nomeEquipes[3*i + 1], idEquipes[3*i + 0], idEquipes[3*i + 1], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[3*i + 2], nomeEquipes[3*i + 0], idEquipes[3*i + 2], idEquipes[3*i + 0], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[3*i + 1], nomeEquipes[3*i + 2], idEquipes[3*i + 1], idEquipes[3*i + 2], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[3*i + 0], nomeEquipes[3*i + 1], idEquipes[3*i + 0], idEquipes[3*i + 1], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[3*i + 2], nomeEquipes[3*i + 0], idEquipes[3*i + 2], idEquipes[3*i + 0], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[3*i + 1], nomeEquipes[3*i + 2], idEquipes[3*i + 1], idEquipes[3*i + 2], 0, 0, false, idModalidade, faseAtual, local);
     }
     await equipes_juergs.update({
         fase_equipe: faseAtual,
@@ -407,14 +467,16 @@ async function monta_tabela_grupos_16(idEquipes, nomeEquipes, idModalidade) {
     // Monta tabela Para:
     // 8 Grupos
     // 3 Times
+    local = await pegarLocalModalidade(idModalidade);
+
     const faseAtual = 1
     for(var i = 0; i < 4; i++){
-        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 1], idEquipes[4*i + 0], idEquipes[4*i + 1], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 2], idEquipes[4*i + 0], idEquipes[4*i + 2], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 3], idEquipes[4*i + 0], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[4*i + 1], nomeEquipes[4*i + 2], idEquipes[4*i + 1], idEquipes[4*i + 2], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[4*i + 1], nomeEquipes[4*i + 3], idEquipes[4*i + 1], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[4*i + 2], nomeEquipes[4*i + 3], idEquipes[4*i + 2], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 1], idEquipes[4*i + 0], idEquipes[4*i + 1], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 2], idEquipes[4*i + 0], idEquipes[4*i + 2], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[4*i + 0], nomeEquipes[4*i + 3], idEquipes[4*i + 0], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[4*i + 1], nomeEquipes[4*i + 2], idEquipes[4*i + 1], idEquipes[4*i + 2], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[4*i + 1], nomeEquipes[4*i + 3], idEquipes[4*i + 1], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[4*i + 2], nomeEquipes[4*i + 3], idEquipes[4*i + 2], idEquipes[4*i + 3], 0, 0, false, idModalidade, faseAtual, local);
     }
     await equipes_juergs.update({
         fase_equipe: faseAtual,
@@ -430,10 +492,12 @@ async function monta_tabela_grupos_12(idEquipes, nomeEquipes, idModalidade) {
     // 8 Grupos
     // 3 Times
     const faseAtual = 1
+    local = await pegarLocalModalidade(idModalidade);
+
     for(var i = 0; i < 4; i++){
-        await insere_jogos_juergs(nomeEquipes[3*i + 0], nomeEquipes[3*i + 1], idEquipes[3*i + 0], idEquipes[3*i + 1], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[3*i + 2], nomeEquipes[3*i + 0], idEquipes[3*i + 2], idEquipes[3*i + 0], 0, 0, false, idModalidade, faseAtual);
-        await insere_jogos_juergs(nomeEquipes[3*i + 1], nomeEquipes[3*i + 2], idEquipes[3*i + 1], idEquipes[3*i + 2], 0, 0, false, idModalidade, faseAtual);
+        await insere_jogos_juergs(nomeEquipes[3*i + 0], nomeEquipes[3*i + 1], idEquipes[3*i + 0], idEquipes[3*i + 1], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[3*i + 2], nomeEquipes[3*i + 0], idEquipes[3*i + 2], idEquipes[3*i + 0], 0, 0, false, idModalidade, faseAtual, local);
+        await insere_jogos_juergs(nomeEquipes[3*i + 1], nomeEquipes[3*i + 2], idEquipes[3*i + 1], idEquipes[3*i + 2], 0, 0, false, idModalidade, faseAtual, local);
     }
     await equipes_juergs.update({
         fase_equipe: faseAtual,
@@ -448,11 +512,13 @@ async function monta_tabela_grupos_12(idEquipes, nomeEquipes, idModalidade) {
 
 
 async function monta_quartas(idEquipes, nomeEquipes, idModalidade) {
+    local = await pegarLocalModalidade(idModalidade);
+
     const faseAtual = 2
-    await insere_jogos_juergs(nomeEquipes[0], nomeEquipes[1], idEquipes[0], idEquipes[1], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[2], nomeEquipes[3], idEquipes[2], idEquipes[3], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[4], nomeEquipes[5], idEquipes[4], idEquipes[5], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[6], nomeEquipes[7], idEquipes[6], idEquipes[7], 0, 0, false, idModalidade, faseAtual);
+    await insere_jogos_juergs(nomeEquipes[0], nomeEquipes[1], idEquipes[0], idEquipes[1], 0, 0, false, idModalidade, faseAtual, local);
+    await insere_jogos_juergs(nomeEquipes[2], nomeEquipes[3], idEquipes[2], idEquipes[3], 0, 0, false, idModalidade, faseAtual, local);
+    await insere_jogos_juergs(nomeEquipes[4], nomeEquipes[5], idEquipes[4], idEquipes[5], 0, 0, false, idModalidade, faseAtual, local);
+    await insere_jogos_juergs(nomeEquipes[6], nomeEquipes[7], idEquipes[6], idEquipes[7], 0, 0, false, idModalidade, faseAtual, local);
 
     await equipes_juergs.update({
         fase_equipe: faseAtual,
@@ -466,8 +532,10 @@ async function monta_quartas(idEquipes, nomeEquipes, idModalidade) {
 
 async function monta_semi(idEquipes, nomeEquipes, idModalidade) {
     const faseAtual = 3
-    await insere_jogos_juergs(nomeEquipes[0], nomeEquipes[1], idEquipes[0], idEquipes[1], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[2], nomeEquipes[3], idEquipes[2], idEquipes[3], 0, 0, false, idModalidade, faseAtual);
+    local = await pegarLocalModalidade(idModalidade);
+
+    await insere_jogos_juergs(nomeEquipes[0], nomeEquipes[1], idEquipes[0], idEquipes[1], 0, 0, false, idModalidade, faseAtual, local);
+    await insere_jogos_juergs(nomeEquipes[2], nomeEquipes[3], idEquipes[2], idEquipes[3], 0, 0, false, idModalidade, faseAtual, local);
 
     await equipes_juergs.update({
         fase_equipe: faseAtual,
@@ -480,8 +548,10 @@ async function monta_semi(idEquipes, nomeEquipes, idModalidade) {
 
 async function monta_final(idEquipes, nomeEquipes, idModalidade) {
     const faseAtual = 4
-    await insere_jogos_juergs(nomeEquipes[0], nomeEquipes[1], idEquipes[0], idEquipes[1], 0, 0, false, idModalidade, faseAtual);
-    await insere_jogos_juergs(nomeEquipes[2], nomeEquipes[3], idEquipes[2], idEquipes[3], 0, 0, false, idModalidade, faseAtual);
+    local = await pegarLocalModalidade(idModalidade);
+
+    await insere_jogos_juergs(nomeEquipes[0], nomeEquipes[1], idEquipes[0], idEquipes[1], 0, 0, false, idModalidade, faseAtual, local);
+    await insere_jogos_juergs(nomeEquipes[2], nomeEquipes[3], idEquipes[2], idEquipes[3], 0, 0, false, idModalidade, faseAtual, local);
 
     await equipes_juergs.update({
         fase_equipe: faseAtual,
@@ -493,7 +563,7 @@ async function monta_final(idEquipes, nomeEquipes, idModalidade) {
 }
 
 async function insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_b, resultado_a, resultado_b,
-    encerrado, modalidade, etapa_jogo) {
+    encerrado, modalidade, etapa_jogo, local) {
     await jogos_juergs.create(
         {
             time_a: nome_time_a,
@@ -505,6 +575,7 @@ async function insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_
             encerrado: encerrado,
             modalidade: modalidade,
             etapa_jogo: etapa_jogo,
+            local_jogo: local,
         }
     ).then((result) => {
         return result;
@@ -561,6 +632,14 @@ async function atualizaTabelaSelect(idModalidade, etapa) {
             resolve(jogosRetornados);
         })
     })
+}
+
+async function pegarLocalModalidade(idModalidade){
+    return new Promise(function (resolve, reject){
+        modalidades_juergs.findByPk(idModalidade).then((modalidade) => {
+            resolve(modalidade.endereco);
+        });
+    });
 }
 
 function atualizaTabelaUpdate(id, resultado_a, resultado_b) {

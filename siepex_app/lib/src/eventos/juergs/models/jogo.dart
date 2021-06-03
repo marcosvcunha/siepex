@@ -25,6 +25,7 @@ class Jogo {
   int idTimeB;
   int classModalidade;
   String etapaJogo;
+  String local;
 
   get resultAStr {
     if (encerrado)
@@ -57,6 +58,7 @@ class Jogo {
     this.nome = 'Jogo';
     this.idJogo = json['id'];
     this.edited = false;
+    this.local = json['local_jogo'];
   }
 
   Jogo(String timeA, String timeB, int resultA, int resultB, bool encerrado,
@@ -160,6 +162,40 @@ class Jogo {
     }catch(e){
       errorDialog(context, 'Erro!', 'Ocorreu um erro ao pegar os jogos');
       return []; 
+    }
+  }
+
+  static Future<List<Jogo>> pegarJogosPorModalidade(int idModalidade) async {
+    try{
+      http.Response res = await http.get(baseUrl + 'modalidades/pegarJogos/porModalidade/$idModalidade');
+      var json = jsonDecode(res.body);
+      if(json['status'] == 'sucesso'){
+        List<Jogo> jogos = [];
+        for(var element in json['data']){
+          jogos.add(Jogo.fromJson(element));
+        }
+        return jogos;
+      }else{
+
+      return [];
+      }
+    }catch(e){
+      print('Erro ao pegar jogos por modalidade');
+      return [];
+    }
+  }
+
+  Future<bool> atualizaLocalJogo(BuildContext context, String nomeLocal) async {
+    try{
+      http.Response res = await http.put(baseUrl + 'modalidades/atualizaLocalJogo/$idJogo/$nomeLocal');
+      var json = jsonDecode(res.body);
+      if(json['status'] == 'sucesso'){
+        return true;
+      }else{
+        return false;
+      }
+    }catch(e){
+      return false;
     }
   }
 

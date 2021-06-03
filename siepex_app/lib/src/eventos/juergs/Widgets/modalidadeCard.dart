@@ -17,12 +17,12 @@ class _ModalidadeCardState extends State<ModalidadeCard> {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Container(
         decoration: BoxDecoration(
-            border: Border.all(
-              color: Color.fromRGBO(0, 60, 125, 1),
-              width: 2,
-            ),
+            // border: Border.all(
+            //   color: Color.fromRGBO(0, 60, 125, 1),
+            //   width: 2,
+            // ),
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: Color(0xff86A5D9),
+            color: Color(0xFFC8D4E9),
             boxShadow: [
               BoxShadow(
                 blurRadius: 2,

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:siepex/src/eventos/juergs/models/handledata.dart';
 import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:provider/provider.dart';
 
 import '../Widgets/modalidadeCard.dart';
 
 class ModalidadesPage extends StatelessWidget {
-  final HandleData _handleData = HandleData();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -22,6 +20,7 @@ class ModalidadesPage extends StatelessWidget {
             if (snapshot.hasData) {
               List<Modalidade> modalidades = snapshot.data;
               return ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 16),
                   itemCount: modalidades.length,
                   itemBuilder: (context, index) {
                     return ChangeNotifierProvider.value(
