@@ -188,6 +188,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
         nomeError = null;
       }
     }
+
     setState(() {});
     return valido;
   }
@@ -275,7 +276,7 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
     } else {
       String modalidadesJuiz = '';
       if (futbol == true) {
-        modalidadesJuiz += 'Futebol, ';
+        modalidadesJuiz += 'Futsal, ';
       }
       if (handbol == true) {
         modalidadesJuiz += 'Handebol, ';
@@ -440,7 +441,6 @@ class _CadastraParticipanteState extends State<CadastraParticipante> {
           child: TextField(
             decoration: InputDecoration(
                 labelText: 'Telefone',
-                errorText: cpfError,
                 labelStyle: labelStyle),
             controller: txtCelular,
             inputFormatters: [celularMask],

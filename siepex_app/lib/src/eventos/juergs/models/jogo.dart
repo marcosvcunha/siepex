@@ -26,6 +26,7 @@ class Jogo {
   int classModalidade;
   String etapaJogo;
   String local;
+  String nome_juiz;
 
   get resultAStr {
     if (encerrado)
@@ -59,6 +60,7 @@ class Jogo {
     this.idJogo = json['id'];
     this.edited = false;
     this.local = json['local_jogo'];
+    this.nome_juiz = json['nome_juiz'];
   }
 
   Jogo(String timeA, String timeB, int resultA, int resultB, bool encerrado,
@@ -228,6 +230,20 @@ class Jogo {
         errorDialog(
             context, 'Erro!', 'Ocorreu um problema ao atualizar os jogos.');
       }
+    }
+  }
+
+  Future<bool> alterarJuiz(String nomeJuiz) async {
+    try{
+      http.Response res = await http.put(baseUrl + 'jogos/alterarJuiz/$idJogo/$nomeJuiz');
+      var json = jsonDecode(res.body);
+      if(json['status'] == 'sucesso'){
+        return true;
+      }else{
+        return false;
+      }
+    }catch(e){
+      return false;
     }
   }
 }

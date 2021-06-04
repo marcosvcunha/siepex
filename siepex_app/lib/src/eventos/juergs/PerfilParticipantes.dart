@@ -78,7 +78,7 @@ class _CadastraParticipanteState extends State<PerfilParticipante> {
       if (modalidade.contains('Volei')) {
         this.volei = true;
       }
-      if (modalidade.contains('Futebol')) {
+      if (modalidade.contains('Futsal')) {
         this.futbol = true;
       }
       if (modalidade.contains('Handebol')) {
@@ -189,11 +189,6 @@ class _CadastraParticipanteState extends State<PerfilParticipante> {
 
   validaCampos(Estudante estudante) {
     bool valido = true;
-    if (!CPFValidator.isValid(estudante.cpf)) {
-      cpfError = 'CPF inválido';
-      valido = false;
-    } else
-      cpfError = null;
     if (!EmailValidator.validate(estudante.email)) {
       emailError = 'Email é Inválido';
       valido = false;
@@ -325,7 +320,7 @@ class _CadastraParticipanteState extends State<PerfilParticipante> {
     } else {
       String modalidadesJuiz = '';
       if (futbol == true) {
-        modalidadesJuiz += 'Futebol, ';
+        modalidadesJuiz += 'Futsal, ';
       }
       if (handbol == true) {
         modalidadesJuiz += 'Handebol, ';
@@ -440,7 +435,7 @@ class _CadastraParticipanteState extends State<PerfilParticipante> {
           padding: const EdgeInsets.only(left: 5, right: 5),
           child: TextField(
             decoration:
-                InputDecoration(labelText: 'Telefone', errorText: cpfError),
+                InputDecoration(labelText: 'Telefone',  ),
             controller: txtCelular,
             inputFormatters: [celularMask],
             keyboardType: TextInputType.number,

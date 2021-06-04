@@ -1,4 +1,11 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
+import 'package:siepex/src/config.dart';
+import 'package:siepex/src/eventos/juergs/Widgets/errorDialog.dart';
 import 'package:siepex/src/eventos/juergs/models/equipe.dart';
+import 'package:http/http.dart' as http;
+
 
 // TODO:: Transformar instanciar userJuergs na raiz do app, passar para as páginas por provider e transformar 
 // em changenotifier (se possivel).
@@ -27,6 +34,13 @@ class Estudante {
    */
   List minhasEquipes = [];
 
+  List<String> get listaModalidades {
+    List<String> mods = modalidadesJuiz.replaceAll(',', '').split(' ');
+    // if(mods.length > 2);
+    return mods;
+  }
+  
+  
   Estudante(
       {this.nome,
       this.cpf,
@@ -134,5 +148,26 @@ class Estudante {
     }
     return false;
   }
+
+  static Future<List<Estudante>> pegarJuizes() async {
+    try{
+      http.Response res = await http.get(baseUrl + 'obtemParticipante/juizes');
+      var json = jsonDecode(res.body);
+      if(json['status'] == 'sucesso'){
+        List<Estudante> juizes = [];
+        for(var juiz in json['data']){
+          juizes.add(Estudante.fromJson(juiz));
+        }
+        return juizes;
+      }else{
+        print('Erro ao pegar os juizes.');
+        return [];
+      }
+    }catch(e){
+      print('Erro ao pegar os juizes: ' + e.toString());
+      return [];
+    }
+  }
+ 
   
 }

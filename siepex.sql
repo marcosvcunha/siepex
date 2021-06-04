@@ -216,6 +216,33 @@ INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, C
 	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ) VALUES ('11111111117', 'User Atleta 7', 
 		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'porto alegre', 'Atleta', 0, ''
 		 );
+         
+-- INSERINDO JUIZES TESTE
+
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ) VALUES ('00000000000', 'User Juiz 1', 
+		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'porto alegre', 'Juiz', 0, 'Futsal, Handebol, Volei, Rustica,'
+		 );
+
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ) VALUES ('00000000001', 'User Juiz 2', 
+		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'porto alegre', 'Juiz', 0, 'Futsal, Handebol, Volei, Rustica,'
+		 );
+
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ) VALUES ('00000000002', 'User Juiz 3', 
+		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'porto alegre', 'Juiz', 0, 'Futsal, Handebol, Volei, Rustica,'
+		 );
+
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ) VALUES ('00000000003', 'User Juiz 4', 
+		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'porto alegre', 'Juiz', 0, 'Futsal, Handebol, Volei, Rustica,'
+		 );
+
+INSERT INTO cadastro_juergs(CPF, NOME, EMAIL, CELULAR, INSTITUICAO, IND_UERGS, CAMPOS_UERGS, TIPO_PARTICIPANTE, 
+	IND_NECESSIDADES_ESPECIAIS,	MODALIDADES_JUIZ) VALUES ('00000000004', 'User Juiz 5', 
+		'emailteste@uergs.deu.br', '51999999999', 'Uergs', 1, 'porto alegre', 'Juiz', 0, 'Futsal, Handebol, Volei, Rustica,'
+		 );
 
 
 DROP TABLE IF EXISTS jogos_juergs;
@@ -232,6 +259,7 @@ CREATE TABLE jogos_juergs (
     MODALIDADE INT(2) NOT NULL,
     ETAPA_JOGO VARCHAR(3),
     LOCAL_JOGO VARCHAR(255),
+    NOME_JUIZ VARCHAR(255) DEFAULT '',
 	ULT_ATUALIZACAO TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (ID_TIME_A) REFERENCES equipes_juergs(id),
     FOREIGN KEY (ID_TIME_B) REFERENCES equipes_juergs(id)

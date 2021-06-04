@@ -11,6 +11,9 @@ import 'package:siepex/src/eventos/juergs/models/jogo.dart';
 import 'package:siepex/utils/utils.dart';
 
 class AlterarLocalPage extends StatelessWidget {
+  final int modalidadeId;
+
+  AlterarLocalPage(this.modalidadeId);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,7 @@ class AlterarLocalPage extends StatelessWidget {
               return ListView(
                 children: [
                   SizedBox(height: 16,),
-                  Text('Clique no jogo que deseja alterar o local:', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                  Text('Selecione o jogo que deseja alterar o local:', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                   SizedBox(height: 16,),
                   Column(
                     children: List<Widget>.generate(

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/CustomButton.dart';
 import 'package:siepex/src/eventos/juergs/admin/AlterarLocalPage.dart';
+import 'package:siepex/src/eventos/juergs/admin/SelecionarJuizPage.dart';
 import 'package:siepex/src/eventos/juergs/models/modalidade.dart';
 import 'package:provider/provider.dart';
 import 'package:siepex/src/eventos/juergs/Widgets/confirmDialog.dart';
@@ -271,7 +272,17 @@ class CompetitionPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: CustomButton(text: 'ALTERAR LOCAL', onTap: (){
-        pushto(context, AlterarLocalPage());
+        pushto(context, AlterarLocalPage(modalidade.id));
+      },),
+    );
+  }
+
+  Widget botaoSelecionarJuiz(BuildContext context, Modalidade modalidade){
+    if(modalidade.fase == 0) return Container();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: CustomButton(text: 'SELECIONAR JUIZ', onTap: (){
+        pushto(context, SelecionarJuizPage(modalidade.id));
       },),
     );
   }
@@ -437,17 +448,20 @@ class CompetitionPage extends StatelessWidget {
             ),
             formatoCompeticao(modalidade),
             SizedBox(
-              height: 40,
+              height: 16,
             ),
             selectButton1(context, modalidade),
             SizedBox(
-              height: 40,
+              height: 16,
             ),
             lancarResultados(context, modalidade),
             SizedBox(
-              height: 40,
+              height: 16,
             ),
             botaoAlterarLocalJogos(context, modalidade),
+            SizedBox(height: 16),
+            botaoSelecionarJuiz(context, modalidade),
+            
           ]),
     );
   }

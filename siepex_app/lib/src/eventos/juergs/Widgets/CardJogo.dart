@@ -87,7 +87,9 @@ class CardJogo extends StatelessWidget {
                               )
                             ]),
                         SizedBox(height: 6,),
-                            Text(jogo.local, style: TextStyle(color: Colors.grey[600]), overflow: TextOverflow.ellipsis,)
+                            Text(jogo.local, style: TextStyle(color: Colors.grey[600]), overflow: TextOverflow.ellipsis,),
+                        SizedBox(height: 6,),
+                            Text(jogo.nome_juiz, style: TextStyle(color: Colors.grey[600]), overflow: TextOverflow.ellipsis,)
                       ]),
                 ),
               ),
