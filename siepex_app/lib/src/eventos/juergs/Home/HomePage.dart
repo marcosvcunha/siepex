@@ -28,7 +28,16 @@ class HomePage extends StatelessWidget {
   Widget corpoMinhasEquipes(List<Widget> cards) {
     if (cards.length > 0) {
       return Wrap(
-        children: cards,
+
+        // clipBehavior: Clip.non,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 16, right: 16),
+            child: Column(
+              children: cards,
+            ),
+          ),
+        ],
       );
     } else {
       return Center(
@@ -62,9 +71,22 @@ class HomePage extends StatelessWidget {
 
   Widget corpoMeusJogos(List<Jogo> jogos) {
     if (jogos.length > 0) {
-      return WrapBuilder(
-          itemBuilder: (context, index) => CardJogo(jogo: jogos[index]),
-          itemCount: jogos.length);
+      return Wrap(
+
+        // clipBehavior: Clip.non,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 16, right: 16, top: 12),
+            child: Column(
+              children: List.generate(jogos.length, (index) => CardJogo(jogo: jogos[index])),
+            ),
+          ),
+        ],
+      );
+
+      // return WrapBuilder(
+      //     itemBuilder: (context, index) => CardJogo(jogo: jogos[index]),
+      //     itemCount: jogos.length);
     } else {
       return Center(
         child: Padding(
@@ -92,26 +114,22 @@ class HomePage extends StatelessWidget {
             width: double.infinity,
             // color: Colors.red,
             child: Padding(
-              padding: EdgeInsets.only(left: 16, right: 16, top: 16),
+              padding: EdgeInsets.only(top: 16),
               child: Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        SizedBox(width: 16,),
                         Text(
                           'Minhas Equipes',
                           style: headerSyle,
                         ),
-                        FlatButton(
-                          padding: EdgeInsets.zero,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          hoverColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onPressed: () {
+                        Spacer(),
+                        GestureDetector(
+                          onTap: () {
                             Navigator.push(context, MaterialPageRoute(
                               builder: (context) => MinhasEquipesPage(),
                             ));
@@ -120,7 +138,8 @@ class HomePage extends StatelessWidget {
                             'Ver Mais',
                             style: TextStyle(color: Color(0xFF2C7AAD)),
                           ),
-                        )
+                        ),
+                        SizedBox(width: 16,),
                       ],
                     ),
                     SizedBox(
@@ -141,24 +160,20 @@ class HomePage extends StatelessWidget {
             width: double.infinity,
             // color: Colors.blue,
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.only(top: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      SizedBox(width: 16),
                       Text(
                         'Meus Jogos',
                         style: headerSyle,
                       ),
-                      FlatButton(
-                        padding: EdgeInsets.zero,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        hoverColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onPressed: () {
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -169,13 +184,11 @@ class HomePage extends StatelessWidget {
                           'Ver Mais',
                           style: TextStyle(color: Color(0xFF2C7AAD)),
                         ),
-                      )
+                      ),
+                      SizedBox(width: 16),
                     ],
                   ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Flexible(
+      Flexible(
                     child: corpoMeusJogos(jogos),
                   ),
                 ],

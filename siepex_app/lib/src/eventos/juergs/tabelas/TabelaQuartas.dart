@@ -18,15 +18,14 @@ class TabelaQuartas extends StatelessWidget {
   List<Widget> buildQuartas(List<Jogo> jogos) {
     return [
       _text('Quartas 1'),
-      Card(child: CardJogo(jogo: jogos[0],), elevation: 3,),
-      // jogoCard(jogos[0]),
+      CardJogo(jogo: jogos[0],),      // jogoCard(jogos[0]),
       _text('Quartas 2'),
-      Card(child: CardJogo(jogo: jogos[1],), elevation: 3,),
+      CardJogo(jogo: jogos[1],),
       _text('Quartas 3'),
-      Card(child: CardJogo(jogo: jogos[2],), elevation: 3,),
+      CardJogo(jogo: jogos[2],),
       // jogoCard(jogos[2]),
       _text('Quartas 4'),
-      Card(child: CardJogo(jogo: jogos[3],), elevation: 3,),
+      CardJogo(jogo: jogos[3],),
       // jogoCard(jogos[3]),
     ];
   }
@@ -53,6 +52,7 @@ class TabelaQuartas extends StatelessWidget {
             );
           }
           return Container(
+            padding: EdgeInsets.symmetric(horizontal: 16),
             height: double.infinity,
             width: double.infinity,
             color: Color(0xFFF5F5F5),

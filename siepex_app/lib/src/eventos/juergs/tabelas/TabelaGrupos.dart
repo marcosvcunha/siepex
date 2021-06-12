@@ -322,7 +322,8 @@ class _GrupoCardState extends State<GrupoCard> {
             ],
           ),
           // SizedBox(height: 8,),
-          Text(jogo.local, style: TextStyle(color: Colors.grey[800])),
+          Text('Local: ' + jogo.local, style: TextStyle(color: Colors.grey[800])),
+          Text('Juiz: ' + jogo.nome_juiz, style: TextStyle(color: Colors.grey[800])),
           // Text(
           //   jogo.encerrado ? 'Encerrado' : 'Não Iniciou',
           //   style: TextStyle(fontSize: 14, color: Colors.grey[800]),

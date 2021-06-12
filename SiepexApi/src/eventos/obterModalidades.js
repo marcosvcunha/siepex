@@ -576,7 +576,7 @@ async function insere_jogos_juergs(nome_time_a, nome_time_b, id_time_a, id_time_
             modalidade: modalidade,
             etapa_jogo: etapa_jogo,
             local_jogo: local,
-            nome_juiz: 'Não Escolhido'
+            nome_juiz: 'Não selecionado'
         }
     ).then((result) => {
         return result;

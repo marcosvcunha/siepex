@@ -23,13 +23,13 @@ class TabelaSemi extends StatelessWidget {
             fontSize: 22, color: Colors.black, fontWeight: FontWeight.w400),
       ),
       // jogoCard(jogos[0]),
-      Card(child: CardJogo(jogo: jogos[0],), elevation: 3,),
+      CardJogo(jogo: jogos[0],),
       Text(
         'Semi 2',
         style: TextStyle(
             fontSize: 22, color: Colors.black, fontWeight: FontWeight.w400),
       ),
-      Card(child: CardJogo(jogo: jogos[1],), elevation: 3,),
+      CardJogo(jogo: jogos[1],),
     ];
   }
 
@@ -55,6 +55,7 @@ class TabelaSemi extends StatelessWidget {
             );
           }
           return Container(
+            padding: EdgeInsets.symmetric(horizontal: 16),
             height: double.infinity,
             width: double.infinity,
             color: Color(0xFFF5F5F5),

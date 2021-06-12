@@ -50,7 +50,9 @@ class EquipeMiniCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Container(
+      child: Material(
+        elevation: 6,
+        child: Container(
         width: double.infinity,
         // height: 70,
         decoration: BoxDecoration(
@@ -95,6 +97,7 @@ class EquipeMiniCard extends StatelessWidget {
             ),
           ),
         ),
+      ),
       ),
     );
   }

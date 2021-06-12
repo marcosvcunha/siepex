@@ -1,3 +1,7 @@
 Local das partidas são padrão, mas editaveis.
 Selecionar árbitros para cada partida
 Fazer videos para explicar a utilização do app
+
+-- 04/06
+Mostrar juiz nos jogos da pagina de tabela
+(?) Tornar o juiz no banco de jogos uma referencia

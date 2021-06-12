@@ -37,7 +37,7 @@ class _InicioJuergsState extends State<InicioJuergs> with SingleTickerProviderSt
 
   Widget corpo(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF0F0F0),
+      backgroundColor: Color(0xFFFCFCFC),
       appBar: AppBar(
         elevation: 10,
         title: Text('Juergs'),
