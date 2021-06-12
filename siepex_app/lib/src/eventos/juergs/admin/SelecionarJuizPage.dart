@@ -53,9 +53,9 @@ class SelecionarJuizPage extends StatelessWidget {
                     return GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () async {
-                        Loading.neverSatisfied(context, true);
                         var juiz = await pushto(context, ListaJuizesPage(juizes: juizes,));
                         if(juiz != null){
+                          Loading.neverSatisfied(context, true);
                           bool result = await jogos[index].alterarJuiz(juiz);
                           if(result){
                             jogos[index].nome_juiz = juiz;
