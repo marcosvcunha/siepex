@@ -24,15 +24,32 @@ var rawBodySaver = function (req, res, buf, encoding) {
   }
 }
 
-app.use(bodyParser.json({
+app.set('query parser', function (str) {
+  return qs.parse(str, { arrayLimit: Infinity });
+});
+
+app.get('/status', (req, res) => {
+  res.status(200).end();
+});
+
+app.head('/status', (req, res) => {
+  res.status(200).end();
+});
+
+app.use(express.json({
+  limit: '150mb',
   verify: rawBodySaver
 }));
 
-app.use(bodyParser.urlencoded({
+app.use(express.urlencoded({
+  limit: '150mb',
+  extended: true,
   verify: rawBodySaver,
-  extended: true
+  parameterLimit:50000,
 }));
-app.use(bodyParser.raw({
+
+app.use(express.raw({
+  limit: '150mb',
   verify: rawBodySaver,
   type: '*/*'
 }));
