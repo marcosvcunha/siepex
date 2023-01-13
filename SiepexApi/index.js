@@ -20,7 +20,7 @@ const app = express();
 
 var rawBodySaver = function (req, res, buf, encoding) {
   if (buf && buf.length) {
-    req.rawBody = buf.toString(encoding || 'utf8');
+    req.rawBody = buf.toString(encoding || 'utf-8');
   }
 }
 
